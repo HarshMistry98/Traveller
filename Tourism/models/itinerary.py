@@ -22,18 +22,14 @@ class travel_itinerary(models.Model):
     price = fields.Integer(string='Price')
     days = fields.Integer(string='Days')
     nights = fields.Integer(string='Nights')
-    date_availability = fields.Date(string='Date Availability', widget='multi_date')
+    date_availability = fields.Date(string='Date Availability')
     active = fields.Boolean(string='Active')
 
     agency_count = fields.Integer(compute="_compute_agency_count")
     customer_count = fields.Integer(compute="_compute_customer_count")
 
-    country = fields.Char(string='Country')
-    state = fields.Char(string='State')
-
     country_id = fields.Many2one('res.country', string='Country')
     state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=', country_id)]")
-    city_id = fields.Many2one('res.city', string='City', domain="[('state_id', '=', state_id)]")
 
     @api.onchange('country_id')
     def onchange_country_id(self):

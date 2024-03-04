@@ -19,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','account'],
     # always loaded
     'data': [
         'security/ir.model.access.csv',
@@ -36,6 +36,7 @@
         'views/offer_discount.xml',
         'views/reservation_booking.xml',
         'views/reservation_invoice.xml',
+        'views/invoice.xml',
     ],
     # only loaded in demonstration mode
     'demo': [

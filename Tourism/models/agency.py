@@ -29,7 +29,6 @@ class travel_agency(models.Model):
 
     country_id = fields.Many2one('res.country', string='Country')
     state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=', country_id)]")
-    city_id = fields.Many2one('res.city', string='City', domain="[('state_id', '=', state_id)]")
 
     @api.onchange('country_id')
     def onchange_country_id(self):

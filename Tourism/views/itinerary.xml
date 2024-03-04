@@ -87,7 +87,7 @@
         <field name="name">travel.itinerary.calendar.view</field>
         <field name="model">travel.itinerary</field>
         <field name="arch" type="xml">
-            <calendar string="Itinerary Calender" date_start="date_availability" color="state">
+            <calendar string="Itinerary Calender" date_start="date_availability" color="itinerary_name">
                 <field name="itinerary_seq" invisible="1"/>
                 <field name="itinerary_name"/>
                 <field name="agency_ids"/>

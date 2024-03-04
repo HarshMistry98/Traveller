@@ -22,15 +22,12 @@ class travel_customer_details(models.Model):
     )
     contact = fields.Char(string='Contact')
     email = fields.Char(string="Email")
-    country = fields.Char(string='Country')
-    states = fields.Char(string='State')
     state = fields.Selection(
         [('customer', "Customer"), ('payment', "Payment"), ('booking', "Booking"), ('invoice', "Invoice")],
         default="customer")
 
     country_id = fields.Many2one('res.country', string='Country')
     state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=', country_id)]")
-    city_id = fields.Many2one('res.city', string='City', domain="[('state_id', '=', state_id)]")
 
 
     @api.onchange('country_id')

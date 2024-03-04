@@ -11,3 +11,4 @@ from . import transportation_road
 from . import offer_discount
 from . import reservation_booking
 from . import reservation_invoice
+from . import invoice
