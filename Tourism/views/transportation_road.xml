@@ -1,0 +1,53 @@
+<odoo>
+
+    <record id="travel_transportation_road_tree_view" model="ir.ui.view">
+        <field name="name">travel.transportation.road.tree.view</field>
+        <field name="model">travel.transportation_road</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="from_city"/>
+                <field name="to_city"/>
+                <field name="date"/>
+                <field name="travellers_adult"/>
+                <field name="travellers_child"/>
+                <field name="travellers_handicapped"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="travel_transportation_road_form_view" model="ir.ui.view">
+        <field name="name">travel.transportation.road.form.view</field>
+        <field name="model">travel.transportation_road</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="from_city"/>
+                            <field name="to_city"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="travellers_adult"/>
+                        </group>
+                        <group>
+                            <field name="travellers_child"/>
+                            <field name="travellers_handicapped"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_travel_transportation_road" model="ir.actions.act_window">
+        <field name="name">Travel Transportation Road</field>
+        <field name="res_model">travel.transportation_road</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_transportation_road" name="Road" parent="menu_transportation" action="action_travel_transportation_road"
+              sequence="3"/>
+
+</odoo>

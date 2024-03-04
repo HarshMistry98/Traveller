@@ -1,0 +1,47 @@
+<odoo>
+
+    <record id="travel_customer_feedback_tree_view" model="ir.ui.view">
+        <field name="name">travel.customer.feedback.tree.view</field>
+        <field name="model">travel.customer_feedback</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="customer_id"/>
+                <field name="itinerary_id"/>
+                <field name="booking_id"/>
+                <field name="suggestions"/>
+                <field name="satisfaction"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="travel_customer_feedback_form_view" model="ir.ui.view">
+        <field name="name">travel.customer.feedback.form.view</field>
+        <field name="model">travel.customer_feedback</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="customer_id"/>
+                            <field name="itinerary_id"/>
+                            <field name="booking_id"/>
+                            <field name="suggestions"/>
+                            <field name="satisfaction"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_travel_customer_feedback" model="ir.actions.act_window">
+        <field name="name">Travel Customer Feedback</field>
+        <field name="res_model">travel.customer_feedback</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">tree,form</field> <!-- Display mode of the view -->
+    </record>
+
+    <menuitem id="menu_customer_feedback" name="Feedback" parent="menu_customer" action="action_travel_customer_feedback"
+              sequence="3"/>
+
+</odoo>

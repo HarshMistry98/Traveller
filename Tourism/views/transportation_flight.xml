@@ -1,0 +1,57 @@
+<odoo>
+
+    <record id="travel_transportation_flight_tree_view" model="ir.ui.view">
+        <field name="name">travel.transportation.flight.tree.view</field>
+        <field name="model">travel.transportation_flight</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="flight_seq"/>
+                <field name="from_city"/>
+                <field name="to_city"/>
+                <field name="date"/>
+                <field name="travellers_adult"/>
+                <field name="flight_class"/>
+                <field name="price"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="travel_transportation_flight_form_view" model="ir.ui.view">
+        <field name="name">travel.transportation.flight.form.view</field>
+        <field name="model">travel.transportation_flight</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="flight_seq"/>
+                            <field name="from_city"/>
+                            <field name="to_city"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="travellers_adult"/>
+                        </group>
+                        <group>
+                            <field name="flight_class"/>
+                            <field name="price"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_travel_transportation_flight" model="ir.actions.act_window">
+        <field name="name">Travel Transportation Flight</field>
+        <field name="res_model">travel.transportation_flight</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_transportation" name="Transportation" parent="menu_travel_and_tourism_root" sequence="4"/>
+
+    <menuitem id="menu_transportation_flight" name="Flight" parent="menu_transportation" action="action_travel_transportation_flight"
+              sequence="1"/>
+
+</odoo>

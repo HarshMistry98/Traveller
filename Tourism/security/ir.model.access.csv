@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+Tourism.access_travel_itinerary,access_travel_itinerary,Tourism.model_travel_itinerary,base.group_user,1,1,1,1
+Tourism.access_travel_agency,access_travel_agency,Tourism.model_travel_agency,base.group_user,1,1,1,1
+Tourism.access_travel_customer_details,access_travel_customer_details,Tourism.model_travel_customer_details,base.group_user,1,1,1,1
+Tourism.access_travel_customer_payment,access_travel_customer_payment,Tourism.model_travel_customer_payment,base.group_user,1,1,1,1
+Tourism.access_travel_customer_feedback,access_travel_customer_feedback,Tourism.model_travel_customer_feedback,base.group_user,1,1,1,1
+Tourism.access_travel_transportation_flight,access_travel_transportation_flight,Tourism.model_travel_transportation_flight,base.group_user,1,1,1,1
+Tourism.access_travel_transportation_railway,access_travel_transportation_railway,Tourism.model_travel_transportation_railway,base.group_user,1,1,1,1
+Tourism.access_travel_transportation_road,access_travel_transportation_road,Tourism.model_travel_transportation_road,base.group_user,1,1,1,1
+Tourism.access_travel_offer_discount,access_travel_offer_discount,Tourism.model_travel_offer_discount,base.group_user,1,1,1,1
+Tourism.access_travel_reservation_booking,access_travel_reservation_booking,Tourism.model_travel_reservation_booking,base.group_user,1,1,1,1
+Tourism.access_travel_reservation_invoice,access_travel_reservation_invoice,Tourism.model_travel_reservation_invoice,base.group_user,1,1,1,1
+

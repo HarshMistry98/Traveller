@@ -1,0 +1,126 @@
+<odoo>
+
+    <record id="travel_itinerary_tree_view" model="ir.ui.view">
+        <field name="name">travel.itinerary.tree.view</field>
+        <field name="model">travel.itinerary</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="itinerary_seq"/>
+                <field name="itinerary_name"/>
+                <field name="persons"/>
+                <field name="price"/>
+                <field name="date_availability"/>
+                <field name="days"/>
+                <field name="nights"/>
+                <field name="agency_ids"/>
+                <field name="country_id"/>
+                <field name="state_id"/>
+                <!--                <field name="city_id"/>-->
+                <field name="active"/>
+                <field name="customer_ids"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="travel_itinerary_form_view" model="ir.ui.view">
+        <field name="name">travel.itinerary.form.view</field>
+        <field name="model">travel.itinerary</field>
+        <field name="arch" type="xml">
+            <form string="harsh">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(Tourism.action_agency)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-building"> 
+                            <field string="Agencies" name="agency_count" widget="statinfo"/>
+                        </button>
+
+                        <button name="%(Tourism.action_customer)d"
+                                type="action"
+                                class="oe_stat_button"
+                                icon="fa-users">
+                            <field string="Customers" name="customer_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h4>
+                            <field name="itinerary_seq" readonly="1"/>
+                        </h4>
+                        <h1>
+                            <field name="itinerary_name" placeholder="Itinerary Name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Info">
+                            <field name="days"/>
+                            <field name="nights"/>
+                            <field name="persons"/>
+                        </group>
+                        <group string="Availability">
+                            <field name="price"/>
+                            <field name="date_availability"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Location">
+                            <field name="country_id"/>
+                            <field name="state_id"/>
+                            <field name="agency_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page name="customer_details" string="Customer">
+                            <field name="customer_ids"/>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="travel_itinerary_calendar_view" model="ir.ui.view">
+        <field name="name">travel.itinerary.calendar.view</field>
+        <field name="model">travel.itinerary</field>
+        <field name="arch" type="xml">
+            <calendar string="Itinerary Calender" date_start="date_availability" color="state">
+                <field name="itinerary_seq" invisible="1"/>
+                <field name="itinerary_name"/>
+                <field name="agency_ids"/>
+                <field name="price" widget="monetary"/>
+                <field name="customer_ids"/>
+                <field name="itinerary_name" filters="1" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="travel_itinerary_graph" model="ir.ui.view">
+        <field name="name">travel.itinerary.graph.view</field>
+        <field name="model">travel.itinerary</field>
+        <field name="arch" type="xml">
+            <graph string="Itinerary Graph" sample="1">
+                <field name="agency_ids"/>
+                <field name="itinerary_name"/>
+                <field name="price" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+
+
+
+    <record id="action_travel_itinerary" model="ir.actions.act_window">
+        <field name="name">Travel Itinerary</field>
+        <field name="res_model">travel.itinerary</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">tree,form,calendar,graph</field> <!-- Display mode of the view -->
+    </record>
+
+    <menuitem id="menu_travel_and_tourism_root" name="Travel and Tourism" sequence="1"/>
+    <menuitem id="menu_itinerary" name="Itinerary" parent="menu_travel_and_tourism_root"
+              action="action_travel_itinerary" sequence="1"/>
+
+</odoo>

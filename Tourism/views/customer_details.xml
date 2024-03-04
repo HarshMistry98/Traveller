@@ -1,0 +1,146 @@
+<odoo>
+
+
+    <record id="travel_customer_details_tree_view" model="ir.ui.view">
+        <field name="name">travel.customer.details.tree.view</field>
+        <field name="model">travel.customer_details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="customer_seq"/>
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="itinerary_id"/>
+                <field name="agency_id"/>
+                <field name="contact"/>
+                <field name="email"/>
+                <field name="country_id"/>
+                <field name="state_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="travel_customer_details_form_view" model="ir.ui.view">
+        <field name="name">travel.customer.details.form.view</field>
+        <field name="model">travel.customer_details</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(Tourism.action_customer_payment)d"
+                            string="Go to Payment"
+                            title="Payment"
+                            class="oe_highlight"
+                            type="action"
+                            attrs="{'invisible': [('state', '!=', 'customer')]}"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="customer,payment,booking,invoice"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h4>
+                            <field name="customer_seq" readonly="1"/>
+                        </h4>
+                        <h1>
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Package">
+                            <field name="itinerary_id"/>
+                            <field name="agency_id"/>
+                        </group>
+                        <group string="Details">
+                            <field name="contact"/>
+                            <field name="email"/>
+                        </group>
+                        <group string="Location">
+                            <field name="country_id"/>
+                            <field name="state_id"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="customer_details_search" model="ir.ui.view">
+        <field name="name">customer.details.search</field>
+        <field name="model">travel.customer_details</field>
+        <field name="arch" type="xml">
+            <search string="Itinerary Name">
+                <field name="first_name"/>
+                <field name="itinerary_id"/>
+
+                <separator/>
+
+                <filter string="Goa Glammer" name="normal_type" domain="[('itinerary_id', '=', 'Goa Glammer')]"/>
+                <filter string="Sikkim Delight" name="normal_type" domain="[('itinerary_id', '=', 'Sikkim Delight')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Agency" name="group_type" domain="" context="{'group_by':'agency_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <record id="travel_customer_details_kanban_view" model="ir.ui.view">
+        <field name="name">travel.customer.details.kanban.view</field>
+        <field name="model">travel.customer_details</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="first_name"/>
+                <field name="last_name"/>
+                <field name="itinerary_id"/>
+                <field name="contact"/>
+                <field name="email"/>
+                <field name="country_id"/>
+                <field name="state_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="o_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <h3>
+                                    <strong>
+                                        <span class="fa fa-user me-2" title="User"/>
+                                        <field name="first_name"/>&#xA0;<field name="last_name"/>
+                                    </strong>
+                                </h3>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <span class="fa fa-map-marker me-2" title="Map-Marker"/>
+                                <field name="itinerary_id"/>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <span class="fa fa-phone me-2" title="Phone"></span>
+                                <field name="contact"/>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <span class="fa fa-envelope me-2" title="Mail"></span>
+                                <field name="email"/>
+                            </div>
+                            <div class="o_kanban_card_content text-inline">
+                                <span class="fa fa-map me-2" title="Location"></span>
+                                <field name="state_id"/>&#xA0;<field name="country_id"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+
+            </kanban>
+        </field>
+    </record>
+
+    <record id="action_travel_customer_details" model="ir.actions.act_window">
+        <field name="name">Travel Customer Details</field>
+        <field name="res_model">travel.customer_details</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">tree,form,kanban</field> <!-- Display mode of the view -->
+    </record>
+
+
+    <menuitem id="menu_customer" name="Customer" parent="menu_travel_and_tourism_root" sequence="3"/>
+
+    <menuitem id="menu_customer_details" name="Details" parent="menu_customer" action="action_travel_customer_details"
+              sequence="1"/>
+
+</odoo>

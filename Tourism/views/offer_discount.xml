@@ -1,0 +1,59 @@
+<odoo>
+
+    <record id="travel_offer_discount_tree_view" model="ir.ui.view">
+        <field name="name">travel.offer.discount.tree.view</field>
+        <field name="model">travel.offer_discount</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="discount_seq"/>
+                <field name="itinerary_id"/>
+                <field name="agency_id"/>
+                <field name="discount_description"/>
+                <field name="discount_percentage"/>
+                <field name="validity_date"/>
+                <field name="validity_days"/>
+                <field name="discount_terms_and_conditions"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="travel_offer_discount_form_view" model="ir.ui.view">
+        <field name="name">travel.offer.discount.form.view</field>
+        <field name="model">travel.offer_discount</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="discount_seq" readonly="0"/>
+                            <field name="itinerary_id"/>
+                            <field name="agency_id"/>
+                        </group>
+                        <group>
+                            <field name="discount_description"/>
+                            <field name="discount_percentage"/>
+                        </group>
+                        <group>
+                            <field name="validity_date"/>
+                            <field name="validity_days" readonly="False"/>
+                            <field name="discount_terms_and_conditions"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_travel_offer_discount" model="ir.actions.act_window">
+        <field name="name">Travel Offer Discount</field>
+        <field name="res_model">travel.offer_discount</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">tree,form</field> <!-- Display mode of the view -->
+    </record>
+
+    <menuitem id="menu_offer" name="Offer" parent="menu_travel_and_tourism_root" sequence="4"/>
+
+    <menuitem id="menu_offer_discount" name="Discount" parent="menu_offer" action="action_travel_offer_discount"
+              sequence="2"/>
+
+</odoo>

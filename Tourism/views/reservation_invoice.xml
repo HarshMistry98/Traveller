@@ -1,0 +1,94 @@
+<odoo>
+
+    <record id="travel_reservation_invoice_tree_view" model="ir.ui.view">
+        <field name="name">travel.reservation.invoice.tree.view</field>
+        <field name="model">travel.reservation_invoice</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="invoice_seq"/>
+                <field name="invoice_number"/>
+                <field name="customer_id"/>
+                <field name="itinerary_id"/>
+                <field name="agency_id"/>
+                <field name="discount_id"/>
+                <field name="booking_id"/>
+                <field name="payment_id"/>
+                <field name="it_amount"/>
+                <field name="transport_id"/>
+                <field name="tp_amount"/>
+                <field name="due_date"/>
+                <field name="total_amount"/>
+                <field name="status"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="travel_reservation_invoice_form_view" model="ir.ui.view">
+        <field name="name">travel.reservation.invoice.form.view</field>
+        <field name="model">travel.reservation_invoice</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="send_invoice"
+                            string="Send Invoice"
+                            class="oe_highlight"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'invoice')]}"
+
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="customer,payment,booking,invoice"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="invoice_seq"/>
+                            <field name="customer_id"/>
+                            <field name="agency_id"/>
+                            <field name="itinerary_id"/>
+                            <field name="discount_id"/>
+
+                        </group>
+                        <group>
+                            <field name="transport_id"/>
+                            <field name="tp_amount"/>
+                            <field name="booking_id"/>
+                            <field name="payment_id"/>
+                            <field name="it_amount"/>
+
+                        </group>
+                        <group>
+                            <field name="due_date"/>
+                            <field name="total_amount"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="travel_reservation_invoice__pivot" model="ir.ui.view">
+        <field name="name">travel.reservation.invoice.pivot</field>
+        <field name="model">travel.reservation_invoice</field>
+        <field name="arch" type="xml">
+            <pivot string="Invoice Pivot" sample="1">
+                <field name="due_date" type="row"/>
+                <field name="total_amount" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+
+    <record id="action_travel_reservation_invoice" model="ir.actions.act_window">
+        <field name="name">Travel Reservation Invoice</field>
+        <field name="res_model">travel.reservation_invoice</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">tree,form,pivot</field> <!-- Display mode of the view -->
+    </record>
+
+
+    <menuitem id="menu_reservation_invoice" name="Invoice" parent="menu_reservation"
+              action="action_travel_reservation_invoice"
+              sequence="2"/>
+
+</odoo>

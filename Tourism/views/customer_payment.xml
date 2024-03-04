@@ -1,0 +1,76 @@
+<odoo>
+
+    <record id="travel_customer_payment_tree_view" model="ir.ui.view">
+        <field name="name">travel.customer.payment.tree.view</field>
+        <field name="model">travel.customer_payment</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="payment_seq"/>
+                <field name="customer_id"/>
+                <field name="itinerary_id"/>
+                <field name="agency_id"/>
+                <field name="booking_id"/>
+                <field name="payment_number"/>
+                <field name="amount"/>
+                <field name="payment_method"/>
+                <field name="payment_status"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="travel_customer_payment_form_view" model="ir.ui.view">
+        <field name="name">travel.customer.payment.form.view</field>
+        <field name="model">travel.customer_payment</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(Tourism.action_reservation_booking)d"
+                            string="Go to Booking"
+                            title="Booking"
+                            class="oe_highlight"
+                            type="action"
+                            attrs="{'invisible': [('state', '!=', 'payment')]}"
+                    />
+                    <field name="state" widget="statusbar" statusbar_visible="customer,payment,booking,invoice"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="payment_seq" readonly="1"/>
+                            <field name="customer_id"/>
+                            <field name="itinerary_id"/>
+                        </group>
+                        <group>
+                            <field name="agency_id"/>
+                            <field name="booking_id"/>
+                        </group>
+                        <group>
+                            <field name="payment_number"/>
+                            <field name="payment_date"/>
+                            <field name="amount"/>
+                        </group>
+                        <group>
+                            <field name="payment_method"/>
+                            <field name="payment_status"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="action_travel_customer_payment" model="ir.actions.act_window">
+        <field name="name">Travel Customer Payment</field>
+        <field name="res_model">travel.customer_payment</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">tree,form</field> <!-- Display mode of the view -->
+    </record>
+
+
+
+
+    <menuitem id="menu_customer_payment" name="Payment" parent="menu_customer" action="action_travel_customer_payment"
+              sequence="2"/>
+
+</odoo>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data noupdate="1">
+        <record id="sequence_itinerary" model="ir.sequence">
+            <field name="name">Itinerary sequence</field>
+            <field name="code">travel.itinerary.seq</field>
+            <field name="prefix">IT/%(y)s/%(month)s/%(day)s/</field>
+            <field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="sequence_agency" model="ir.sequence">
+            <field name="name">Agency sequence</field>
+            <field name="code">travel.agency.seq</field>
+            <field name="prefix">AG/%(y)s/%(month)s/%(day)s/</field>
+            <field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="sequence_customer_details" model="ir.sequence">
+            <field name="name">Customer sequence</field>
+            <field name="code">travel.customer.details.seq</field>
+            <field name="prefix">CU/%(y)s/%(month)s/%(day)s/</field>
+            <field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="sequence_customer_payment" model="ir.sequence">
+            <field name="name">Customer Payment sequence</field>
+            <field name="code">travel.customer.payment.seq</field>
+            <field name="prefix">PMT/%(y)s/%(month)s/%(day)s/</field>
+            <field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="sequence_transport_flight" model="ir.sequence">
+            <field name="name">Transport flight sequence</field>
+            <field name="code">travel.transport.flight.seq</field>
+            <field name="prefix">FT/%(y)s/%(month)s/%(day)s/</field>
+            <field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="sequence_offer_discount" model="ir.sequence">
+            <field name="name">Offer Discount sequence</field>
+            <field name="code">travel.offer.discount.seq</field>
+            <field name="prefix">DS/%(y)s/%(month)s/%(day)s/</field>
+            <field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="sequence_reservation_invoice" model="ir.sequence">
+            <field name="name">Reservation Invoice sequence</field>
+            <field name="code">travel.reservation.invoice.seq</field>
+            <field name="prefix">IV/%(y)s/%(month)s/%(day)s/</field>
+            <field name="padding">4</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+        </record>
+    </data>
+</odoo>
