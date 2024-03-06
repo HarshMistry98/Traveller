@@ -10,5 +10,4 @@ Tourism.access_travel_transportation_road,access_travel_transportation_road,Tour
 Tourism.access_travel_offer_discount,access_travel_offer_discount,Tourism.model_travel_offer_discount,base.group_user,1,1,1,1
 Tourism.access_travel_reservation_booking,access_travel_reservation_booking,Tourism.model_travel_reservation_booking,base.group_user,1,1,1,1
 Tourism.access_travel_reservation_invoice,access_travel_reservation_invoice,Tourism.model_travel_reservation_invoice,base.group_user,1,1,1,1
-
-
+Tourism.access_travel_product,access_travel_product,Tourism.model_travel_product,base.group_user,1,1,1,1

@@ -49,9 +49,10 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_transportation" name="Transportation" parent="menu_travel_and_tourism_root" sequence="4"/>
+    <menuitem id="menu_transportation" name="Transportation" parent="menu_configuration_root" sequence="2   "/>
 
-    <menuitem id="menu_transportation_flight" name="Flight" parent="menu_transportation" action="action_travel_transportation_flight"
+    <menuitem id="menu_transportation_flight" name="Flight" parent="menu_transportation"
+              action="action_travel_transportation_flight"
               sequence="1"/>
 
 </odoo>
