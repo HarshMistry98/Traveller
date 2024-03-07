@@ -55,7 +55,6 @@ class travel_agency(models.Model):
         return records
 
     def write(self, vals):
-        print(">>>>>>>0", vals)
         if not self.agency_seq:
             seq = self.env['ir.sequence'].next_by_code('travel.agency.seq')
             vals.update({

@@ -14,7 +14,6 @@ class travel_customer_details(models.Model):
     first_name = fields.Char(string='First Name')
     last_name = fields.Char(string='Last Name')
     itinerary_id = fields.Many2one(comodel_name="travel.itinerary", string="Itinerary")
-    print(itinerary_id)
     agency_id = fields.Many2one(
         comodel_name="travel.agency",
         string="Agency",
@@ -65,7 +64,6 @@ class travel_customer_details(models.Model):
                 'customer_seq': seq
             })
         res = super(travel_customer_details, self).write(vals)
-        print(res)
         return res
 
     def name_get(self):

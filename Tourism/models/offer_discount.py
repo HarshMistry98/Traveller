@@ -55,10 +55,8 @@ class travel_offer_discount(models.Model):
         return records
 
     def write(self, vals):
-        print(">>>>>>>0", vals)
         if not self.discount_seq:
             seq = self.env['ir.sequence'].next_by_code('travel.offer.discount.seq')
-            print(seq)
             vals.update({
                 'discount_seq': seq
             })

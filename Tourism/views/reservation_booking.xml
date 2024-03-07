@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="booking_seq"/>
-                <field name="booking_number"/>
                 <field name="customer_id"/>
                 <field name="itinerary_id"/>
                 <field name="agency_id"/>
@@ -29,13 +28,20 @@
                             type="action"
                             attrs="{'invisible': [('state', '!=', 'booking')]}"
                     />
+                    <button name="%(Tourism.action_back_payment)d"
+                            string="Back to Payment"
+                            title="Payment"
+                            class="oe_highlight"
+                            type="action"
+                            attrs="{'invisible': [('state', '!=', 'payment')]}"
+                    />
+
                     <field name="state" widget="statusbar" statusbar_visible="customer,payment,booking,invoice"/>
                 </header>
                 <sheet>
                     <group>
                         <group>
                             <field name="booking_seq"/>
-                            <field name="booking_number"/>
                         </group>
                         <group>
                             <field name="customer_id"/>
@@ -61,8 +67,6 @@
         <field name="res_model">travel.reservation_booking</field> <!-- Reference to the model of the form -->
         <field name="view_mode">tree,form</field> <!-- Display mode of the view -->
     </record>
-
-
 
 
     <menuitem id="menu_reservation" name="Reservation" parent="menu_travel_and_tourism_root" sequence="5"/>

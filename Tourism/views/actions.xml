@@ -23,6 +23,26 @@
     <!--        <field name="view_mode">form</field> &lt;!&ndash; Display mode of the view &ndash;&gt;-->
     <!--    </record>-->
 
+    <record id="action_back_customer" model="ir.actions.act_window">
+        <field name="name">Travel Customer</field>
+        <field name="res_model">travel.customer_details</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">form</field> <!-- Display mode of the view -->
+        <field name="context">{'default_customer_id': active_id.customer_id.id}</field>
+    </record>
+    <record id="action_back_payment" model="ir.actions.act_window">
+        <field name="name">Travel Payment</field>
+        <field name="res_model">travel.customer_payment</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">form</field> <!-- Display mode of the view -->
+<!--        <field name="context">{'default_customer_id': active_id.customer_id}</field>-->
+    </record>
+    <record id="action_back_booking" model="ir.actions.act_window">
+        <field name="name">Travel Booking</field>
+        <field name="res_model">travel.reservation_booking</field> <!-- Reference to the model of the form -->
+        <field name="view_mode">form</field> <!-- Display mode of the view -->
+<!--        <field name="context">{'default_customer_id': active_id.customer_id}</field>-->
+    </record>
+
+
     <record id="action_agency" model="ir.actions.act_window">
         <field name="name">Travel Agency</field>
         <field name="res_model">travel.agency</field> <!-- Reference to the model of the form -->
@@ -41,12 +61,15 @@
         <field name="view_mode">tree,form</field> <!-- Display mode of the view -->
     </record>
 
-<!--    <record id="action_customer" model="ir.actions.act_window">-->
-<!--        <field name="name">Travel Customer</field>-->
-<!--        <field name="type">ir.actions.act_window</field>-->
-<!--        <field name="res_model">travel.customer_details</field>-->
-<!--        <field name="view_mode">tree,form</field>-->
-<!--        <field name="target">current</field>-->
-<!--        <field name="context">{'customer_ids': active_id}</field>-->
-<!--    </record>-->
+
+    <!--    <record id="action_customer" model="ir.actions.act_window">-->
+    <!--        <field name="name">Travel Customer</field>-->
+    <!--        <field name="type">ir.actions.act_window</field>-->
+    <!--        <field name="res_model">travel.customer_details</field>-->
+    <!--        <field name="view_mode">tree,form</field>-->
+    <!--        <field name="target">current</field>-->
+    <!--        <field name="context">{'customer_ids': active_id}</field>-->
+    <!--    </record>-->
+
+
 </odoo>

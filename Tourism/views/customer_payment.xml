@@ -9,8 +9,6 @@
                 <field name="customer_id"/>
                 <field name="itinerary_id"/>
                 <field name="agency_id"/>
-                <field name="booking_id"/>
-                <field name="payment_number"/>
                 <field name="amount"/>
                 <field name="payment_method"/>
                 <field name="payment_status"/>
@@ -32,6 +30,14 @@
                             type="action"
                             attrs="{'invisible': [('state', '!=', 'payment')]}"
                     />
+
+                    <button name="%(Tourism.action_back_customer)d"
+                            string="Back to Customer"
+                            title="Customer"
+                            class="oe_highlight"
+                            type="action"
+                            attrs="{'invisible': [('state', '!=', 'payment')]}"
+                    />
                     <field name="state" widget="statusbar" statusbar_visible="customer,payment,booking,invoice"/>
                 </header>
                 <sheet>
@@ -39,14 +45,12 @@
                         <group>
                             <field name="payment_seq" readonly="1"/>
                             <field name="customer_id"/>
+                        </group>
+                        <group>
                             <field name="itinerary_id"/>
-                        </group>
-                        <group>
                             <field name="agency_id"/>
-                            <field name="booking_id"/>
                         </group>
                         <group>
-                            <field name="payment_number"/>
                             <field name="payment_date"/>
                             <field name="amount"/>
                         </group>

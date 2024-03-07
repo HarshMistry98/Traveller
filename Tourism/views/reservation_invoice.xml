@@ -6,7 +6,6 @@
         <field name="arch" type="xml">
             <tree>
                 <field name="invoice_seq"/>
-                <field name="invoice_number"/>
                 <field name="customer_id"/>
                 <field name="itinerary_id"/>
                 <field name="agency_id"/>
@@ -36,6 +35,14 @@
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'invoice')]}"
 
+                    />
+
+                    <button name="%(Tourism.action_back_booking)d"
+                            string="Back to Booking"
+                            title="Booking"
+                            class="oe_highlight"
+                            type="action"
+                            attrs="{'invisible': [('state', '!=', 'payment')]}"
                     />
                     <field name="state" widget="statusbar" statusbar_visible="customer,payment,booking,invoice"/>
                 </header>

@@ -66,13 +66,11 @@ class travel_itinerary(models.Model):
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
-        # print(":?????????", self, default)
         # if default:
         #     default.update({"hotel_name": self.hotel_name + "(Copy)"})
         # else:
         #     default = {"hotel_name": self.hotel_name + "(Copy)"}
         res = super(travel_itinerary, self).copy(default=default)
-        print(">>>>>", res)
         res.itinerary_name = self.itinerary_name + "(Copy)"
         return res
 

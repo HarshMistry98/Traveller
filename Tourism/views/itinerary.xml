@@ -110,9 +110,6 @@
         </field>
     </record>
 
-
-
-
     <record id="action_travel_itinerary" model="ir.actions.act_window">
         <field name="name">Travel Itinerary</field>
         <field name="res_model">travel.itinerary</field> <!-- Reference to the model of the form -->

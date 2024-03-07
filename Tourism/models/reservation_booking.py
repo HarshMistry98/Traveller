@@ -5,11 +5,10 @@ from odoo.exceptions import UserError
 class travel_reservation_booking(models.Model):
     _name = 'travel.reservation_booking'
     _description = 'All details regarding reservation booking is shown here'
-    _rec_name = "booking_number"
+    _rec_name = "booking_seq"
 
     booking_seq = fields.Char(string='Booking Sequence')
 
-    booking_number = fields.Integer(string="Booking Number")
     customer_id = fields.Many2one(comodel_name="travel.customer_details", string="Customer")
     itinerary_id = fields.Many2one(comodel_name="travel.itinerary", string="Itinerary", domain="[('customer_ids','=',customer_id)]")
     agency_id = fields.Many2one(comodel_name="travel.agency", string="Agency",domain="[('itinerary_ids', '=', itinerary_id)]")
@@ -27,7 +26,6 @@ class travel_reservation_booking(models.Model):
         return records
 
     def write(self, vals):
-        print(">>>>>>>0", vals)
         if not self.booking_seq:
             seq = self.env['ir.sequence'].next_by_code('travel.reservation.booking.seq')
             vals.update({
