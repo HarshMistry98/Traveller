@@ -23,20 +23,26 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
+                    <div class="oe_title">
+                        <h4>
+                            <field name="discount_seq" readonly="1"/>
+                        </h4>
+                        <h1>
+                            <field name="discount_description" placeholder="Itinerary Name"/>
+                        </h1>
+                    </div>
                     <group>
-                        <group>
-                            <field name="discount_seq" readonly="0"/>
+                        <group string="Itinerary">
                             <field name="itinerary_id"/>
                             <field name="agency_id"/>
                         </group>
-                        <group>
-                            <field name="discount_description"/>
+                        <group string="Discount">
                             <field name="discount_percentage"/>
+                            <field name="discount_terms_and_conditions"/>
                         </group>
-                        <group>
+                        <group string="Validity">
                             <field name="validity_date"/>
                             <field name="validity_days" readonly="False"/>
-                            <field name="discount_terms_and_conditions"/>
                         </group>
                     </group>
                 </sheet>

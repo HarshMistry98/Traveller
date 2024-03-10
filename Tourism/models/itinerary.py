@@ -84,4 +84,18 @@ class travel_itinerary(models.Model):
         for record in self:
             record.customer_count = len(record.customer_ids)
 
+    def action_agency(self):
+        agency_action = self.env.ref('Tourism.action_travel_agency').read()[0]
+        agency_action.update({
+            'domain': [('itinerary_ids', '=', self.id)],
+        })
+        return agency_action
+
+    def action_customer(self):
+        agency_action = self.env.ref('Tourism.action_travel_customer_details').read()[0]
+        agency_action.update({
+            'domain': [('itinerary_id', '=', self.id)],
+        })
+        return agency_action
+
 

@@ -6,8 +6,8 @@ from odoo import models, fields, api
 class travel_customer_details(models.Model):
     _name = 'travel.customer_details'
     _description = 'All customer details booked with our organizations.'
-    _rec_name = "first_name"
-    _rec_names_search = ['first_name','last_name','email']
+    _rec_name = "customer_seq"
+    _rec_names_search = ['first_name', 'last_name', 'email']
 
     customer_seq = fields.Char(string='Customer Sequence')
 
@@ -28,7 +28,6 @@ class travel_customer_details(models.Model):
     country_id = fields.Many2one('res.country', string='Country')
     state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=', country_id)]")
 
-
     @api.onchange('country_id')
     def onchange_country_id(self):
         """Update the state dropdown based on the selected country."""
@@ -44,7 +43,6 @@ class travel_customer_details(models.Model):
             return {'domain': {'city_id': [('state_id', '=', self.state_id.id)]}}
         else:
             return {'domain': {'city_id': []}}
-
 
     def next_payment(self):
         self.state = "payment"
@@ -70,8 +68,16 @@ class travel_customer_details(models.Model):
         res = []
         for pays in self:
             if pays.first_name and pays.last_name:
-                name = pays.first_name + " " + pays.last_name
+                name = pays.customer_seq + " " + pays.first_name + " " + pays.last_name
             else:
                 name = "--No name available--"
             res.append((pays.id, name))
         return res
+
+    # @api.multi
+    def action_view_customer_payment(self):
+        customer_payment_action = self.env.ref('Tourism.action_travel_customer_payment').read()[0]
+        customer_payment_action.update({
+            'domain': [('customer_id', '=', self.id)],
+        })
+        return customer_payment_action

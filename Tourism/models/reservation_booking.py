@@ -40,6 +40,14 @@ class travel_reservation_booking(models.Model):
         return super(travel_reservation_booking, self).unlink()
 
 
+    def action_view_invoice(self):
+        invoice_action = self.env.ref('Tourism.action_travel_reservation_invoice').read()[0]
+        invoice_action.update({
+            'domain': [('customer_id', '=', self.id)],
+        })
+        return invoice_action
+
+
     # @api.onchange("customer_id")
     # def set_itinerary(self):
     #     for record in self:

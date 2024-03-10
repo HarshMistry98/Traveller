@@ -24,8 +24,9 @@
             <form>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button name="%(Tourism.action_itinerary)d"
-                                type="action"
+
+                        <button name="action_itinerary"
+                                type="object"
                                 class="oe_stat_button"
                                 icon="fa-users">
                             <field string="Itinerary" name="itinerary_count" widget="statinfo"/>

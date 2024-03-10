@@ -22,7 +22,9 @@ class travel_customer_payment(models.Model):
         ('paid', 'Paid'),
         ('unpaid', 'Unpaid'),
     ], string="Payment Status", default="unpaid")
-    state = fields.Selection([('customer', "Customer"), ('payment', "Payment"), ('booking', "Booking"), ('invoice', "Invoice")], default="payment")
+    state = fields.Selection(
+        [('customer', "Customer"), ('payment', "Payment"), ('booking', "Booking"), ('invoice', "Invoice")],
+        default="payment")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -41,6 +43,9 @@ class travel_customer_payment(models.Model):
         res = super(travel_customer_payment, self).write(vals)
         return res
 
-
-
-
+    def action_view_booking(self):
+        booking_action = self.env.ref('Tourism.action_travel_reservation_booking').read()[0]
+        booking_action.update({
+            'domain': [('customer_id', '=', self.id)],
+        })
+        return booking_action

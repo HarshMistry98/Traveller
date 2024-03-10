@@ -25,12 +25,11 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="%(Tourism.action_customer_payment)d"
+                    <button name="action_view_customer_payment"
                             string="Go to Payment"
-                            title="Payment"
                             class="oe_highlight"
-                            type="action"
-                            attrs="{'invisible': [('state', '!=', 'customer')]}"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'customer')], 'target': 'main'}"
                     />
                     <field name="state" widget="statusbar" statusbar_visible="customer,payment,booking,invoice"/>
                 </header>
