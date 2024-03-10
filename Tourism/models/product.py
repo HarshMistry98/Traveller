@@ -26,7 +26,7 @@ class TravelProduct(models.Model):
                       (False, 'form')],
             'res_model': 'product.pricelist.item',
             'type': 'ir.actions.act_window',
-            'target': 'current',
+                'target': 'current',
             'domain': domain,
             'context': {
                 'default_product_id': self.id,

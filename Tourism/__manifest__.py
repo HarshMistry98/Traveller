@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Tourism",
 
@@ -19,7 +18,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','sale'],
+    'depends': ['base', 'sale'],
     # always loaded
     'data': [
         'security/ir.model.access.csv',
@@ -30,6 +29,7 @@
         'views/customer_details.xml',
         'views/customer_payment.xml',
         'views/customer_feedback.xml',
+        'views/product.xml',
         'views/transportation_flight.xml',
         'views/transportation_railway.xml',
         'views/transportation_road.xml',
@@ -37,10 +37,11 @@
         'views/reservation_booking.xml',
         'views/reservation_invoice.xml',
         'views/invoice.xml',
-        'views/product.xml',
+
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
 }
+# -*- coding: utf-8 -*-
