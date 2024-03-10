@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from . import wizards
 from . import itinerary
 from . import agency
 from . import customer_details

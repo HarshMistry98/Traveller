@@ -22,7 +22,12 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+
         'data/ir_sequence.xml',
+
+        'views/wizards/transportation_select.xml',
+        'views/wizards/travel_flight_wizard_views.xml',
+
         'views/actions.xml',
         'views/itinerary.xml',
         'views/agency.xml',

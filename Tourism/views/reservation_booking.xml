@@ -1,20 +1,5 @@
 <odoo>
 
-    <record id="travel_reservation_booking_tree_view" model="ir.ui.view">
-        <field name="name">travel.reservation.booking.tree.view</field>
-        <field name="model">travel.reservation_booking</field>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="booking_seq"/>
-                <field name="customer_id"/>
-                <field name="itinerary_id"/>
-                <field name="agency_id"/>
-                <field name="payment_id"/>
-                <field name="discount_id"/>
-            </tree>
-        </field>
-    </record>
-
     <record id="travel_reservation_booking_form_view" model="ir.ui.view">
         <field name="name">travel.reservation.booking.form.view</field>
         <field name="model">travel.reservation_booking</field>
@@ -51,10 +36,29 @@
                         <group string="Discount">
                             <field name="discount_id"/>
                         </group>
+                        <group>
+                            <button string="Select Transportation" type="object" class="oe_highlight"
+                                    name="action_select_transportation"/>
+                        </group>
 
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="travel_reservation_booking_tree_view" model="ir.ui.view">
+        <field name="name">travel.reservation.booking.tree.view</field>
+        <field name="model">travel.reservation_booking</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="booking_seq"/>
+                <field name="customer_id"/>
+                <field name="itinerary_id"/>
+                <field name="agency_id"/>
+                <field name="payment_id"/>
+                <field name="discount_id"/>
+            </tree>
         </field>
     </record>
 

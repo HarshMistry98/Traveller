@@ -5,12 +5,13 @@
         <field name="model">travel.transportation_road</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="road_seq"/>
                 <field name="from_city"/>
                 <field name="to_city"/>
                 <field name="date"/>
                 <field name="travellers_adult"/>
-                <field name="travellers_child"/>
-                <field name="travellers_handicapped"/>
+                <field name="price"/>
+
             </tree>
         </field>
     </record>
@@ -23,6 +24,7 @@
                 <sheet>
                     <group>
                         <group>
+                            <field name="road_seq"/>
                             <field name="from_city"/>
                             <field name="to_city"/>
                         </group>
@@ -31,8 +33,7 @@
                             <field name="travellers_adult"/>
                         </group>
                         <group>
-                            <field name="travellers_child"/>
-                            <field name="travellers_handicapped"/>
+                            <field name="price"/>
                         </group>
                     </group>
                 </sheet>
@@ -47,7 +48,8 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_transportation_road" name="Road" parent="menu_transportation" action="action_travel_transportation_road"
+    <menuitem id="menu_transportation_road" name="Road" parent="menu_transportation"
+              action="action_travel_transportation_road"
               sequence="3"/>
 
 </odoo>

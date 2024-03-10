@@ -6,7 +6,7 @@ class travel_transportation_flight(models.Model):
     _description = 'All details regarding flights are shown here'
     _rec_name = "flight_seq"
 
-    flight_seq = fields.Char(string='Itinerary Sequence')
+    flight_seq = fields.Char(string='Flight Sequence')
 
     from_city = fields.Char(string="From City")
     to_city = fields.Char(string="To City")

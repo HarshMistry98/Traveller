@@ -47,6 +47,16 @@ class travel_reservation_booking(models.Model):
         })
         return invoice_action
 
+    def action_select_transportation(self):
+        return {
+            'name': 'Transportation Selection',
+            'type': 'ir.actions.act_window',
+            'res_model': 'travel.transportation.selection',
+            'view_mode': 'form',
+            'view_id': self.env.ref('Tourism.view_transportation_selection_form').id,
+            'target': 'new',
+        }
+
 
     # @api.onchange("customer_id")
     # def set_itinerary(self):
