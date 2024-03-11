@@ -19,7 +19,13 @@ class travel_itinerary(models.Model):
 
     itinerary_name = fields.Char(string='Itinerary')
     persons = fields.Integer(string='Persons')
-    price = fields.Integer(string='Price')
+    # price = fields.Integer(string='Price')
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency',
+        readonly=True,
+        default=lambda self: self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
+    )
+    price = fields.Monetary("Price", "currency_id")
     days = fields.Integer(string='Days')
     nights = fields.Integer(string='Nights')
     date_availability = fields.Date(string='Date Availability')
@@ -92,6 +98,8 @@ class travel_itinerary(models.Model):
         return agency_action
 
     def action_customer(self):
+        print(self.env.ref('Tourism.action_travel_customer_details').read())
+
         agency_action = self.env.ref('Tourism.action_travel_customer_details').read()[0]
         agency_action.update({
             'domain': [('itinerary_id', '=', self.id)],

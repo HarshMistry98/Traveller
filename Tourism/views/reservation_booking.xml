@@ -29,18 +29,39 @@
                         <group string="Itinerary">
                             <field name="itinerary_id"/>
                             <field name="agency_id"/>
-                        </group>
-                        <group string="Payment">
-                            <field name="payment_id"/>
-                        </group>
-                        <group string="Discount">
                             <field name="discount_id"/>
+                            <field name="it_amount"/>
                         </group>
-                        <group>
-                            <button string="Select Transportation" type="object" class="oe_highlight"
-                                    name="action_select_transportation"/>
-                        </group>
+                        <group string="Transportation">
+                            <group>
+                                <button string="Select Transportation" type="object" class="oe_highlight"
+                                        name="action_select_transportation"/>
+                            </group>
+                            <group>
+                                <!-- Radio button to choose transportation mode -->
 
+                                <field name="mode_of_transport" widget="radio"/>
+                            </group>
+                            <group>
+                                <field name="flight_transport_id"
+                                       attrs="{'invisible': [('mode_of_transport', '!=', 'flight')]}"/>
+                                <field name="railway_transport_id"
+                                       attrs="{'invisible': [('mode_of_transport', '!=', 'railway')]}"/>
+                                <field name="road_transport_id"
+                                       attrs="{'invisible': [('mode_of_transport', '!=', 'road')]}"/>
+
+                                <field name="flight_tp_amount"
+                                       attrs="{'invisible': [('mode_of_transport', '!=', 'flight')]}"/>
+                                <field name="railway_tp_amount"
+                                       attrs="{'invisible': [('mode_of_transport', '!=', 'railway')]}"/>
+                                <field name="road_tp_amount"
+                                       attrs="{'invisible': [('mode_of_transport', '!=', 'road')]}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <group string="Payment">
+                        <field name="total_amount"/>
+                        <field name="payment_id"/>
                     </group>
                 </sheet>
             </form>
@@ -55,9 +76,13 @@
                 <field name="booking_seq"/>
                 <field name="customer_id"/>
                 <field name="itinerary_id"/>
+                <field name="it_amount"/>
                 <field name="agency_id"/>
                 <field name="payment_id"/>
                 <field name="discount_id"/>
+                <!--                <field name="transport_id"/>-->
+                <!--                <field name="tp_amount"/>-->
+                <field name="total_amount"/>
             </tree>
         </field>
     </record>

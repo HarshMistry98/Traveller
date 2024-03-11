@@ -49,6 +49,12 @@
         <field name="view_mode">tree,form</field>
     </record>
 
+    <record id="action_travel_transportation_flight_form" model="ir.actions.act_window">
+        <field name="name">Travel Transportation Flight</field>
+        <field name="res_model">travel.transportation_flight</field>
+        <field name="view_mode">form</field>
+    </record>
+
     <menuitem id="menu_transportation" name="Transportation" parent="menu_configuration_root" sequence="2"/>
 
     <menuitem id="menu_transportation_flight" name="Flight" parent="menu_transportation"

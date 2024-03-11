@@ -77,7 +77,20 @@ class travel_customer_details(models.Model):
     # @api.multi
     def action_view_customer_payment(self):
         customer_payment_action = self.env.ref('Tourism.action_travel_customer_payment').read()[0]
+
         customer_payment_action.update({
             'domain': [('customer_id', '=', self.id)],
+            'view_mode': 'form',
         })
+
+        # if len(self) == 1:  # Check if there's only one record selected
+        #     customer_payment_action.update({
+        #         'view_mode': 'form',
+        #         'res_id': self.id,
+        #     })
+        # else:
+        #     customer_payment_action.update({
+        #         'view_mode': 'form',
+        #     })
+        print(customer_payment_action)
         return customer_payment_action

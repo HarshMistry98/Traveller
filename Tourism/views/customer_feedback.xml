@@ -9,7 +9,7 @@
                 <field name="itinerary_id"/>
                 <field name="booking_id"/>
                 <field name="suggestions"/>
-                <field name="satisfaction"/>
+                <field name="rating"/>
             </tree>
         </field>
     </record>
@@ -26,7 +26,7 @@
                             <field name="itinerary_id"/>
                             <field name="booking_id"/>
                             <field name="suggestions"/>
-                            <field name="satisfaction"/>
+                            <field name="rating" widget="priority"/>
                         </group>
                     </group>
                 </sheet>

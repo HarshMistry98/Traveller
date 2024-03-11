@@ -6,6 +6,7 @@ from . import agency
 from . import customer_details
 from . import customer_payment
 from . import customer_feedback
+from . import transport_abstract
 from . import transportation_flight
 from . import transportation_railway
 from . import transportation_road

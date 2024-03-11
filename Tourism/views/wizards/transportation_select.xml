@@ -7,9 +7,7 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field name="flight_selected"/>
-                    <field name="railway_selected"/>
-                    <field name="road_selected"/>
+                    <field name="mode_of_transport" widget="radio"/>
                 </group>
                 <footer>
                     <button string="Confirm" type="object" class="oe_highlight" name="action_confirm"/>
@@ -18,4 +16,14 @@
             </form>
         </field>
     </record>
+
+<!--    <record id="action_travel_transportation_flight_form" model="ir.actions.act_window">-->
+<!--        <field name="name">Flight Transportation Form</field>-->
+<!--        <field name="res_model">your.res.model.name</field>-->
+<!--        <field name="view_mode">form</field>-->
+<!--        <field name="view_id" ref="travel.transportation.flight.form.view"/>-->
+<!--        &lt;!&ndash; Replace 'your.res.model.name' and 'your_module.view_transportation_flight_form' with appropriate values &ndash;&gt;-->
+<!--        <field name="target">current</field>-->
+<!--    </record>-->
+
 </odoo>

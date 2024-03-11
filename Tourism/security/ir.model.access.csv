@@ -12,4 +12,4 @@ Tourism.access_travel_reservation_booking,access_travel_reservation_booking,Tour
 Tourism.access_travel_reservation_invoice,access_travel_reservation_invoice,Tourism.model_travel_reservation_invoice,base.group_user,1,1,1,1
 Tourism.access_travel_product,access_travel_product,Tourism.model_travel_product,base.group_user,1,1,1,1
 Tourism.access_travel_transportation_selection,access_travel_transportation_selection,Tourism.model_travel_transportation_selection,base.group_user,1,1,1,1
-Tourism.access_travel_flight_wizard,access_travel_flight_wizard,Tourism.model_travel_flight_wizard,base.group_user,1,1,1,1
+Tourism.access_travel_transport,access_travel_transport,Tourism.model_travel_transport,base.group_user,1,1,1,1

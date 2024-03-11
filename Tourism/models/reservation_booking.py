@@ -16,6 +16,30 @@ class travel_reservation_booking(models.Model):
     discount_id = fields.Many2one(comodel_name="travel.offer_discount", string="Discount")
     state = fields.Selection([('customer', "Customer"), ('payment', "Payment"), ('booking', "Booking"), ('invoice', "Invoice")], default="booking")
 
+    flight_transport_id = fields.Many2one("travel.transportation_flight", "Transport")
+    railway_transport_id = fields.Many2one("travel.transportation_railway", "Transport")
+    road_transport_id = fields.Many2one("travel.transportation_road", "Transport")
+
+    currency_id = fields.Many2one(
+        'res.currency', string='Currency',
+        readonly=True,
+        default=lambda self: self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
+    )
+    it_amount = fields.Monetary(currency_field='currency_id',compute="_compute_it_amount", string='Itinerary Amt.')
+
+    flight_tp_amount = fields.Monetary(currency_field='currency_id', related="flight_transport_id.price", string='Transport Amt.', defaulrt=0)
+    railway_tp_amount = fields.Monetary(currency_field='currency_id', related="railway_transport_id.price", string='Transport Amt.')
+    road_tp_amount = fields.Monetary(currency_field='currency_id', related="road_transport_id.price", string='Transport Amt.')
+
+    total_amount = fields.Monetary(currency_field='currency_id',string='Total Amount', store=1)
+
+    mode_of_transport = fields.Selection([
+        ('flight', 'Flight'),
+        ('railway', 'Railway'),
+        ('road', 'Road')
+    ], string='Mode of Transport', default="flight")
+
+    # mode_of_transport = fields.Char("Mode")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -33,12 +57,27 @@ class travel_reservation_booking(models.Model):
             })
         res = super(travel_reservation_booking, self).write(vals)
         return res
-    
+
     def unlink(self):
         if self.payment_id:
             raise UserError("You can't unlink this record")
         return super(travel_reservation_booking, self).unlink()
 
+    @api.depends('itinerary_id', 'discount_id')
+    def _compute_it_amount(self):
+        for record in self:
+            if record.itinerary_id and record.discount_id:
+                price = record.itinerary_id.price
+                discount_percentage = record.discount_id.discount_percentage
+                discounted_price = price - (price * discount_percentage / 100)
+                record.it_amount = discounted_price
+            else:
+                record.it_amount = record.itinerary_id.price
+
+    @api.onchange('flight_tp_amount', "it_amount")
+    def _compute_total_amount(self):
+        for record in self:
+            record.total_amount = record.it_amount + record.flight_tp_amount
 
     def action_view_invoice(self):
         invoice_action = self.env.ref('Tourism.action_travel_reservation_invoice').read()[0]
@@ -56,6 +95,7 @@ class travel_reservation_booking(models.Model):
             'view_id': self.env.ref('Tourism.view_transportation_selection_form').id,
             'target': 'new',
         }
+
 
 
     # @api.onchange("customer_id")
