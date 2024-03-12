@@ -28,7 +28,6 @@
 <!--                <field name="agency_id"/>-->
             <field name="contact">9999999999</field>
             <field name="email">ankit@google.com</field>
-            <field name="email" ref="agency_data1_id"/>
         </record>
     </data>
 </odoo>
