@@ -1,5 +1,5 @@
 <odoo>
-    <data noupdate="0">
+    <data noupdate="1">
         <record id="itinerary_data1_id" model="travel.itinerary">
             <field name="itinerary_name">Manali Retreat</field>
             <field name="persons">16</field>
@@ -11,7 +11,7 @@
         </record>
     </data>
 
-    <data noupdate="0">
+    <data noupdate="1">
         <record id="agency_data1_id" model="travel.agency">
             <field name="agency_name">Skylink Tours</field>
             <field name="commission">40000</field>
@@ -20,7 +20,7 @@
         </record>
     </data>
 
-    <data noupdate="0">
+    <data noupdate="1">
         <record id="customer_detail_data1_id" model="travel.customer_details">
             <field name="first_name">Ankit</field>
             <field name="last_name">Maheshwari</field>
