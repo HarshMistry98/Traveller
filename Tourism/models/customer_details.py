@@ -9,10 +9,10 @@ class travel_customer_details(models.Model):
     _description = 'All customer details booked with our organizations.'
     _rec_name = "customer_seq"
     _rec_names_search = ['first_name', 'last_name', 'email']
-    _sql_constraints = [
-        ('check_contact_length', "CHECK (LENGTH(contact) != 10)","Mobile number must be of length 10"),
-        ('check_contact_numeric', "CHECK (contact ~ '^[0-9]+$')", "Mobile number must contain only numeric digits"),
-    ]
+    # _sql_constraints = [
+    #     ('check_contact_length', "CHECK (LENGTH(contact) != 10)","Mobile number must be of length 10"),
+    #     ('check_contact_numeric', "CHECK (contact ~ '^[0-9]+$')", "Mobile number must contain only numeric digits"),
+    # ]
 
 
 
