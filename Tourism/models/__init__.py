@@ -15,3 +15,4 @@ from . import reservation_booking
 from . import reservation_invoice
 from . import invoice
 from . import product
+from . import res_config

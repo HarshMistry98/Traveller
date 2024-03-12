@@ -27,7 +27,7 @@ class travel_reservation_booking(models.Model):
     )
     it_amount = fields.Monetary(currency_field='currency_id',compute="_compute_it_amount", string='Itinerary Amt.')
 
-    flight_tp_amount = fields.Monetary(currency_field='currency_id', related="flight_transport_id.price", string='Transport Amt.', defaulrt=0)
+    flight_tp_amount = fields.Monetary(currency_field='currency_id', related="flight_transport_id.price", string='Transport Amt.', default=0)
     railway_tp_amount = fields.Monetary(currency_field='currency_id', related="railway_transport_id.price", string='Transport Amt.')
     road_tp_amount = fields.Monetary(currency_field='currency_id', related="road_transport_id.price", string='Transport Amt.')
 

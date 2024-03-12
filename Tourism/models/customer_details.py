@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError
 
 
 class travel_customer_details(models.Model):
@@ -8,6 +9,12 @@ class travel_customer_details(models.Model):
     _description = 'All customer details booked with our organizations.'
     _rec_name = "customer_seq"
     _rec_names_search = ['first_name', 'last_name', 'email']
+    _sql_constraints = [
+        ('check_contact_length', "CHECK (LENGTH(contact) != 10)","Mobile number must be of length 10"),
+        ('check_contact_numeric', "CHECK (contact ~ '^[0-9]+$')", "Mobile number must contain only numeric digits"),
+    ]
+
+
 
     customer_seq = fields.Char(string='Customer Sequence')
 
@@ -28,6 +35,11 @@ class travel_customer_details(models.Model):
     country_id = fields.Many2one('res.country', string='Country')
     state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=', country_id)]")
 
+    # @api.constrains("contact")
+    # def contact_10_digit(self):
+    #     for rec in self:
+    #         if not (len(rec.contact)==10 and rec.contact.isnumeric()):
+    #             raise ValidationError("Enter a valid 10 digit contact number")
     @api.onchange('country_id')
     def onchange_country_id(self):
         """Update the state dropdown based on the selected country."""

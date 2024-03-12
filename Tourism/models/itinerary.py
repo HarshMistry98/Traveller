@@ -7,12 +7,13 @@ class travel_itinerary(models.Model):
     _name = 'travel.itinerary'
     _description = 'All itinerary details will be shown here'
     _rec_name = "itinerary_name"
+    _inherit = 'mail.thread'
 
     # Other fields in your model...
 
     agency_ids = fields.Many2many(comodel_name="travel.agency", string="Agency")
     customer_ids = fields.One2many(comodel_name="travel.customer_details", inverse_name="itinerary_id",
-                                   string="Customers")
+                                   string="Customers", tracking=1)
     # agency_ids = fields.One2many(comodel_name="travel.agency", inverse_name="itinerary_id", string="Agencies")
 
     itinerary_seq = fields.Char(string='Itinerary Sequence')
@@ -29,7 +30,7 @@ class travel_itinerary(models.Model):
     days = fields.Integer(string='Days')
     nights = fields.Integer(string='Nights')
     date_availability = fields.Date(string='Date Availability')
-    active = fields.Boolean(string='Active')
+    is_active = fields.Boolean(string='Active', tracking=1)
 
     agency_count = fields.Integer(compute="_compute_agency_count")
     customer_count = fields.Integer(compute="_compute_customer_count")

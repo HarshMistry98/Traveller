@@ -1,0 +1,34 @@
+<odoo>
+    <data noupdate="0">
+        <record id="itinerary_data1_id" model="travel.itinerary">
+            <field name="itinerary_name">Manali Retreat</field>
+            <field name="persons">16</field>
+            <field name="price">12500</field>
+            <field name="date_availability">2024-04-05</field>
+            <field name="days">7</field>
+            <field name="nights">6</field>
+            <field name="is_active">True</field>
+        </record>
+    </data>
+
+    <data noupdate="0">
+        <record id="agency_data1_id" model="travel.agency">
+            <field name="agency_name">Skylink Tours</field>
+            <field name="commission">40000</field>
+            <field name="ratings">5</field>
+            <field name="contact">9696969696</field>
+        </record>
+    </data>
+
+    <data noupdate="0">
+        <record id="customer_detail_data1_id" model="travel.customer_details">
+            <field name="first_name">Ankit</field>
+            <field name="last_name">Maheshwari</field>
+<!--                <field name="itinerary_id"/>-->
+<!--                <field name="agency_id"/>-->
+            <field name="contact">9999999999</field>
+            <field name="email">ankit@google.com</field>
+            <field name="email" ref="agency_data1_id"/>
+        </record>
+    </data>
+</odoo>

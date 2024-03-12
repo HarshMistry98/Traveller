@@ -15,7 +15,7 @@ class travel_transportation_flight(models.Model):
         ('economy_class', 'Economy Class'),
     ], string="Flight Class")
 
-    price = fields.Monetary("Price", "currency_id",compute="_compute_price")
+    price = fields.Monetary("Price", "currency_id",compute="_compute_price", default=0)
 
 
     @api.model_create_multi
@@ -38,12 +38,12 @@ class travel_transportation_flight(models.Model):
     @api.depends("travellers_adult", "flight_class")
     def _compute_price(self):
         for record in self:
+            fare = 0
             if record.flight_class:
-                fare = 0
                 if record.flight_class == "business_class":
                     fare = 7000 * record.travellers_adult
                 if record.flight_class == "first_class":
                     fare = 5000 * record.travellers_adult
                 if record.flight_class == "economy_class":
                     fare = 3000 * record.travellers_adult
-                record.price = fare
+            record.price = fare

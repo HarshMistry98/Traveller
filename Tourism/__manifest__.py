@@ -24,6 +24,7 @@
         'security/ir.model.access.csv',
 
         'data/ir_sequence.xml',
+        'data/travel_data.xml',
 
         'views/wizards/transportation_select.xml',
 
@@ -41,6 +42,7 @@
         'views/reservation_booking.xml',
         'views/reservation_invoice.xml',
         'views/invoice.xml',
+        'views/res_config.xml',
 
     ],
     # only loaded in demonstration mode
