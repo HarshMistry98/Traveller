@@ -16,7 +16,7 @@
             <field name="agency_name">Skylink Tours</field>
             <field name="commission">40000</field>
             <field name="ratings">5</field>
-            <field name="contact">9696969696</field>
+            <field name="contact">987654321</field>
         </record>
     </data>
 
@@ -26,7 +26,7 @@
             <field name="last_name">Maheshwari</field>
 <!--                <field name="itinerary_id"/>-->
 <!--                <field name="agency_id"/>-->
-            <field name="contact">9999999999</field>
+            <field name="contact">9876543210</field>
             <field name="email">ankit@google.com</field>
         </record>
     </data>
