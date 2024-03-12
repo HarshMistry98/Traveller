@@ -8,9 +8,9 @@
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Hotel" string="Hotel" data-key="hotel">
-                        <h2>Hotel</h2>
-                        <div class="row mt16 o_settings_container" name="hotel_setting_container">
+                    <div class="app_settings_block" data-string="Tourism" string="Tourism" data-key="Tourism">
+                        <h2>Tourism</h2>
+                        <div class="row mt16 o_settings_container" name="Tourism_setting_container">
                             <div class="col-12 col-lg-6 o_setting_box"
                                 id="manage_tracks"
                                 title="Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc.">
@@ -50,7 +50,7 @@
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
-            <field name="context">{'module' : 'hotel'}</field>
+            <field name="context">{'module' : 'Tourism'}</field>
         </record>
 
         <menuitem id="menu_hotel_global_settings" name="Settings"
