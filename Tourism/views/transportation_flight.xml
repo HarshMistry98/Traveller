@@ -57,6 +57,9 @@
 
     <menuitem id="menu_transportation" name="Transportation" parent="menu_configuration_root" sequence="2"/>
 
+<!--    <menuitem id="menu_transportation" name="Transportation" parent="menu_configuration_root" sequence="2"-->
+<!--                attrs="{'invisible': [('env[res.company].need_transport','=',False)]}"/>-->
+
     <menuitem id="menu_transportation_flight" name="Flight" parent="menu_transportation"
               action="action_travel_transportation_flight"
               sequence="1"/>

@@ -22,6 +22,7 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'security/security_groups.xml',
 
         'data/ir_sequence.xml',
         'data/travel_data.xml',
@@ -43,6 +44,7 @@
         'views/reservation_invoice.xml',
         'views/invoice.xml',
         'views/res_config.xml',
+        'views/demo.xml',
 
     ],
     # only loaded in demonstration mode

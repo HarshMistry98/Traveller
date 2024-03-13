@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="travel_category_group">
+            <field name="name">Tourism</field>
+            <field name="sequence">1</field>
+        </record>
+
+
+        <record id="group_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="comment">User Access</field>
+            <field name="category_id" ref="Tourism.travel_category_group"/>
+        </record>
+
+        <record id="group_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="comment">Manager Access</field>
+            <field name="category_id" ref="Tourism.travel_category_group"/>
+            <field name="implied_ids" eval="[(4, ref('Tourism.group_user'))]"/>
+        </record>
+
+        <record id="group_admin" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="comment">AdminAdmin Access</field>
+            <field name="category_id" ref="Tourism.travel_category_group"/>
+            <field name="implied_ids" eval="[(4, ref('Tourism.group_manager'))]"/>
+        </record>
+
+    </data>
+</odoo>

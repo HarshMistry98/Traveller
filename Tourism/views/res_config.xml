@@ -15,29 +15,17 @@
                                 id="manage_tracks"
                                 title="Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc.">
                                 <div class="o_setting_left_pane">
-                                    <field name="is_staff"/>
+                                    <field name="need_transport"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label string="Staff" for="is_staff"/>
+                                    <label string="Transport" for="need_transport"/>
                                     <div class="text-muted">
 
                                     </div>
                                 </div>
 
                             </div>
-                                <div class="col-12 col-lg-6 o_setting_box"
-                                id="manage_tracks"
-                                title="Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc.">
-                                     <div class="o_setting_left_pane">
-                                    <field name="is_department"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label string="is_department" for="is_department"/>
-                                    <div class="text-muted">
 
-                                    </div>
-                                </div>
-                                </div>
                         </div>
                     </div>
                 </xpath>

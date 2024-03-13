@@ -9,25 +9,36 @@
             <field name="nights">6</field>
             <field name="is_active">True</field>
         </record>
-    </data>
 
-    <data noupdate="1">
         <record id="agency_data1_id" model="travel.agency">
             <field name="agency_name">Skylink Tours</field>
             <field name="commission">40000</field>
             <field name="ratings">5</field>
             <field name="contact">987654321</field>
+            <field name="itinerary_ids" eval="[(4, ref('itinerary_data1_id'))]"/>
         </record>
-    </data>
 
-    <data noupdate="1">
+        <record id="itinerary_data1_id" model="travel.itinerary">
+            <field name="agency_ids" eval="[(4, ref('agency_data1_id'))]"/>
+        </record>
+
+
         <record id="customer_detail_data1_id" model="travel.customer_details">
             <field name="first_name">Ankit</field>
             <field name="last_name">Maheshwari</field>
-<!--                <field name="itinerary_id"/>-->
-<!--                <field name="agency_id"/>-->
+            <field name="itinerary_id" ref="Tourism.itinerary_data1_id"/>
+            <field name="agency_id" ref="Tourism.agency_data1_id"/>
             <field name="contact">9876543210</field>
             <field name="email">ankit@google.com</field>
+        </record>
+
+        <record id="offer_discount_data1_id" model="travel.offer_discount">
+            <field name="itinerary_id" ref="Tourism.itinerary_data1_id"/>
+            <field name="agency_id" ref="Tourism.agency_data1_id"/>
+            <field name="discount_description">Holi Offer</field>
+            <field name="discount_percentage">15</field>
+            <field name="validity_date">2024-03-25</field>
+            <field name="discount_terms_and_conditions">No condition</field>
         </record>
     </data>
 </odoo>

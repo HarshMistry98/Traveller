@@ -119,7 +119,7 @@
         <field name="view_mode">tree,form,calendar,graph</field> <!-- Display mode of the view -->
     </record>
 
-    <menuitem id="menu_travel_and_tourism_root" name="Travel and Tourism" sequence="1"/>
+    <menuitem id="menu_travel_and_tourism_root" name="Travel and Tourism" groups="Tourism.group_admin" sequence="1"/>
     <menuitem id="menu_itinerary" name="Itinerary" parent="menu_travel_and_tourism_root"
               action="action_travel_itinerary" sequence="1"/>
 
