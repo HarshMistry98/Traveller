@@ -1,0 +1,111 @@
+<odoo>
+    <record id="reservation_invoice_template" model="ir.actions.report">
+        <field name="name">Invoice</field>
+        <field name="model">travel.reservation_invoice</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">Tourism.reservation_invoice</field>
+        <field name="report_file">Tourism.reservation_invoice</field>
+        <field name="binding_model_id" ref="model_travel_reservation_invoice"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- Report Template -->
+    <template id="reservation_invoice_doc">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <!-- Header -->
+                    <div class="header">
+                        <h1>Reservation Invoice</h1>
+                        <h2 t-field="doc.invoice_seq"/>
+                    </div>
+
+                    <!-- Customer Information -->
+                    <div class="customer-info">
+                        <h4>Customer: <span t-field="doc.customer_id.customer_seq"/></h4>
+                        <p>
+                            <h5><span t-field="doc.customer_id.first_name"/> <span t-field="doc.customer_id.last_name"/></h5>
+                        </p>
+                    </div>
+
+                    <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                        <p>Booking ID:  <span t-field="doc.booking_id.booking_seq"/></p>
+                        <h5>
+                            <p>Payment ID:  <span t-field="doc.payment_id.payment_seq"/></p>
+                            <p>Payment Status:  <span t-field="doc.status"/></p>
+                        </h5>
+                    </div>
+
+                    <!-- Itinerary Details -->
+                    <div class="itinerary-details">
+                        <h5>Itinerary Details</h5>
+                        <table class="table table-sm o_main_table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Itinerary</th>
+                                    <th class="text-center">Agency</th>
+                                    <th class="text-center">Amount</th>
+                                    <th class="text-center">Discount</th>
+                                    <th class="text-center">Discount(%)</th>
+                                    <th class="text-center">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"><span t-field="doc.itinerary_id.itinerary_name"/></td>
+                                    <td class="text-center"><span t-field="doc.agency_id.agency_name"/></td>
+                                    <td class="text-center"><span t-field="doc.itinerary_id.price" class="text-end"/></td>
+                                    <td class="text-center"><span t-field="doc.discount_id.discount_description"/></td>
+                                    <td class="text-center"><span t-field="doc.discount_id.discount_percentage" class="text-end"/></td>
+                                    <td class="text-center"><span t-field="doc.it_amount" class="text-end"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Transportation Details -->
+                    <div class="transportation-details">
+                        <h5 >Transportation Details</h5>
+                        <table class="table table-sm o_main_table table-borderless">
+                            <thead >
+                                <tr>
+                                    <th class="text-center">From</th>
+                                    <th class="text-center">To</th>
+                                    <th class="text-center">Date</th>
+                                    <th class="text-center">Class</th>
+                                    <th class="text-center">Persons</th>
+                                    <th class="text-center">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="text-center"><span t-field="doc.transport_id.from_city"/></td>
+                                    <td class="text-center"><span t-field="doc.transport_id.to_city"/></td>
+                                    <td class="text-center"><span t-field="doc.transport_id.date"/></td>
+                                    <td class="text-center"><span t-field="doc.transport_id.flight_class"/></td>
+                                    <td class="text-center"><span t-field="doc.transport_id.travellers_adult"/></td>
+                                    <td class="text-center"><span t-field="doc.tp_amount" class="text-end"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Total Amount -->
+                    <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                        <h5>Total Amount:
+                            <span t-field="doc.total_amount"/>
+                        </h5>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <template id="reservation_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="Tourism.reservation_invoice_doc"/>
+            </t>
+        </t>
+    </template>
+</odoo>

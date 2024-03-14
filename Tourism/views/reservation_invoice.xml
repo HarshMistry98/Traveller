@@ -51,6 +51,7 @@
                         <group string="Itinerary">
                             <field name="itinerary_id"/>
                             <field name="agency_id"/>
+                            <field name="currency_id" invisible="1"/>
                             <field name="it_amount"/>
                         </group>
 

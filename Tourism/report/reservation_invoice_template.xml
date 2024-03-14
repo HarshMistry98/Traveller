@@ -1,0 +1,82 @@
+<odoo>
+    <record id="reservation_invoice_template" model="ir.actions.report">
+        <field name="name">Invoice</field>
+        <field name="model">travel.reservation_invoice</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">Tourism.reservation_invoice</field>
+        <field name="report_file">Tourism.reservation_invoice</field>
+        <field name="binding_model_id" ref="model_travel_reservation_invoice"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="reservation_invoice_doc">
+        <t t-call="web.external_layout">
+            <div class="page">
+                <div>
+                    <h2 class="">
+                        <span>Invoice: </span>
+                        <span t-field="o.invoice_seq"/>
+                    </h2>
+                </div>
+
+                <h5>Itinerary</h5>
+
+                <div>
+                    <table class="table table-sm o_main_table table-borderless" name="payment_slip">
+                        <thead>
+                            <tr>
+                                <th>Itinerary</th>
+                                <th>Agency</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center" t-out="o.itinerary_id.itinerary_name"/>
+                                <td class="text-center" t-out="o.agency_id.agency_name"/>
+                                <td class="text-center" t-out="o.it_amount"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h5>Transportation</h5>
+                <div>
+                    <table class="table table-sm o_main_table table-borderless" name="payment_slip">
+                        <thead>
+                            <tr>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Date</th>
+                                <th>Class</th>
+                                <th>Persons</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center" t-out="o.transport_id.from_city"/>
+                                <td class="text-center" t-out="o.transport_id.to_city"/>
+                                <td class="text-center" t-out="o.transport_id.date"/>
+                                <td class="text-center" t-out="o.transport_id.flight_class"/>
+                                <td class="text-center" t-out="o.transport_id.travellers_adult"/>
+                                <td class="text-center" t-out="o.tp_amount"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                    <strong>Discount (%) </strong><span t-field="o.discount_id.discount_percentage"/><strong>%</strong><br></br>
+                    <strong>Total: </strong><span t-field="o.total_amount"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="reservation_invoice">
+        <t t-foreach="docs" t-as="o"/>
+            <t t-call="web.html_container">
+                <t t-call="Tourism.reservation_invoice_doc"/>
+            </t>
+    </template>
+</odoo>

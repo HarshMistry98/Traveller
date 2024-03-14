@@ -46,6 +46,10 @@
         'views/res_config.xml',
         'views/demo.xml',
 
+        'report/customer_payment_slip.xml',
+        # 'report/reservation_invoice_template.xml',
+        'report/reservation_invoice_template1.xml',
+
     ],
     # only loaded in demonstration mode
     'demo': [

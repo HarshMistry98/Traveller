@@ -19,11 +19,7 @@ class travel_reservation_invoice(models.Model):
 
     discount_id = fields.Many2one(comodel_name="travel.offer_discount", string="Discount")
 
-    currency_id = fields.Many2one(
-        'res.currency', string='Currency',
-        readonly=True,
-        default=lambda self: self.env['res.currency'].search([('name', '=', 'INR')], limit=1)
-    )
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id, string='Currency')
     it_amount = fields.Monetary(currency_field='currency_id', compute='_compute_it_amount', string='Itinerary Amt.')
     tp_amount = fields.Monetary(currency_field='currency_id', compute='_compute_tp_amount', string='Transport Amt.')
     total_amount = fields.Float(string='Total Amount', store=1)

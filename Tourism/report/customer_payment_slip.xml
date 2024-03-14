@@ -1,0 +1,47 @@
+<odoo>
+    <record id="customer_payment_slip" model="ir.actions.report">
+        <field name="name">Payment</field>
+        <field name="model">travel.customer_payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">Tourism.customer_payment</field>
+        <field name="report_file">Tourism.customer_payment</field>
+        <field name="binding_model_id" ref="model_travel_customer_payment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="customer_payment_doc">
+        <t t-call="web.external_layout">
+            <div class="page">
+
+                <h2 class="mt-4">
+                    <span>Payment: </span>
+                    <span t-field="o.payment_seq"/>
+                </h2>
+
+                <table class="table table-sm o_main_table table-borderless" name="payment_slip">
+                    <thead>
+                        <tr>
+                            <th>Itinerary</th>
+                            <th>Agency</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center" t-out="o.itinerary_id.itinerary_name"/>
+                            <td class="text-center" t-out="o.agency_id.agency_name"/>
+                            <td class="text-center" t-out="o.amount"/>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="customer_payment">
+        <t t-foreach="docs" t-as="o"/>
+            <t t-call="web.html_container">
+                <t t-call="Tourism.customer_payment_doc"/>
+            </t>
+    </template>
+</odoo>

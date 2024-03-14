@@ -16,8 +16,10 @@ class travel_transportation_flight(models.Model):
     ], string="Flight Class")
 
     price = fields.Monetary("Price", "currency_id",compute="_compute_price", default=0)
+    
+    need_transport=fields.Boolean("Need Transport", config_parameter="Tourism.need_transport")
 
-
+    print("need_transport------",need_transport)
     @api.model_create_multi
     def create(self, vals_list):
         records = super(travel_transportation_flight, self).create(vals_list)
