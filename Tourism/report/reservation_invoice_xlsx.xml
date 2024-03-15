@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="travel_invoice_xlsx" model="ir.actions.report">
+        <field name="name">Invoice XLSX</field>
+        <field name="model">travel.reservation_invoice</field>
+        <field name="report_type">xlsx</field>
+        <field name="report_name">Tourism.invoice_xlsx</field>
+        <field name="report_file">Tourism.invoice_xlsx</field>
+        <field name="binding_model_id" ref="model_travel_reservation_invoice"/>
+    </record>
+</odoo>

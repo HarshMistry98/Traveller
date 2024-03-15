@@ -18,7 +18,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sale'],
+    'depends': ['base', 'sale','report_xlsx'],
     # always loaded
     'data': [
         'security/ir.model.access.csv',
@@ -50,6 +50,7 @@
         'report/customer_payment_slip.xml',
         # 'report/reservation_invoice_template.xml',
         'report/reservation_invoice_template1.xml',
+        'report/reservation_invoice_xlsx.xml',
 
     ],
     # only loaded in demonstration mode

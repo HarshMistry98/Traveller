@@ -1,4 +1,5 @@
 from odoo import fields, models, api
+from odoo.exceptions import UserError
 
 
 class travel_reservation_invoice(models.Model):
@@ -63,8 +64,15 @@ class travel_reservation_invoice(models.Model):
             record.total_amount = record.it_amount + record.tp_amount
 
     def send_invoice(self):
-        self.env.ref("Tourism.invoice_mail_template").send_mail(self.id)
-        print("Invoice sent")
+        for rec in self:
+            if rec.status == "paid":
+                rec.env.ref("Tourism.invoice_mail_template").send_mail(self.id)
+                print("Invoice sent")
+            else:
+                print("Invoice not sent")
+                raise UserError("Can't send mail and generate invoice for Payment Status: Unpaid")
+
+
 
     @api.model_create_multi
     def create(self, vals_list):
