@@ -26,6 +26,7 @@
 
         'data/ir_sequence.xml',
         'data/travel_data.xml',
+        'data/invoice_mail_template.xml',
 
         'views/wizards/transportation_select.xml',
 

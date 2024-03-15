@@ -35,6 +35,7 @@ class travel_reservation_invoice(models.Model):
 
     transport_id = fields.Many2one("travel.transportation_flight", "Transport")
 
+
     # status = fields.Char(string="Status")
 
     @api.depends('itinerary_id', 'discount_id')
@@ -62,6 +63,7 @@ class travel_reservation_invoice(models.Model):
             record.total_amount = record.it_amount + record.tp_amount
 
     def send_invoice(self):
+        self.env.ref("Tourism.invoice_mail_template").send_mail(self.id)
         print("Invoice sent")
 
     @api.model_create_multi
