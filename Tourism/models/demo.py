@@ -35,7 +35,7 @@ class ModelName(models.Model):
         return {
             'name': 'Transportation Selection',
             'type': 'ir.actions.act_window',
-            'res_model': 'travel.transportation.selection',
+            'res_model': 'travel.transportation_selection',
             'view_mode': 'form',
             'view_id': self.env.ref('Tourism.view_transportation_selection_form').id,
             'target': 'new',

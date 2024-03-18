@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 
 
 class TransportationSelection(models.TransientModel):
-    _name = 'travel.transportation.selection'
+    _name = 'travel.transportation_selection'
     _description = 'Transportation Selection Wizard'
 
     mode_of_transport = fields.Selection([

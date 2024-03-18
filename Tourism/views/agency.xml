@@ -11,7 +11,7 @@
                 <field name="state_id"/>
                 <field name="itinerary_ids"/>
                 <field name="commission"/>
-                <field name="ratings"/>
+                <field name="rating"/>
                 <field name="contact"/>
             </tree>
         </field>
@@ -44,7 +44,7 @@
                         <group string="Info">
                             <field name="itinerary_ids" widget="many2many_tags"/>
                             <field name="contact"/>
-                            <field name="ratings"/>
+                            <field name="rating"/>
                             <field name="commission"/>
                         </group>
                         <group string="Location">

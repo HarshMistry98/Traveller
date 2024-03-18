@@ -28,7 +28,7 @@
         'data/travel_data.xml',
         'data/invoice_mail_template.xml',
 
-        'views/wizards/transportation_select.xml',
+        'wizards/transportation_select.xml',
 
         'views/actions.xml',
         'views/itinerary.xml',
@@ -46,6 +46,8 @@
         'views/invoice.xml',
         'views/res_config.xml',
         'views/demo.xml',
+        'views/harsh.xml',
+        'views/harsh_report_wiz.xml',
 
         'report/customer_payment_slip.xml',
         # 'report/reservation_invoice_template.xml',

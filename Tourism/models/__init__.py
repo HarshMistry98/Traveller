@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from . import wizards
+
 from . import itinerary
 from . import agency
 from . import customer_details
@@ -17,3 +17,4 @@ from . import invoice
 from . import product
 from . import res_config
 from . import demo
+from . import harsh

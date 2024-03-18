@@ -12,6 +12,7 @@
                 <field name="date_availability"/>
                 <field name="days"/>
                 <field name="nights"/>
+                <field name="rating"/>
                 <field name="agency_ids"/>
                 <field name="country_id"/>
                 <field name="state_id"/>
@@ -56,6 +57,7 @@
                             <field name="days"/>
                             <field name="nights"/>
                             <field name="persons"/>
+                            <field name="rating"/>
                         </group>
                         <group string="Availability">
                             <field name="price"/>

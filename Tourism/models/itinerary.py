@@ -31,6 +31,8 @@ class travel_itinerary(models.Model):
     nights = fields.Integer(string='Nights')
     date_availability = fields.Date(string='Date Availability')
     is_active = fields.Boolean(string='Active', tracking=1)
+    rating = fields.Float("Rating", default=4.0)
+
 
     agency_count = fields.Integer(compute="_compute_agency_count")
     customer_count = fields.Integer(compute="_compute_customer_count")

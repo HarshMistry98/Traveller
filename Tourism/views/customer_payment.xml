@@ -60,10 +60,26 @@
         </field>
     </record>
 
+    <record id="travel_customer_payment_search_view" model="ir.ui.view">
+        <field name="name">travel.customer.payment.search.view</field>
+        <field name="model">travel.customer_payment</field>
+        <field name="arch" type="xml">
+            <search string="Payment Status">
+                <field name="payment_status"/>
+
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Payment Status" name="status" context="{'group_by':'payment_status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
 
     <record id="action_travel_customer_payment" model="ir.actions.act_window">
         <field name="name">Travel Customer Payment</field>
-        <field name="res_model">travel.customer_payment</field> <!-- Reference to the model of the form -->
+        <field name="res_model">travel.customer_payment</field><!-- Reference to the model of the form -->
+        <field name="context">{'search_default_status':1}</field>
         <field name="view_mode">tree,form</field> <!-- Display mode of the view -->
     </record>
 

@@ -24,6 +24,7 @@ class travel_agency(models.Model):
         ('4', '4 Stars'),
         ('5', '5 Stars'),
     ], string="Ratings")
+    rating = fields.Float("Rating", default=4.0)
     contact = fields.Char(string='Contact')
     itinerary_count = fields.Integer(compute="_compute_itinerary_count")
 

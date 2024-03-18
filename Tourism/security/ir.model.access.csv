@@ -14,3 +14,5 @@ Tourism.access_travel_product,access_travel_product,Tourism.model_travel_product
 Tourism.access_travel_transportation_selection,access_travel_transportation_selection,Tourism.model_travel_transportation_selection,base.group_user,1,1,1,1
 Tourism.access_travel_transport,access_travel_transport,Tourism.model_travel_transport,base.group_user,1,1,1,1
 Tourism.access_travel_demo,access_travel_demo,Tourism.model_travel_demo,base.group_user,1,1,1,1
+Tourism.access_travel_print_report,access_travel_print_report,Tourism.model_travel_print_report,base.group_user,1,1,1,1
+

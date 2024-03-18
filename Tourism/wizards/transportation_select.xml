@@ -3,7 +3,7 @@
 <odoo>
     <record id="view_transportation_selection_form" model="ir.ui.view">
         <field name="name">travel.transportation.selection.form</field>
-        <field name="model">travel.transportation.selection</field>
+        <field name="model">travel.transportation_selection</field>
         <field name="arch" type="xml">
             <form>
                 <group>
