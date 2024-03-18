@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class travel_customer_details(models.Model):
@@ -13,8 +13,6 @@ class travel_customer_details(models.Model):
     #     ('check_contact_length', "CHECK (LENGTH(contact) != 10)","Mobile number must be of length 10"),
     #     ('check_contact_numeric', "CHECK (contact ~ '^[0-9]+$')", "Mobile number must contain only numeric digits"),
     # ]
-
-
 
     customer_seq = fields.Char(string='Customer Sequence')
 
@@ -34,6 +32,10 @@ class travel_customer_details(models.Model):
 
     country_id = fields.Many2one('res.country', string='Country')
     state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=', country_id)]")
+
+    payment_ids = fields.One2many("travel.customer_payment", "customer_id")
+
+    dp = fields.Image(string='Profile Image', max_width=128, max_height=128, attachment=True)
 
     # @api.constrains("contact")
     # def contact_10_digit(self):
@@ -88,21 +90,22 @@ class travel_customer_details(models.Model):
 
     # @api.multi
     def action_view_customer_payment(self):
-        customer_payment_action = self.env.ref('Tourism.action_travel_customer_payment').read()[0]
-
-        customer_payment_action.update({
-            'domain': [('customer_id', '=', self.id)],
-            'view_mode': 'form',
-        })
-
-        # if len(self) == 1:  # Check if there's only one record selected
-        #     customer_payment_action.update({
-        #         'view_mode': 'form',
-        #         'res_id': self.id,
-        #     })
-        # else:
-        #     customer_payment_action.update({
-        #         'view_mode': 'form',
-        #     })
-        print(customer_payment_action)
-        return customer_payment_action
+        if len(self.payment_ids) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Customer Payment',
+                'res_model': 'travel.customer_payment',
+                'view_mode': 'form',
+                'res_id': self.payment_ids.id,
+            }
+        elif len(self.payment_ids) > 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Customer Payment',
+                'res_model': 'travel.customer_payment',
+                'view_mode': 'tree,form',
+                'domain': [('id', 'in', self.payment_ids.ids)],
+        }
+        else:
+            # No records found
+            raise UserError('No records found.')

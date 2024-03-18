@@ -38,6 +38,9 @@ class travel_reservation_booking(models.Model):
         ('railway', 'Railway'),
         ('road', 'Road')
     ], string='Mode of Transport', default="flight")
+    
+    invoice_ids = fields.One2many("travel.reservation_invoice", "booking_id")
+
 
     # mode_of_transport = fields.Char("Mode")
 
@@ -80,11 +83,25 @@ class travel_reservation_booking(models.Model):
             record.total_amount = record.it_amount + record.flight_tp_amount
 
     def action_view_invoice(self):
-        invoice_action = self.env.ref('Tourism.action_travel_reservation_invoice').read()[0]
-        invoice_action.update({
-            'domain': [('customer_id', '=', self.id)],
-        })
-        return invoice_action
+        if len(self.invoice_ids) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Reservation Invoice',
+                'res_model': 'travel.reservation_invoice',
+                'view_mode': 'form',
+                'res_id': self.invoice_ids.id,
+            }
+        elif len(self.invoice_ids) > 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Reservation Invoice',
+                'res_model': 'travel.reservation_invoice',
+                'view_mode': 'tree,form',
+                'domain': [('id', 'in', self.invoice_ids.ids)],
+        }
+        else:
+            # No records found
+            raise UserError('No records found.')
 
     def action_select_transportation(self):
         return {

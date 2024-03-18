@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class travel_customer_payment(models.Model):
@@ -25,6 +26,9 @@ class travel_customer_payment(models.Model):
     state = fields.Selection(
         [('customer', "Customer"), ('payment', "Payment"), ('booking', "Booking"), ('invoice', "Invoice")],
         default="payment")
+    
+    booking_ids = fields.One2many("travel.reservation_booking", "payment_id")
+
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -44,8 +48,22 @@ class travel_customer_payment(models.Model):
         return res
 
     def action_view_booking(self):
-        booking_action = self.env.ref('Tourism.action_travel_reservation_booking').read()[0]
-        booking_action.update({
-            'domain': [('customer_id', '=', self.id)],
-        })
-        return booking_action
+        if len(self.booking_ids) == 1:  
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Reservation Booking',
+                'res_model': 'travel.reservation_booking',
+                'view_mode': 'form',
+                'res_id': self.booking_ids.id,
+            }
+        elif len(self.booking_ids) > 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Reservation Booking',
+                'res_model': 'travel.reservation_booking',
+                'view_mode': 'tree,form',
+                'domain': [('id', 'in', self.booking_ids.ids)],
+        }
+        else:
+            # No records found
+            raise UserError('No records found.')
