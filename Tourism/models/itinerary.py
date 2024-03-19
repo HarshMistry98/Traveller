@@ -40,6 +40,8 @@ class travel_itinerary(models.Model):
     country_id = fields.Many2one('res.country', string='Country')
     state_id = fields.Many2one('res.country.state', string='State', domain="[('country_id', '=', country_id)]")
 
+    photo = fields.Image(string='Image', style="height: 160px; width: 320px;", attachment=True)
+
     @api.onchange('country_id')
     def onchange_country_id(self):
         """Update the state dropdown based on the selected country."""

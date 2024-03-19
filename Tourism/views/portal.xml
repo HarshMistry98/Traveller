@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="portal.portal_breadcrumbs" priority="20">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'booking'">
+                Bookings
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_travel" name="Show Hotel Bookings" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Travel Bookings</t>
+                <t t-set="url" t-value="'/my/bookings'"/>
+                <t t-set="placeholder_count" t-value="'booking_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_bookings" name="My Bookings">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Bookings</t>
+            </t>
+            <t t-if="bookings" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Itinerary</th>
+                        <th>Agency</th>
+                    </tr>
+                </thead>
+                <t t-foreach="bookings" t-as="booking">
+                    <tr>
+<!--                        <a t-att-href="quotation.get_portal_url()">-->
+                        <td><a t-att-href="booking.get_portal_url()"><t t-out="booking.itinerary_name"/></a></td>
+                        <td><t t-out="booking.agency_ids.agency_name"/></td>
+                    </tr>
+                </t>
+            </t>
+            <p t-else="">There are currently no Bookings for your account.</p>
+        </t>
+    </template>
+
+</odoo>

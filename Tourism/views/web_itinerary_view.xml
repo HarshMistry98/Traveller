@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!--    Here in template the structure of page is defined -->
+    <template id="itinerary_menu_template">
+        <t t-call="website.layout">
+            <div class="container">
+                Itinerary............................
+            </div>
+        </t>
+    </template>
+
+<!--    tHE RECORD FOR THE ACTION TO BE PERFORM WHEN CLICKED-->
+    <record id="itinerary_page" model="website.page">
+        <field name="url">/itinerary</field>
+        <field name="is_published">True</field>
+<!--        HERE ID FOR THE TEMPLATE IS GIVEN WHICH IS TO LOADED -->
+        <field name="view_id" ref="Tourism.itinerary_menu_template"/>
+        <field name="track">True</field>
+    </record>
+
+<!--    The menu for Itinerary will be added in the navbar of the website-->
+    <record id="menu_itinerary_website" model="website.menu">
+        <field name="name">Itinerary</field>
+        <field name="url">/itinerary</field>
+        <!--  Here id IS GIVEN for the action which get triggered-->
+        <field name="page_id" ref="Tourism.itinerary_page"/>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">60</field>
+    </record>
+
+</odoo>

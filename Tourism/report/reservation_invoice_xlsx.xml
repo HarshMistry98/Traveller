@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="travel_invoice_xlsx" model="ir.actions.report">
+    <record id="Tourism_invoice_xlsx" model="ir.actions.report">
         <field name="name">Invoice XLSX</field>
         <field name="model">travel.reservation_invoice</field>
         <field name="report_type">xlsx</field>

@@ -34,6 +34,8 @@
                     <field name="state" widget="statusbar" statusbar_visible="customer,payment,booking,invoice"/>
                 </header>
                 <sheet>
+                    <field name="dp" widget="image" style="height: 200px; width: 200px;"/>
+
                     <div class="oe_title">
                         <h4>
                             <field name="customer_seq" readonly="1"/>

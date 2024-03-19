@@ -26,8 +26,8 @@ class Wizard_for_print(models.TransientModel):
         return report.report_action(self.selected_orders.ids)
 
     def action_xlsx(self):
-        export_data = super(Wizard_for_print, self).export_data(self.selected_orders.ids)
-        return export_data
+        report = self.env.ref("Tourism.sales_excel_xlsx")
+        return report.report_action(self.selected_orders.ids)
 
 
 class PrintReport(models.Model):

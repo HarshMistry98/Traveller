@@ -48,11 +48,14 @@
         'views/demo.xml',
         'views/harsh.xml',
         'views/harsh_report_wiz.xml',
+        'views/web_itinerary_view.xml',
+        'views/portal.xml',
 
         'report/customer_payment_slip.xml',
         # 'report/reservation_invoice_template.xml',
         'report/reservation_invoice_template1.xml',
         'report/reservation_invoice_xlsx.xml',
+        'report/sales_excel.xml',
 
     ],
     # only loaded in demonstration mode
