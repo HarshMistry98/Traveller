@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries" inherit_id="portal.portal_breadcrumbs" priority="20">
+    <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries"
+              inherit_id="portal.portal_breadcrumbs" priority="20">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'booking'">
                 Bookings
@@ -8,7 +9,8 @@
         </xpath>
     </template>
 
-    <template id="portal_my_home_travel" name="Show Hotel Bookings" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+    <template id="portal_my_home_travel" name="Show Hotel Bookings" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="20">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
                 <t t-set="title">Travel Bookings</t>
@@ -28,15 +30,29 @@
             <t t-if="bookings" t-call="portal.portal_table">
                 <thead>
                     <tr class="active">
+                        <th>Invoice No.</th>
                         <th>Itinerary</th>
                         <th>Agency</th>
+                        <th>Amount</th>
                     </tr>
                 </thead>
                 <t t-foreach="bookings" t-as="booking">
                     <tr>
-<!--                        <a t-att-href="quotation.get_portal_url()">-->
-                        <td><a t-att-href="booking.get_portal_url()"><t t-out="booking.itinerary_name"/></a></td>
-                        <td><t t-out="booking.agency_ids.agency_name"/></td>
+                        <!--                        <a t-att-href="quotation.get_portal_url()">-->
+                        <td>
+                            <a t-att-href="booking.get_portal_url()">
+                                <t t-out="booking.invoice_seq"/>
+                            </a>
+                        </td>
+                        <td>
+                            <t t-out="booking.itinerary_id.itinerary_name"/>
+                        </td>
+                        <td>
+                            <t t-out="booking.agency_id.agency_name"/>
+                        </td>
+                        <td>
+                            <t t-out="booking.total_amount"/>
+                        </td>
                     </tr>
                 </t>
             </t>
@@ -44,4 +60,44 @@
         </t>
     </template>
 
+
+    <template id="portal_view_bookings" name="View Bookings" inherit_id="portal.portal_sidebar">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+
+            <t t-set="o_portal_fullwidth_alert">
+                <!-- Uses backend_url provided in rendering values -->
+                <t t-call="portal.portal_back_in_edit_mode"/>
+            </t>
+
+<!--            <t t-set="title">-->
+<!--                <h2 class="mb-0">-->
+<!--                    <b t-field="invoice_order.total_amount" />-->
+<!--                </h2>-->
+<!--            </t>-->
+            <t t-set="entries">
+                <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                    <li class="list-group-item d-grid align-content-start">
+                        <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                            <div class="btn-group flex-grow-1 me-1 mb-1">
+                                <a class="btn btn-secondary o_download_btn"
+                                   t-att-href="invoic_order.get_portal_url(report_type='pdf', download=True)"
+                                   title="Download">
+                                    <i class="fa fa-download"/>
+                                    Download
+                                </a>
+                            </div>
+                            <div class="btn-group flex-grow-1 mb-1">
+                                <a class="btn btn-secondary o_print_btn o_portal_invoice_print"
+                                   t-att-href="invoic_order.get_portal_url(report_type='pdf')" id="print_invoice_report"
+                                   title="Print" target="_blank">
+                                    <i class="fa fa-print"/>
+                                    Print
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </t>
+        </xpath>
+    </template>
 </odoo>

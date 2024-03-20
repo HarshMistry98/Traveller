@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 class travel_reservation_invoice(models.Model):
     _name = 'travel.reservation_invoice'
     _description = 'All details regarding reservation booking is shown here'
+    _inherit = "portal.mixin"
     _rec_name = "invoice_seq"
 
     invoice_seq = fields.Char(string='Invoice Sequence')
@@ -90,3 +91,13 @@ class travel_reservation_invoice(models.Model):
             })
         res = super(travel_reservation_invoice, self).write(vals)
         return res
+
+    def _get_portal_return_action(self):
+        """ Return the action used to display orders when returning from customer portal. """
+        self.ensure_one()
+        return self.env.ref('Tourism.action_travel_reservation_invoice')
+
+    def _compute_access_url(self):
+        super()._compute_access_url()
+        for inv in self:
+            inv.access_url = f'/my/invoice/{inv.id}'
