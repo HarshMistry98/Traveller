@@ -100,4 +100,8 @@ class travel_reservation_invoice(models.Model):
     def _compute_access_url(self):
         super()._compute_access_url()
         for inv in self:
-            inv.access_url = f'/my/invoice/{inv.id}'
+            inv.access_url = f'/my/travels/{inv.id}'
+
+    def _get_report_base_filename(self):
+        self.ensure_one()
+        return 'Invoice'

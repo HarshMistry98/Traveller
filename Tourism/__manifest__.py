@@ -1,3 +1,15 @@
+# -*- coding: utf-8 -*-
+
+
+
+
+
+
+
+
+
+
+
 {
     'name': "Tourism",
 
@@ -49,12 +61,13 @@
         'views/harsh.xml',
         'views/harsh_report_wiz.xml',
         'views/web_itinerary_view.xml',
+        'views/travel_invoice_portal_templates.xml',
         'views/portal.xml',
 
         'report/customer_payment_slip.xml',
         # 'report/reservation_invoice_template.xml',
         'report/reservation_invoice_template1.xml',
-        'report/reservation_invoice_xlsx.xml',
+        # 'report/reservation_invoice_xlsx.xml',
         'report/sales_excel.xml',
 
     ],
@@ -63,4 +76,3 @@
         'demo/demo.xml',
     ],
 }
-# -*- coding: utf-8 -*-

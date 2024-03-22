@@ -91,7 +91,7 @@ class TravelPortal(portal.CustomerPortal):
     #
     #     url = "/my/invoice"
 
-    @http.route(['/my/invoice/<int:invoice_id>'], type='http', auth="user",
+    @http.route(['/my/travels/<int:invoice_id>'], type='http', auth="user",
                 website=True)
 
     def portal_my_travel_booking_view(self, invoice_id, report_type=None, access_token=None, message=False, download=False, **kw):
@@ -137,6 +137,7 @@ class TravelPortal(portal.CustomerPortal):
             'backend_url': backend_url, # Used to display correct company logo
         }
 
+
         # # Payment values
         # if order_sudo._has_to_be_paid():
         #     values.update(self._get_payment_values(order_sudo))
@@ -150,5 +151,6 @@ class TravelPortal(portal.CustomerPortal):
 
         values = self._get_page_view_values(
             order_sudo, access_token, values, history_session_key, False)
+        print(values)
 
         return request.render('Tourism.portal_view_bookings',values)

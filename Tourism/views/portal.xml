@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template id="portal_my_home_menu_sale" name="Portal layout : sales menu entries"
+    <template id="portal_travel_menu" name="Portal layout : sales menu entries"
               inherit_id="portal.portal_breadcrumbs" priority="20">
+
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
-            <li t-if="page_name == 'booking'">
-                Bookings
+<!--            <li t-if="page_name == 'booking'">-->
+<!--                Bookings-->
+<!--            </li>-->
+            <li t-if="page_name == 'booking' or invoic_order"
+                t-attf-class="breadcrumb-item #{'active ' if not invoic_order else ''}">
+                <a t-if="invoic_order" t-attf-href="/my/bookings?{{ keep_query() }}">Bookings</a>
+                <t t-else="">Bookings</t>
+            </li>
+            <li t-if="invoic_order" class="breadcrumb-item active">
+                <t t-out="invoic_order.invoice_seq"/>
             </li>
         </xpath>
     </template>
@@ -64,40 +73,188 @@
     <template id="portal_view_bookings" name="View Bookings" inherit_id="portal.portal_sidebar">
         <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
 
+            <!--            <t t-set="breadcrumbs_searchbar" t-value="True"/>-->
+
+
             <t t-set="o_portal_fullwidth_alert">
                 <!-- Uses backend_url provided in rendering values -->
                 <t t-call="portal.portal_back_in_edit_mode"/>
             </t>
 
-<!--            <t t-set="title">-->
-<!--                <h2 class="mb-0">-->
-<!--                    <b t-field="invoice_order.total_amount" />-->
-<!--                </h2>-->
-<!--            </t>-->
-            <t t-set="entries">
-                <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
-                    <li class="list-group-item d-grid align-content-start">
-                        <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
-                            <div class="btn-group flex-grow-1 me-1 mb-1">
-                                <a class="btn btn-secondary o_download_btn"
-                                   t-att-href="invoic_order.get_portal_url(report_type='pdf', download=True)"
-                                   title="Download">
-                                    <i class="fa fa-download"/>
-                                    Download
-                                </a>
-                            </div>
-                            <div class="btn-group flex-grow-1 mb-1">
-                                <a class="btn btn-secondary o_print_btn o_portal_invoice_print"
-                                   t-att-href="invoic_order.get_portal_url(report_type='pdf')" id="print_invoice_report"
-                                   title="Print" target="_blank">
-                                    <i class="fa fa-print"/>
-                                    Print
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </t>
+            <div class="row mt16 o_portal_sale_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+                    <t t-set="title">
+                        <h2 class="mb-0">
+                            <b t-field="invoic_order.total_amount"/>
+                        </h2>
+                    </t>
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item d-grid align-content-start">
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group flex-grow-1 me-1 mb-1">
+                                        <a class="btn btn-secondary o_download_btn"
+                                           t-att-href="invoic_order.get_portal_url(report_type='pdf', download=True)"
+                                           title="Download">
+                                            <i class="fa fa-download"/>
+                                            Download
+                                        </a>
+                                    </div>
+                                    <div class="btn-group flex-grow-1 mb-1">
+                                        <a class="btn btn-secondary o_print_btn o_portal_invoice_print"
+                                           t-att-href="invoic_order.get_portal_url(report_type='pdf')"
+                                           id="print_invoice_report"
+                                           title="Print" target="_blank">
+                                            <i class="fa fa-print"/>
+                                            Print
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </t>
+                </t>
+
+                <div id="quote_content" class="col-12 col-lg justify-content-end">
+                    <!-- modal relative to the actions sign and pay -->
+                    <!-- modal relative to the action reject -->
+                    <!-- status messages -->
+                    <!-- main content -->
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_sale_content">
+                        <div t-call="Tourism.portal_invoice_template"/>
+                    </div>
+                    <!-- bottom actions -->
+                </div><!-- // #quote_content -->
+            </div>
         </xpath>
+    </template>
+
+    <template id="portal_invoice_template">
+
+
+        <!--        <t t-call="web.external_layout">-->
+        <div class="page">
+            <!-- Header -->
+            <div class="header">
+                <h1>Reservation Invoice</h1>
+                <h2 t-field="invoic_order.invoice_seq"/>
+            </div>
+
+            <!-- Customer Information -->
+            <div class="customer-info">
+                <h4>Customer:
+                    <span t-field="invoic_order.customer_id.customer_seq"/>
+                </h4>
+                <p>
+                    <h5>
+                        <span t-field="invoic_order.customer_id.first_name"/>
+                        <span t-field="invoic_order.customer_id.last_name"/>
+                    </h5>
+                </p>
+            </div>
+
+            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                <p>Booking ID:
+                    <span t-field="invoic_order.booking_id.booking_seq"/>
+                </p>
+                <h5>
+                    <p>Payment ID:
+                        <span t-field="invoic_order.payment_id.payment_seq"/>
+                    </p>
+                    <p>Payment Status:
+                        <span t-field="invoic_order.status"/>
+                    </p>
+                </h5>
+            </div>
+
+            <!-- Itinerary Details -->
+            <div class="itinerary-details">
+                <h5>Itinerary Details</h5>
+                <table class="table table-sm o_main_table table-borderless">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Itinerary</th>
+                            <th class="text-center">Agency</th>
+                            <th class="text-center">Amount</th>
+                            <th class="text-center">Discount</th>
+                            <th class="text-center">Discount(%)</th>
+                            <th class="text-center">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">
+                                <span t-field="invoic_order.itinerary_id.itinerary_name"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.agency_id.agency_name"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.itinerary_id.price" class="text-end"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.discount_id.discount_description"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.discount_id.discount_percentage" class="text-end"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.it_amount" class="text-end"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Transportation Details -->
+            <div class="transportation-details">
+                <h5>Transportation Details</h5>
+                <table class="table table-sm o_main_table table-borderless">
+                    <thead>
+                        <tr>
+                            <th class="text-center">From</th>
+                            <th class="text-center">To</th>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Class</th>
+                            <th class="text-center">Persons</th>
+                            <th class="text-center">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-center">
+                                <span t-field="invoic_order.transport_id.from_city"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.transport_id.to_city"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.transport_id.date"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.transport_id.flight_class"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.transport_id.travellers_adult"/>
+                            </td>
+                            <td class="text-center">
+                                <span t-field="invoic_order.tp_amount" class="text-end"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Total Amount -->
+            <div t-attf-class="#{'col-4' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                <h5>Total Amount:
+                    <span t-field="invoic_order.total_amount"/>
+                </h5>
+            </div>
+        </div>
+        <!--        </t>-->
     </template>
 </odoo>
