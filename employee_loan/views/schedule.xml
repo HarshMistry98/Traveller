@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="installment_loan_tree_view" model="ir.ui.view">
+            <field name="name">installment.loan.tree.view</field>
+            <field name="model">loan.installment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="note"/>
+                    <field name="loan_id"/>
+                    <field name="pay_period"/>
+                    <field name="paid"/>
+                    <field name="amount"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="installment_loan_form_view" model="ir.ui.view">
+            <field name="name">installment.loan.form.view</field>
+            <field name="model">loan.installment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="note"/>
+                                <field name="loan_id"/>
+                                <field name="pay_period"/>
+                            </group>
+                            <group>
+                                <field name="paid"/>
+                                <field name="amount"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_installment_loan" model="ir.actions.act_window">
+            <field name="name">Installment Loan</field>
+            <field name="res_model">loan.installment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_installment_loan" name="Installment" parent="menu_loan_root"
+                  action="action_installment_loan" sequence="2"/>
+    </data>
+</odoo>
