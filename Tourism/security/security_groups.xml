@@ -2,7 +2,7 @@
 <odoo>
     <data>
 
-        <record model="ir.module.category" id="travel_category_group">
+            <record model="ir.module.category" id="travel_category_group">
             <field name="name">Tourism</field>
             <field name="sequence">1</field>
         </record>

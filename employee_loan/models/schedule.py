@@ -13,5 +13,7 @@ class LoanInstallment(models.Model):
 
     amount = fields.Float("Installment Amount", required=True)
 
+    emi_date = fields.Date("EMI Date")
+
     loan_id = fields.Many2one('loan.loan', string='Loan', ondelete='cascade')
 

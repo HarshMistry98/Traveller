@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from dateutil.relativedelta import relativedelta
 
@@ -93,11 +93,12 @@ class EmployeeLoan(models.Model):
                 date = rec.start_date
                 for i in range(total_months):
                     self.env["loan.installment"].create({
-                        'note': f"{date.year} - Monthly(12) Period #{date.month} payment on {rec.name}",
+                            'note': f"{date.year} - Monthly(12) Period #{date.month} payment on {rec.name}",
                         'pay_period': f"{date.year} - Monthly(12) Period #{date.month}",
                         'amount': rec.installment_amount,
                         'paid': False,
                         'loan_id': rec.id,
+                        'emi_date': date,
                     })
                     print(i)
                     date += relativedelta(months=1)
@@ -111,3 +112,5 @@ class EmployeeLoan(models.Model):
                 rec.balance = rec.amount - months_paid*rec.installment_amount
             else:
                 rec.balance = 0
+
+
