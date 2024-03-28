@@ -10,6 +10,7 @@
                     <field name="note"/>
                     <field name="loan_id"/>
                     <field name="pay_period"/>
+                    <field name="emi_date"/>
                     <field name="paid"/>
                     <field name="amount"/>
                 </tree>
@@ -29,6 +30,7 @@
                                 <field name="pay_period"/>
                             </group>
                             <group>
+                                <field name="emi_date"/>
                                 <field name="paid"/>
                                 <field name="amount"/>
                             </group>

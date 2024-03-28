@@ -9,7 +9,7 @@
             <field name="name">Loan</field>
             <field name="sequence" eval="25"/>
             <field name="amount_python_compute">
-result = -(payslip.env["loan.loan"].search([('employee', '=', payslip.employee_id.id)]).installment_amount)
+result = -(payslip.env["loan.installment"].search([('loan_id.employee', '=', payslip.employee_id.id),('paid', '=', 0)], limit=1).amount)
             </field>
         </record>
 
