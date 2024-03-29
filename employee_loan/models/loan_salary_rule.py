@@ -1,49 +1,34 @@
-from ...oca_modules.payroll.tests.common import TestPayslipBase
-from odoo import _, fields, models, api
-from odoo.exceptions import UserError
-from odoo.tools.safe_eval import safe_eval
-from odoo.tests.common import TransactionCase
+from odoo import models
+from ...oca_modules.payroll.models.base_browsable import Payslips, WorkedDays, InputLine, BrowsableObject
 from ...employee_loan.models.browsable import Loan
-
-
-class LoanRule(TestPayslipBase):
-    def setUp(self):
-        super(LoanRule, self).setUp()
-
-        self.register_loan = self.PayrollStructure.create({
-            'name': 'Loan Register',
-            'company_id': self.env.company.id,
-        })
-
-        self.rule_loan = self.SalaryRule.create({
-            'name': 'Loan',
-            'code': 'EMI',
-            'sequence': 10,
-            'category_id': self.categ_ded.id,
-            "condition_select": "none",
-            'register_id': self.register_loan,
-            'company_id': self.env.company.id,
-            'active': 1,
-            'appears_on_payslip': 1,
-            'amount_select': 'code',
-            'amount_python_compute': '''result = -Loan.get_installment()['emi_amount']'''
-        })
-
-
 class LoanSalarySlip(models.Model):
     _inherit = 'hr.payslip'
 
     def _get_baselocaldict(self, contracts):
-        localdict = super(LoanSalarySlip, self)._get_baselocaldict(contracts)
+        self.ensure_one()
+        worked_days_dict = {
+            line.code: line for line in self.worked_days_line_ids if line.code
+        }
+        input_lines_dict = {
+            line.code: line for line in self.input_line_ids if line.code
+        }
+        localdict = {
+            "payslips": Payslips(self.employee_id.id, self, self.env),
+            "worked_days": WorkedDays(self.employee_id.id, worked_days_dict, self.env),
+            "inputs": InputLine(self.employee_id.id, input_lines_dict, self.env),
+            "payroll": BrowsableObject(
+                self.employee_id.id, self.get_payroll_dict(contracts), self.env
+            ),
+            "current_contract": BrowsableObject(self.employee_id.id, {}, self.env),
+            "categories": BrowsableObject(self.employee_id.id, {}, self.env),
+            "rules": BrowsableObject(self.employee_id.id, {}, self.env),
+            "result_rules": BrowsableObject(self.employee_id.id, {}, self.env),
+            "tools": BrowsableObject(
+                self.employee_id.id, self._get_tools_dict(), self.env
+            ),
+            "loan": Loan(self.employee_id.id, {}, self.env),  # Add Loan object
+        }
 
-        # Add your key-value pair to the localdict
-        localdict['loan'] = Loan(self.employee_id.id, self, self.env)
-        print("////////////////////", localdict)
 
+        print(">>>>>>>>>>>>>>>",localdict)
         return localdict
-
-
-
-
-
-

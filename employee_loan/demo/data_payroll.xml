@@ -9,24 +9,31 @@
             <field name="name">Loan</field>
             <field name="sequence" eval="25"/>
             <field name="amount_python_compute">
-result = -(payslip.env["loan.installment"].search([('loan_id.employee', '=', payslip.employee_id.id),('paid', '=', 0)], limit=1).amount)
+                result = -(payslip.env["loan.installment"].search([('loan_id.employee', '=',
+                payslip.employee_id.id),('paid', '=', 0)], limit=1).amount)
             </field>
         </record>
 
-        <!--        <record id="structure_base" model="hr.payroll.structure">-->
+        <record id="hr_salary_rule_loan2" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">L2</field>
+            <field name="category_id" ref="payroll.DED"/>
+            <field name="name">Loan2</field>
+            <field name="sequence" eval="35"/>
+            <field name="amount_python_compute">
+                result = employee.loan_id.installment_ids.filtered(lambda i: not i.paid)[0].amount
+            </field>
+        </record>
 
-        <!--        </record>-->
 
-        <!--        <record id="structure_base_add_loan_rule" model="hr.payroll.structure">-->
-        <!--            <field-->
-        <!--                    eval="[(4, ref('structure_base'), [ref('hr_salary_rule_loan'),])]"-->
-        <!--                    name="rule_ids"-->
-        <!--            />-->
-        <!--        </record>-->
+        <record id="structure_loan" model="hr.payroll.structure">
+            <field name="name">Loan Structure</field>
+            <field name="code">LN</field>
+            <field name="parent_id" ref="payroll.structure_base"/>
+            <field name="company_id" ref="base.main_company"/>
 
-        <record id="payroll.structure_base" model="hr.payroll.structure">
             <field
-                    eval="[(4, ref('hr_salary_rule_loan'))]"
+                    eval="[(6, 0, [ref('hr_salary_rule_loan'), ref('hr_salary_rule_loan2')])]"
                     name="rule_ids"
             />
         </record>
