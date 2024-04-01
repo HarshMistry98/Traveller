@@ -11,6 +11,8 @@
                     <field name="loan_id"/>
                     <field name="pay_period"/>
                     <field name="emi_date"/>
+                    <field name="emi_month"/>
+                    <field name="emi_year"/>
                     <field name="paid"/>
                     <field name="amount"/>
                 </tree>
@@ -31,6 +33,8 @@
                             </group>
                             <group>
                                 <field name="emi_date"/>
+                                <field name="emi_month"/>
+                                <field name="emi_year"/>
                                 <field name="paid"/>
                                 <field name="amount"/>
                             </group>

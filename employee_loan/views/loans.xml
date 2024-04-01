@@ -63,7 +63,9 @@
                                         <field name="pay_period"/>
                                         <field name="amount"/>
                                         <field name="paid"/>
-                                        <field name="emi_date" invisible="1"/>
+                                        <field name="emi_date"/>
+                                        <field name="emi_month"  invisible="1"/>
+                                        <field name="emi_year"  invisible="1"/>
                                     </tree>
                                 </field>
                             </page>

@@ -99,6 +99,8 @@ class EmployeeLoan(models.Model):
                         'paid': False,
                         'loan_id': rec.id,
                         'emi_date': date,
+                        'emi_month': date.month,
+                        'emi_year': date.year,
                     })
                     print(i)
                     date += relativedelta(months=1)

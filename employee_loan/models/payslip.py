@@ -11,10 +11,13 @@ class Payslip(models.Model):
         print("res=========", res)
 
         records = self.env["loan.installment"].search(
-            [('loan_id.employee', '=', self.employee_id.id), ('paid', '=', False)], limit=1)
+            [('emi_month', '=', self.date_from.month),
+             ('emi_year', '=', self.date_from.year),
+             ('loan_id.employee', '=', self.employee_id.id),
+             ('paid', '=', False)], limit=1)
 
-        for records in records:
-            records.paid = True
+        for record in records:
+            record.paid = True
         # dater = self.date_from
         # daterend = self.date_to
         # print(dater)
@@ -24,6 +27,7 @@ class Payslip(models.Model):
 
     def get_lines_dict(self):
         res = super().get_lines_dict()
+        print("res", res)
         remove_key = False
         for key, line in list(res.items()):
             if line.get("code") == "EMI" and abs(line.get("total")) == 0:
@@ -32,8 +36,13 @@ class Payslip(models.Model):
             del res[remove_key]
         return res
 
-    @api.depends('dynamic_filtered_payslip_lines.total_amount')
-    def _compute_visible_rows(self):
-        for record in self:
-            filtered_records = record.dynamic_filtered_payslip_lines.filtered(lambda x: x.total_amount != 0)
-            record.dynamic_filtered_payslip_lines = [(6, 0, filtered_records.ids)]
+    # def get_lines_dict(self):
+    #     res = super().get_lines_dict()
+    #     print("res", res)
+    #     return res
+
+    # @api.depends('dynamic_filtered_payslip_lines.total_amount')
+    # def _compute_visible_rows(self):
+    #     for record in self:
+    #         filtered_records = record.dynamic_filtered_payslip_lines.filtered(lambda x: x.total_amount != 0)
+    #         record.dynamic_filtered_payslip_lines = [(6, 0, filtered_records.ids)]
