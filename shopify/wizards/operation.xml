@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="operation_import_wizard_view" model="ir.ui.view">
+        <field name="name">operation.import.wizard.view</field>
+        <field name="model">shopify.operation</field>
+        <field name="arch" type="xml">
+            <form>
+                <label for="operation_for"/>
+                <field name="operation_for"/>
+                <footer>
+                    <button string="IMPORT" type="object" class="oe_highlight" name="action_import_data"/>
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_operation" model="ir.actions.act_window">
+        <field name="name">Operation</field>
+        <field name="res_model">shopify.operation</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="operation_import_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+
+</odoo>
