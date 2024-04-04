@@ -19,7 +19,7 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','sale'],
 
     # always loaded
     'data': [
@@ -28,6 +28,9 @@
         'wizards/operation.xml',
 
         'views/config.xml',
+        'views/customerdetails.xml',
+        'views/productdetails.xml',
+        'views/ordersdetails.xml',
 
         'views/menus.xml',
     ],

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="shopify_customer_details_form_inherit" model="ir.ui.view">
+            <field name="name">shopify.customer.details.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field name="shopify_customer_id"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+
+
