@@ -108,6 +108,30 @@ class operationImport(models.TransientModel):
                 except Exception as e:
                     raise e
 
+    def get_attribute(self, attribute_name):
+        attribute_id = self.env['product.attribute'].search([('name', '=', attribute_name)], limit=1)
+        if not attribute_id:
+            attribute_id = self.env['product.attribute'].create({
+                'name': attribute_name,
+                'display_type': 'radio',
+                'create_variant': 'always',
+                'visibility': 'visible',
+            })
+        return attribute_id.id
+
+    def get_attribute_values(self, attribute_id, values):
+        value_ids = []
+        for value in values:
+            value_id = self.env['product.attribute.value'].search(
+                [('name', '=', value), ('attribute_id', '=', attribute_id)], limit=1)
+            if not value_id:
+                value_id = self.env['product.attribute.value'].create({
+                    'name': value,
+                    'attribute_id': attribute_id,
+                })
+            value_ids.append(value_id.id)
+        return value_ids
+
     def update_products(self, response_data):
         for rec in self:
             productenv = self.env['product.template']
@@ -128,64 +152,53 @@ class operationImport(models.TransientModel):
                         else:
                             tag_list.append(tag_id.id)
 
-                varaible_list = []
-                attribute_line = {}
+                product_exist = productenv.search([('shopify_product_id', '=', str(product["id"]))])
+
+                variable_list = []
                 # attribute_list = []
-                value_list = []
+                # value_list = []
                 variants = product.get('options')
 
                 if variants:
                     for variant in variants:
-                        attribute_id = self.env['product.attribute'].search([('name', '=', variant.get('name'))],
-                                                                            limit=1)
-                        if not attribute_id:
-                            attribute_id = self.env['product.attribute'].create({
-                                'name': variant.get('name'),
-                                'display_type': 'radio',
-                                'create_variant': 'always',
-                                'visibility': 'visible',
-                            })
-                        print('attribute_id',attribute_id)
-
+                        attribute_id = self.get_attribute(variant.get('name'))
 
                         values = variant.get('values')
-                        for value in values:
-                            value_id = self.env['product.attribute.value']
-                            if not value_id:
-                                value_id = self.env['product.attribute.value'].create({
-                                    'name': value,
-                                    'attribute_id': attribute_id.id,
-                                })
-                                value_list.append(value_id.id)
-                            else:
-                                value_list.append(value_id.id)
+                        value_list = self.get_attribute_values(attribute_id,values)
 
-                        attribute_line.update({
-                            'attribute_id': attribute_id.id,
-                            'value_ids': [(6, 0, value_list)]
-                        })
-                        varaible_list.append(attribute_line)
+                        attribute_line = {}
+                        attribute_line.update({'attribute_id': attribute_id, 'value_ids': [(6, 0, value_list)]})
+                        print('attribute_line', attribute_line)
 
-                for pro in products:
-                    values = {
-                        'shopify_product_id': str(pro["id"]),
-                        'name': pro["title"],
-                        'product_tag_ids': [(6, 0, tag_list)],
-                        'attribute_line_ids': [(6, 0, varaible_list)]
-                    }
-                    print("Valueeeeeees", values)
-
-                    product_exist = productenv.search([('shopify_product_id', '=', str(product["id"]))])
-                    print("product_exist", product_exist)
-                    try:
                         if product_exist:
-                            productenv.write(values)
-                            print("Product Updated")
+                            variable_list.append((6, 0, attribute_line))
                         else:
-                            productenv.create(values)
-                            print("Product   Created")
-                    except Exception as e:
-                        raise e
+                            variable_list.append((0, 0, attribute_line))
+
+                        print('variable_list', variable_list)
+
+
+                # for pro in products:
+                product_values = {
+                    'shopify_product_id': str(product["id"]),
+                    'name': product["title"],
+                    'product_tag_ids': [(6, 0, tag_list)],
+                    'attribute_line_ids': variable_list
+                }
+
+                print("Valueeeeeees", product_values)
+
+                # product_exist = productenv.search([('shopify_product_id', '=', str(product["id"]))])
+                print("product_exist", product_exist)
+                try:
+                    if product_exist:
+                        product_exist.write(product_values)
+                        print("Product Updated")
+                    else:
+                        productenv.create(product_values)
+                        print("Product   Created")
+                except Exception as e:
+                    raise e
 
         print("Product printed")
 

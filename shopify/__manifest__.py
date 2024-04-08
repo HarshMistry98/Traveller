@@ -31,6 +31,7 @@
         'views/customerdetails.xml',
         'views/productdetails.xml',
         'views/ordersdetails.xml',
+        'views/productdetailstemplate.xml',
 
         'views/menus.xml',
     ],
