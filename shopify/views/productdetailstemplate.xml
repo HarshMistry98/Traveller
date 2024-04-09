@@ -13,5 +13,17 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="shopify_product_template_details_filter" model="ir.ui.view">
+            <field name="name">shopify.product.template.details.filter</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view"/>
+            <field name="arch" type="xml">
+                <search string="Product">
+                    <filter string="Shopify Products" name="shopify_products"
+                            domain="[('shopify_product_id', '!=', False)]"/>
+                </search>
+            </field>
+        </record>
     </data>
 </odoo>

@@ -7,8 +7,17 @@
 
         <menuitem id="menu_shopify_order"
                   name="Orders"
-                  sequence="30"
-                  action="sale.action_orders">
+                  sequence="30">
+
+            <menuitem id="menu_shopify_order_quotations"
+                      name="Quotations"
+                      sequence="10"
+                      action="sale.action_quotations_with_onboarding"/>
+
+            <menuitem id="menu_shopify_order_order"
+                      name="Order"
+                      sequence="10"
+                      action="sale.action_orders"/>
         </menuitem>
 
         <menuitem id="menu_shopify_customer"

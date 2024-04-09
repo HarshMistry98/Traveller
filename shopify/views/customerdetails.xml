@@ -13,6 +13,21 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_res_partner_filter" model="ir.ui.view">
+            <field name="name">res.partner.select</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_res_partner_filter"/>
+            <field name="arch" type="xml">
+                <search string="Search Partner">
+                    <filter string="Shopify Customers" name="shopify_customers"
+                            domain="[('shopify_customer_id', '!=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+
+
     </data>
 </odoo>
 
