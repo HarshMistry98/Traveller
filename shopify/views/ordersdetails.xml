@@ -13,5 +13,29 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_shopify_orders_filter" model="ir.ui.view">
+            <field name="name">view.shopify.order.filter</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+            <field name="arch" type="xml">
+                <search>
+                    <filter string="Shopify Orders" name="shopify_orders"
+                            domain="[('shopify_orders_id', '!=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_shopify_quotations_filter" model="ir.ui.view">
+            <field name="name">view.shopify.quotations.filter</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="arch" type="xml">
+                <search>
+                    <filter string="Shopify Orders" name="shopify_orders"
+                            domain="[('shopify_orders_id', '!=', False)]"/>
+                </search>
+            </field>
+        </record>
     </data>
 </odoo>
