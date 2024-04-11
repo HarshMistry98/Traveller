@@ -37,5 +37,13 @@
                 </search>
             </field>
         </record>
+
+        <record id="action_shopify_orders" model="ir.actions.act_window">
+            <field name="name">Shopify Orders</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="target">current</field>
+            <field name="domain">[('shopify_orders_id', '!=', False)]</field>
+        </record>
     </data>
 </odoo>

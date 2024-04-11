@@ -14,18 +14,13 @@
             </field>
         </record>
 
-        <record id="view_res_partner_filter" model="ir.ui.view">
-            <field name="name">res.partner.select</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_res_partner_filter"/>
-            <field name="arch" type="xml">
-                <search string="Search Partner">
-                    <filter string="Shopify Customers" name="shopify_customers"
-                            domain="[('shopify_customer_id', '!=', False)]"/>
-                </search>
-            </field>
+        <record id="action_shopify_customers" model="ir.actions.act_window">
+            <field name="name">Shopify Customer</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="target">current</field>
+            <field name="domain">[('shopify_customer_id', '!=', False)]</field>
         </record>
-
 
 
     </data>

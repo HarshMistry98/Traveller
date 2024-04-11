@@ -17,13 +17,13 @@
             <menuitem id="menu_shopify_order_order"
                       name="Order"
                       sequence="10"
-                      action="sale.action_orders"/>
+                      action="action_shopify_orders"/>
         </menuitem>
 
         <menuitem id="menu_shopify_customer"
                   name="Customer"
                   sequence="10"
-                  action="account.res_partner_action_customer">
+                  action="shopify.action_shopify_customers">
         </menuitem>
 
         <menuitem id="menu_shopify_products"
@@ -33,12 +33,12 @@
             <menuitem id="menu_shopify_product"
                       name="Product"
                       sequence="10"
-                      action="sale.product_template_action"/>
+                      action="shopify.action_shopify_product_templates"/>
 
             <menuitem id="menu_shopify_product_variant"
                       name="Product Variants"
                       sequence="10"
-                      action="product.product_normal_action_sell"/>
+                      action="shopify.action_shopify_product_variants"/>
         </menuitem>
 
         <menuitem id="menu_shopify_operation"
