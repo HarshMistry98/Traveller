@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="shopify_config_settings_view_form1" model="ir.ui.view">
+        <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">shopify.config.settings.view.form.inherit.event</field>
             <field name="model">res.config.settings</field>
             <field name="priority" eval="65"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Shopify" string="Shopify" data-key="Shopify">
+                    <div class="app_settings_block" data-string="Shopify" string="Shopify" data-key="hspl_shopify">
                         <h2>Store</h2>
                         <div class="row mt16 o_settings_container" name="Shopify_setting_container">
                             <div class="col-12 col-lg-6 o_setting_box"
@@ -52,8 +52,9 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
+            <field name="view_id" ref="hspl_shopify.res_config_settings_view_form"/>
             <field name="target">inline</field>
-            <field name="context">{'module' : 'shopify'}</field>
+            <field name="context">{'module' : 'hspl_shopify'}</field>
         </record>
 
     </data>

@@ -168,3 +168,4 @@ class productsDetails(models.Model):
                         product_id.product_template_image_ids = [(6, 0, image_ids)]
             else:
                 product_id.image_1920 = False
+

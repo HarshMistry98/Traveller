@@ -26,22 +26,21 @@
             </field>
         </record>
 
-        <record id="view_shopify_quotations_filter" model="ir.ui.view">
-            <field name="name">view.shopify.quotations.filter</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
-            <field name="arch" type="xml">
-                <search>
-                    <filter string="Shopify Orders" name="shopify_orders"
-                            domain="[('shopify_orders_id', '!=', False)]"/>
-                </search>
-            </field>
-        </record>
 
         <record id="action_shopify_orders" model="ir.actions.act_window">
             <field name="name">Shopify Orders</field>
             <field name="res_model">sale.order</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="view_id" ref="sale.view_order_tree"/>
+            <field name="target">current</field>
+            <field name="domain">[('shopify_orders_id', '!=', False)]</field>
+        </record>
+
+        <record id="action_shopify_quatations" model="ir.actions.act_window">
+            <field name="name">Shopify Quatations</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+            <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
             <field name="target">current</field>
             <field name="domain">[('shopify_orders_id', '!=', False)]</field>
         </record>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+
+        <record id="action_shopify_product_variants" model="ir.actions.act_window">
+            <field name="name">Shopify Variants</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">tree,kanban,form,activity</field>
+            <field name="view_id" ref="product.product_product_tree_view"/>
+            <field name="target">current</field>
+            <field name="domain">[('shopify_product_id', '!=', False)]</field>
+        </record>
+
+    </data>
+</odoo>

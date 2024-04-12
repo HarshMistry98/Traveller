@@ -18,6 +18,7 @@
             <field name="name">Shopify Customer</field>
             <field name="res_model">res.partner</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
             <field name="target">current</field>
             <field name="domain">[('shopify_customer_id', '!=', False)]</field>
         </record>

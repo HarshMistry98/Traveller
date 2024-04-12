@@ -19,8 +19,8 @@ class operationImport(models.TransientModel):
         try:
             store = self.env['ir.config_parameter']
 
-            baseURL = store.search([('key', '=', 'shopify.baseStoreURL')]).value
-            access_token = store.search([('key', '=', 'shopify.access_token')]).value
+            baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
+            access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
 
             print(baseURL)
             print(access_token)

@@ -17,13 +17,13 @@
             <menuitem id="menu_shopify_order_order"
                       name="Order"
                       sequence="10"
-                      action="action_shopify_orders"/>
+                      action="hspl_shopify.action_shopify_orders"/>
         </menuitem>
 
         <menuitem id="menu_shopify_customer"
                   name="Customer"
                   sequence="10"
-                  action="shopify.action_shopify_customers">
+                  action="hspl_shopify.action_shopify_customers">
         </menuitem>
 
         <menuitem id="menu_shopify_products"
@@ -33,18 +33,18 @@
             <menuitem id="menu_shopify_product"
                       name="Product"
                       sequence="10"
-                      action="shopify.action_shopify_product_templates"/>
+                      action="hspl_shopify.action_shopify_product_templates"/>
 
             <menuitem id="menu_shopify_product_variant"
                       name="Product Variants"
                       sequence="10"
-                      action="shopify.action_shopify_product_variants"/>
+                      action="hspl_shopify.action_shopify_product_variants"/>
         </menuitem>
 
         <menuitem id="menu_shopify_operation"
                   name="Operation"
                   sequence="40"
-                  action="shopify.action_operation">
+                  action="hspl_shopify.action_operation">
         </menuitem>
 
 
@@ -55,7 +55,7 @@
             <menuitem id="menu_shopify_general_settings"
                       name="Settings"
                       sequence="10"
-                      action="action_shopify_setting_configuration"/>
+                      action="hspl_shopify.action_shopify_setting_configuration"/>
 
         </menuitem>
 
