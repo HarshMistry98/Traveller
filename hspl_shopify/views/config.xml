@@ -10,6 +10,9 @@
                 <xpath expr="//div[hasclass('settings')]" position="inside">
                     <div class="app_settings_block" data-string="Shopify" string="Shopify" data-key="hspl_shopify">
                         <h2>Store</h2>
+                        <header>
+                            <button name="test_shopify_connection" type="object" string="Test Connection" class="btn-primary"/>
+                        </header>
                         <div class="row mt16 o_settings_container" name="Shopify_setting_container">
                             <div class="col-12 col-lg-6 o_setting_box"
                                  id="manage_tracks">
@@ -36,6 +39,10 @@
                                         <div class="row mt8">
                                             <label class="col-lg-3" string="Access Token" for="access_token"/>
                                             <field name="access_token"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label class="col-lg-3" string="Store Domain" for="store_domain"/>
+                                            <field name="store_domain" placeholder="http://www.example.com"/>
                                         </div>
                                     </div>
                                 </div>

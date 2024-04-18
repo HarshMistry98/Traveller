@@ -41,7 +41,11 @@ class productsDetails(models.Model):
     def update_products(self, response_data):
         productenv = self.env['product.template']
 
-        products = response_data["products"]
+        # products = response_data["products"]
+        if "products" in response_data:
+            products = response_data["orders"]
+        else:
+            products = [response_data]
 
         for product in products:
 

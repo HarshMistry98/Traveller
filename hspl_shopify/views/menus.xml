@@ -47,10 +47,16 @@
                   action="hspl_shopify.action_operation">
         </menuitem>
 
+        <menuitem id="menu_webhook"
+                  name="Webhook"
+                  sequence="50"
+                  action="hspl_shopify.action_webhook">
+        </menuitem>
+
 
         <menuitem id="menu_shopify_config"
                   name="Configuration"
-                  sequence="50">
+                  sequence="60">
 
             <menuitem id="menu_shopify_general_settings"
                       name="Settings"

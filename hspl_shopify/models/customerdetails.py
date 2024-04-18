@@ -10,7 +10,13 @@ class customersDetails(models.Model):
 
     def update_customers(self, response_data):
         partners = self.env['res.partner']
-        list_customers = response_data.get("customers")
+        # list_customers = response_data.get("customers")
+
+        if "customers" in response_data:
+            list_customers = response_data["customers"]
+        else:
+            list_customers = [response_data]
+
         for customer in list_customers:
             values = self.get_customer_values(customer)
             partner_exist = partners.search([('shopify_customer_id', '=', values['shopify_customer_id'])])

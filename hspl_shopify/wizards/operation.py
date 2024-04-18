@@ -22,9 +22,6 @@ class operationImport(models.TransientModel):
             baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
             access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
 
-            print(baseURL)
-            print(access_token)
-
             if baseURL and access_token:
                 url = f"{baseURL}/{self.operation_for}.json"
 

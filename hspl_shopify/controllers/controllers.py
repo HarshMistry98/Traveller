@@ -1,21 +1,37 @@
 # -*- coding: utf-8 -*-
-# from odoo import http
+from odoo import http
+from odoo.http import request
+from odoo.tools import json
 
 
-# class Shopify(http.Controller):
-#     @http.route('/hspl_shopify/hspl_shopify', auth='public')
-#     def index(self, **kw):
-#         return "Hello, world"
+class ShopifyWebhooksController(http.Controller):
 
-#     @http.route('/hspl_shopify/hspl_shopify/objects', auth='public')
-#     def list(self, **kw):
-#         return http.request.render('hspl_shopify.listing', {
-#             'root': '/hspl_shopify/hspl_shopify',
-#             'objects': http.request.env['hspl_shopify.hspl_shopify'].search([]),
-#         })
+    @http.route(['/customers/update', '/customers/create'], type='json', method=['POST'])
+    def customer_create_or_update(self):
+        if request.httprequest.method == 'POST':
+            try:
+                data = json.loads(request.httprequest.data)
+                self.env['res.partner'].update_customers(data)
+            except Exception as e:
+                return {"error": str(e)}
+        return {"success": True}
 
-#     @http.route('/hspl_shopify/hspl_shopify/objects/<model("hspl_shopify.hspl_shopify"):obj>', auth='public')
-#     def object(self, obj, **kw):
-#         return http.request.render('hspl_shopify.object', {
-#             'object': obj
-#         })
+    @http.route(['/products/update', '/products/create'], type='json', method=['POST'])
+    def customer_create_or_update(self):
+        if request.httprequest.method == 'POST':
+            try:
+                data = json.loads(request.httprequest.data)
+                self.env['product.template'].update_products(data)
+            except Exception as e:
+                return {"error": str(e)}
+        return {"success": True}
+
+    @http.route('/orders/create', type='json', method=['POST'])
+    def customer_create_or_update(self):
+        if request.httprequest.method == 'POST':
+            try:
+                data = json.loads(request.httprequest.data)
+                self.env['sale.order'].update_orders(data)
+            except Exception as e:
+                return {"error": str(e)}
+        return {"success": True}

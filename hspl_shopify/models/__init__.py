@@ -5,3 +5,4 @@ from . import customerdetails
 from . import productdetails
 from . import ordersdetails
 from . import producttemplate
+from . import webhooks

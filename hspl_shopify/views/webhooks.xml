@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="webhook_tree_view" model="ir.ui.view">
+            <field name="name">webhook.tree.view</field>
+            <field name="model">shopify.webhooks</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="webhook_id"/>
+                    <field name="topic"/>
+                    <field name="address"/>
+                    <field name="target_address"/>
+                    <field name="format"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="webhook_form_view" model="ir.ui.view">
+            <field name="name">webhook.form.view</field>
+            <field name="model">shopify.webhooks</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="webhook_id"/>
+                                <field name="topic"/>
+                                <field name="address"/>
+                                <field name="target_address"/>
+                                <field name="format"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_webhook" model="ir.actions.act_window">
+            <field name="name">Webhook</field>
+            <field name="res_model">shopify.webhooks</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>
