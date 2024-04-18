@@ -43,7 +43,7 @@ class productsDetails(models.Model):
 
         # products = response_data["products"]
         if "products" in response_data:
-            products = response_data["orders"]
+            products = response_data["products"]
         else:
             products = [response_data]
 
@@ -140,6 +140,7 @@ class productsDetails(models.Model):
             images = product.get('images')
             if images:
                 for image in images:
+                    image_data = None
                     image_position = image.get('position')
                     print('image_position', image_position)
 

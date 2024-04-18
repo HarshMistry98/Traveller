@@ -6,7 +6,7 @@ from odoo.tools import json
 
 class ShopifyWebhooksController(http.Controller):
 
-    @http.route(['/customers/update', '/customers/create'], type='json', method=['POST'])
+    @http.route(['/customers/update', '/customers/create'], type='json', methods=['POST'])
     def customer_create_or_update(self):
         if request.httprequest.method == 'POST':
             try:
@@ -16,7 +16,7 @@ class ShopifyWebhooksController(http.Controller):
                 return {"error": str(e)}
         return {"success": True}
 
-    @http.route(['/products/update', '/products/create'], type='json', method=['POST'])
+    @http.route(['/products/update', '/products/create'], type='json', methods=['POST'])
     def customer_create_or_update(self):
         if request.httprequest.method == 'POST':
             try:
@@ -26,7 +26,7 @@ class ShopifyWebhooksController(http.Controller):
                 return {"error": str(e)}
         return {"success": True}
 
-    @http.route('/orders/create', type='json', method=['POST'])
+    @http.route('/orders/create', type='json', methods=['POST'])
     def customer_create_or_update(self):
         if request.httprequest.method == 'POST':
             try:
