@@ -6,3 +6,4 @@ from . import productdetails
 from . import ordersdetails
 from . import producttemplate
 from . import webhooks
+from . import productimage

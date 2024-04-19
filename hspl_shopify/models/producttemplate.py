@@ -136,7 +136,7 @@ class productsDetails(models.Model):
                                 item.weight = variant.get('weight')
                                 item.lst_price = variant.get('price')
 
-            image_ids = []
+            # image_ids = []
             images = product.get('images')
             if images:
                 for image in images:
@@ -155,22 +155,25 @@ class productsDetails(models.Model):
                         print('product_id', product_id.id)
                         print('first image')
                     else:
-                        image_id = self.env['product.image'].search([('product_tmpl_id', '=', product_id.id),
-                                                                     ('name', '=', product["title"]),
-                                                                     ('image_1920', '=', image_data)])
+                        # image_id = self.env['product.image'].search([('product_tmpl_id', '=', product_id.id),
+                        #                                              ('name', '=', product["title"]),
+                        #                                              ('image_1920', '=', image_data)])
+
+                        image_id = self.env['product.image'].search([('shopify_image_id', '=', str(image.get('id')))])
                         print('Present image_id.id', image_id.id)
 
                         if not image_id:
                             image_id = self.env['product.image'].create({
+                                'shopify_image_id': image.get('id'),
                                 'product_tmpl_id': product_id.id,
                                 'name': product["title"],
                                 'image_1920': image_data,
                             })
                             print('Created image_id.id', image_id.id)
 
-                        image_ids.append(image_id.id)
-                        print(image_ids)
-                        product_id.product_template_image_ids = [(6, 0, image_ids)]
+                        # image_ids.append(image_id.id)
+                        # print(image_ids)
+                        # product_id.product_template_image_ids = [(6, 0, image_ids)]
             else:
                 product_id.image_1920 = False
 
