@@ -12,12 +12,13 @@ class customersDetails(models.Model):
         partners = self.env['res.partner']
         # list_customers = response_data.get("customers")
 
-        if "customers" in response_data:
-            list_customers = response_data["customers"]
-        else:
-            list_customers = [response_data]
+        # if "customers" in response_data:
+        #     customers = response_data["customers"]
+        # else:
+        #     customers = [response_data]
+        customers = response_data.get("customers", [response_data])
 
-        for customer in list_customers:
+        for customer in customers:
             values = self.get_customer_values(customer)
             partner_exist = partners.search([('shopify_customer_id', '=', values['shopify_customer_id'])])
             try:

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="import_customers_cron_job" model="ir.cron">
+            <field name="name">Import Customers</field>
+            <field name="model_id" ref="model_shopify_operation"/>
+            <field name="state">code</field>
+            <field name="code">model.action_import_data(job_for='customers')</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name='priority'>1</field>
+            <field name="numbercall">-1</field>
+        </record>
+        <record id="import_product_cron_job" model="ir.cron">
+            <field name="name">Import Product</field>
+            <field name="model_id" ref="model_shopify_operation"/>
+            <field name="state">code</field>
+            <field name="code">model.action_import_data(job_for='products')</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name='priority'>2</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+        <record id="import_orders_cron_job" model="ir.cron">
+            <field name="name">Import Orders</field>
+            <field name="model_id" ref="model_shopify_operation"/>
+            <field name="state">code</field>
+            <field name="code">model.action_import_data(job_for='orders')</field>
+            <field name='priority'>3</field>
+            <field name='interval_number'>1</field>
+            <field name='interval_type'>days</field>
+            <field name="numbercall">-1</field>
+        </record>
+
+    </data>
+</odoo>
+

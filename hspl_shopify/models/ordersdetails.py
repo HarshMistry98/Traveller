@@ -73,12 +73,7 @@ class ordersDetails(models.Model):
 
     def update_orders(self, response_data):
         orderenv = self.env['sale.order']
-        # orders = response_data.get('orders')
-
-        if "orders" in response_data:
-            orders = response_data["orders"]
-        else:
-            orders = [response_data]
+        orders = response_data.get("orders", [response_data])
 
         for order in orders:
             values = self.get_order_values(order)

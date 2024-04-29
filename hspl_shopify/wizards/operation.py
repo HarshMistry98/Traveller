@@ -14,16 +14,17 @@ class operationImport(models.TransientModel):
         ('orders', 'Orders'),
     ], string="Operation", default="customers")
 
-    def action_import_data(self):
+    def action_import_data(self, job_for=False):
 
         try:
             store = self.env['ir.config_parameter']
+            operation_for = job_for if job_for else self.operation_for
 
             baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
             access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
 
             if baseURL and access_token:
-                url = f"{baseURL}/{self.operation_for}.json"
+                url = f"{baseURL}/{operation_for}.json"
 
                 payload = {}
                 headers = {
@@ -38,17 +39,17 @@ class operationImport(models.TransientModel):
                     print(f"Error: {response.status_code}")
                     raise UserError(f"Error: {response.status_code}")
 
-                operatefunc = f"update_{self.operation_for}"
+                operatefunc = f"update_{operation_for}"
                 # print(">>>>>>>",type(operatefunc))
                 #
                 #
                 # getattr(self, operatefunc)(response_data)
 
-                if self.operation_for == 'customers':
+                if operation_for == 'customers':
                     operateClass = self.env['res.partner']
-                elif self.operation_for == 'products':
+                elif operation_for == 'products':
                     operateClass = self.env['product.template']
-                elif self.operation_for == 'orders':
+                elif operation_for == 'orders':
                     operateClass = self.env['sale.order']
 
                 getattr(operateClass,operatefunc)(response_data)

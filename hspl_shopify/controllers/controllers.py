@@ -35,3 +35,4 @@ class ShopifyWebhooksController(http.Controller):
             except Exception as e:
                 return {"error": str(e)}
         return {"success": True}
+

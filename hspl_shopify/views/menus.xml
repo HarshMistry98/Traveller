@@ -12,7 +12,7 @@
             <menuitem id="menu_shopify_order_quotations"
                       name="Quotations"
                       sequence="10"
-                      action="sale.action_quotations_with_onboarding"/>
+                      action="hspl_shopify.action_shopify_quatations"/>
 
             <menuitem id="menu_shopify_order_order"
                       name="Order"
