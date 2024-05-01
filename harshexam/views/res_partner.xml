@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!--    <record id="res_partner_form_inherit" model="ir.ui.view">-->
+<!--        <field name="name">harshexam.res.partner.form</field>-->
+<!--        <field name="model">res.partner</field>-->
+<!--        <field name="inherit_id" ref="base.view_partner_form"/>-->
+<!--        <field name="priority" eval="8"/>-->
+<!--        <field name="arch" type="xml">-->
+<!--            &lt;!&ndash;                <xpath expr="//field[@name='example_field']" position="replace">&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <field name="example_field2"/>&ndash;&gt;-->
+<!--            &lt;!&ndash;                </xpath>&ndash;&gt;-->
+<!--            &lt;!&ndash;                <xpath expr="//field[@name='example_field']" position="attributes">&ndash;&gt;-->
+<!--            &lt;!&ndash;                    <attribute name="invisible">True</attribute>&ndash;&gt;-->
+<!--            &lt;!&ndash;                </xpath>&ndash;&gt;-->
+<!--        </field>-->
+<!--    </record>-->
+
+    <record id="action_res_partner_exam" model="ir.actions.act_window">
+        <field name="name">Res Partner</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+
+    </record>
+
+
+    <menuitem id="menu_harshexam" name="Harsh Exam" sequence="5"/>
+
+    <menuitem id="menu_harshexam_res_partner" name="Partner" parent="menu_harshexam"
+              action="action_res_partner_exam"
+              sequence="1"/>
+</odoo>

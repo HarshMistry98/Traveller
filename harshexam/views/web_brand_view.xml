@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="product_brand_insert" inherit_id="website_sale.product" customize_show="True" active="True" name="Product Brand" priority="21">
+        <xpath expr="//h1[@itemprop='name']" position="after">
+            <strong><span class="oe_custom_base_unit" t-field="product.brand_id.name"/></strong>
+        </xpath>
+    </template>
+
+    <template id="brand_menu_view_website">
+        <t t-call="website.layout">
+            <div class="container" style="display: flex; align-items: center; justify-content: center;">
+                <h1>Brands</h1>
+            </div>
+            <div class="container">
+                <br/>
+                <br/>
+                <div class="row">
+                    <t t-foreach="brands" t-as="brand">
+                        <div class="brand col-sm">
+                            <img t-att-src="'/web/image/product.brand/%s/image' % brand.id" class="d-block product_detail_img" alt="Brand Image"/>
+
+                            <h4>
+                                <a t-attf-href="/brand/products/{{brand.id}}"><t t-esc="brand.name"/></a>
+                            </h4>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <record id="brand_page" model="website.page">
+        <field name="url">/brand</field>
+        <field name="is_published">True</field>
+        <field name="view_id" ref="harshexam.brand_menu_view_website"/>
+        <field name="track">True</field>
+    </record>
+
+    <record id="menu_itinerary_website" model="website.menu">
+        <field name="name">Brand</field>
+        <field name="url">/brand</field>
+        <field name="page_id" ref="harshexam.brand_page"/>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">60</field>
+    </record>
+
+    <template id="brand_only_products">
+        <t t-call="website.layout">
+            <div class="container">
+                <div class="brand">
+                    <img t-att-src="'/web/image/product.brand/%s/image' % brand.id" class="d-block product_detail_img" alt="Brand Image"/>
+
+                    <h4><t t-esc="brand.name"/></h4>
+                </div>
+                <div class="row">
+                    <t t-foreach="products" t-as="product">
+                        <div class="brand col-sm">
+    <!--                        <img t-att-src="'/web/image/product.brand/%s/image' % brand.id" class="d-block product_detail_img" alt="Product Image"/>-->
+
+                            <img t-att-src="'/web/image/product.template/%s/image_1920' % product.id" class="d-block product_detail_img" alt="Product Image"/>
+
+                            <h4>
+                                <t t-esc="product.name"/>
+                            </h4>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
+     <record id="brand_product_page" model="website.page">
+        <field name="url">/brand/products</field>
+        <field name="is_published">True</field>
+        <field name="view_id" ref="harshexam.brand_only_products"/>
+        <field name="track">True</field>
+    </record>
+
+</odoo>

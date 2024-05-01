@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="menu_purchase_control_exam"
+              name="Control"
+              sequence="35"
+              parent="purchase.menu_purchase_root">
+
+        <menuitem id="menu_purchase_vendor_report_exam"
+              name="Vendor Report"
+              sequence="1"
+              action="harshexam.action_vendor_report_wizard"/>
+
+    </menuitem>
+</odoo>

@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+harshexam.access_vendor_report,access_vendor_report,harshexam.model_vendor_report,base.group_user,1,1,1,1
+harshexam.access_product_brand,access_product_brand,harshexam.model_product_brand,base.group_user,1,1,1,1
