@@ -59,3 +59,19 @@ class operationImport(models.TransientModel):
 
         except Exception as e:
             raise e
+
+    def action_export_data(self):
+        print("Exporting")
+
+        operation_for = self.operation_for
+
+        operatefunc = f"export_{operation_for}"
+
+        if operation_for == 'customers':
+            operateClass = self.env['res.partner']
+        elif operation_for == 'products':
+            operateClass = self.env['product.template']
+        elif operation_for == 'orders':
+            operateClass = self.env['sale.order']
+
+        export_data = getattr(operateClass, operatefunc)()

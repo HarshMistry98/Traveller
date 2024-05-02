@@ -9,6 +9,7 @@
                 <field name="operation_for"/>
                 <footer>
                     <button string="IMPORT" type="object" class="oe_highlight" name="action_import_data"/>
+                    <button string="EXPORT" type="object" class="oe_highlight" name="action_export_data"/>
                     <button string="Cancel" class="oe_link" special="cancel"/>
                 </footer>
             </form>

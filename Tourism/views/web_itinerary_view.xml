@@ -4,7 +4,7 @@
     <template id="itinerary_menu_template">
         <t t-call="website.layout">
             <div class="container">
-                Itinerary............................
+                Braand............................
             </div>
         </t>
     </template>
