@@ -2,6 +2,8 @@ import base64
 import requests
 import json
 
+from bs4 import BeautifulSoup
+
 from odoo import fields, models, api
 from odoo.exceptions import UserError
 
@@ -125,6 +127,7 @@ class productsDetails(models.Model):
                             'shopify_image_id': image.get('id'),
                             'product_tmpl_id': product_id.id,
                             'name': product["title"],
+                            'sequence': image_position,
                             'image_1920': image_data,
                         })
         else:
@@ -140,9 +143,15 @@ class productsDetails(models.Model):
             tag_list = []
             tag_list = self.update_tags(product_data, tag_list)
 
+            product_description = False
+            if product_data.get('body_html'):
+                soup = BeautifulSoup(product_data.get('body_html'), 'html.parser')
+                product_description = soup.get_text()
+
             product_values = {
                 'shopify_product_id': str(product_data["id"]),
                 'name': product_data["title"],
+                'description': product_description,
                 'detailed_type': 'product',
                 'product_tag_ids': [(6, 0, tag_list)],
             }
@@ -171,6 +180,9 @@ class productsDetails(models.Model):
         # If the customer have Shopify ID so that customer is  present on Shopify
         # therefore during export we have to update the customer
 
+        print("without_shopify_id_products", without_shopify_id_products)
+        print("with_shopify_id_products", with_shopify_id_products)
+
         store = self.env['ir.config_parameter']
         baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
         access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
@@ -188,13 +200,16 @@ class productsDetails(models.Model):
                     values = self.get_export_product_values(product)
 
                     url = f"{baseURL}/products.json"
-
+                    print("(values)", (values))
+                    # print("json.dumps(values)", json.dumps(values))
                     response = requests.request(method="POST", url=url, headers=headers, data=json.dumps(values))
                     error = response.json().get("errors")
+                    print("response.status_code", response.status_code)
+                    print("error", error)
 
                     if response.status_code == 201:
                         response_data = response.json()
-
+                        print("response_data", response_data)
                         response_product = response_data.get("product")
                         product.with_context(skip_export_flag=True).write({
                             "shopify_product_id": response_product.get("id"),
@@ -211,6 +226,8 @@ class productsDetails(models.Model):
                                         if set(options).issubset(set(list_values)):
                                             item.shopify_variant_id = variant.get('id')
                                             item.shopify_product_id = variant.get('product_id')
+
+                        print("Product Exported")
 
                     else:
                         raise UserError(
@@ -307,36 +324,20 @@ class productsDetails(models.Model):
 
             data.get('product')['variants'] = variant_val_list
             data.get('product')['options'] = option_list
-        return data
 
-# data = {
-#     "product":
-#         {
-#             "title": "Burton Custom Freestyle 151",
-#             "body_html": "<strong>Good snowboard!</strong>",
-#             "vendor": "Burton",
-#             "product_type": "Snowboard",
-#             "variants":
-#                 [
-#                     {
-#                         "option1": "Blue",
-#                         "option2": "155"
-#                     },
-#                     {
-#                         "option1": "Black",
-#                         "option2": "159"
-#                     }
-#                 ],
-#             "options":
-#                 [
-#                     {
-#                         "name": "Color",
-#                         "values": ["Blue", "Black"]
-#                     },
-#                     {
-#                         "name": "Size"
-#                         , "values": ["155", "159"]
-#                     }
-#                 ]
-#         }
-# }
+            image_list = []
+            product_images = self.env['product.image'].search([("product_tmpl_id", "=", product.id)])
+
+            if product_images:
+                position = 1
+                for product_image in product_images:
+                    image_dic = {
+                        'position': position,
+                        'name': product_image.name,
+                        # 'attachment': product.image_1920 if position == 1 else product_image.image_1920,
+                    }
+                    image_list.append(image_dic)
+                    position += 1
+
+                data.get('product')['images'] = image_list
+        return data

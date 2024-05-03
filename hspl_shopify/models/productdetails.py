@@ -7,6 +7,6 @@ class productsDetails(models.Model):
 
     shopify_product_id = fields.Char("Shopify Product ID")
     shopify_variant_id = fields.Char("Shopify Variant ID")
-    def update_products(self):
-
-        print("Product printed")
+    # def update_products(self):
+    #
+    #     print("Product printed")

@@ -1,5 +1,15 @@
 from odoo import fields, models, api
 import requests
+import json
+
+from odoo.exceptions import UserError
+
+
+class SaleOrderLineDetails(models.Model):
+    _inherit = 'sale.order.line'
+    _description = 'Order Line'
+
+    shopify_order_line_id = fields.Char("Shopify ID")
 
 
 class ordersDetails(models.Model):
@@ -7,6 +17,16 @@ class ordersDetails(models.Model):
     _description = 'Order Details'
 
     shopify_orders_id = fields.Char("Shopify ID")
+    is_shopify_order = fields.Boolean("Shopify Order", default=False)
+    is_exported_to_shopify = fields.Boolean("Exported to Shopify")
+
+    # def write(self, vals):
+    #     if not self.env.context.get('skip_export_flag'):
+    #         vals.update({
+    #             "is_exported_to_shopify": False,
+    #         })
+    #     res = super(ordersDetails, self).write(vals)
+    #     return res
 
     def get_order_values(self, order):
 
@@ -26,6 +46,8 @@ class ordersDetails(models.Model):
             payment_status = 'draft'
         values = {
             'shopify_orders_id': order.get('id'),
+            'is_exported_to_shopify': True,
+            'is_shopify_order': True,
             'partner_id': customer_id.id,
             'partner_invoice_id': billing_id.id,
             'partner_shipping_id': shipping_id.id,
@@ -47,12 +69,14 @@ class ordersDetails(models.Model):
 
     def create_order_lines(self, order, order_id):
         line_items = order.get('line_items')
+        order_line_list = []
         for line_item in line_items:
             variant_id = line_item.get('variant_id')
             product_variant = self.env['product.product'].search([('shopify_variant_id', '=', str(variant_id))])
             product_variant_id = product_variant.id
             tax_ids = self.get_taxes(line_item)
             order_line_values = {
+                'shopify_order_line_id': line_item.get("id"),
                 'order_id': order_id.id,
                 'product_id': product_variant_id,
                 'product_uom_qty': line_item.get('quantity'),
@@ -60,16 +84,15 @@ class ordersDetails(models.Model):
                 'discount': float(line_item.get('total_discount')) * 100,
             }
             order_line = self.env['sale.order.line'].search([
-                ('order_id', '=', order_id.id),
-                ('product_id', '=', product_variant_id),
-                ('product_uom_qty', '=', line_item.get('quantity')),
-                ('tax_id', '=', tax_ids),
-                ('discount', '=', float(line_item.get('total_discount')) * 100),
+                ('shopify_order_line_id', '=', line_item.get("id")),
             ])
             if not order_line:
                 order_line = self.env['sale.order.line'].create(order_line_values)
             else:
                 order_line.write(order_line_values)
+            order_line_list.append(order_line.id)
+
+        # return order_line_list
 
     def update_orders(self, response_data):
         orderenv = self.env['sale.order']
@@ -84,3 +107,161 @@ class ordersDetails(models.Model):
                 order_id.write(values)
             # Creating Order Lines
             self.create_order_lines(order, order_id)
+            # order_line_list = self.create_order_lines(order, order_id)
+            #
+            # order_id.write({
+            #     'order_line': [(6, 0, order_line_list)]
+            # })
+
+    def export_orders(self):
+        print("Exporting Orders")
+
+        without_shopify_id_orders = self.env['sale.order'].search([("shopify_orders_id", "=", False),
+                                                                   ("is_exported_to_shopify", "=", False),
+                                                                   ("is_shopify_order", "=", True), ])
+        # If the order do not have Shopify ID so that order is not present on Shopify
+        # therefore during export we have to create the order by POST request
+
+        with_shopify_id_orders = self.env['sale.order'].search([("shopify_orders_id", "!=", False),
+                                                                ("is_exported_to_shopify", "=", False),
+                                                                ("is_shopify_order", "=", True)])
+        # If the order have Shopify ID so that order is  present on Shopify
+        # therefore during export we have to update the order by PUT request
+
+        print("without_shopify_id_orders", without_shopify_id_orders)
+        print("with_shopify_id_orders", with_shopify_id_orders)
+
+        store = self.env['ir.config_parameter']
+        baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
+        access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
+
+        if baseURL and access_token:
+            headers = {
+                'X-Shopify-Access-Token': access_token,
+                "Content-Type": "application/json"
+            }
+
+            if without_shopify_id_orders:
+                # make POST request
+                for order in without_shopify_id_orders:
+
+                    values = self.get_export_order_values(order)
+
+                    url = f"{baseURL}/orders.json"
+
+                    response = requests.request(method="POST", url=url, headers=headers, data=json.dumps(values))
+                    error = response.json().get("errors")
+
+                    if response.status_code == 201:
+                        response_data = response.json()
+
+                        response_order = response_data.get("order")
+                        order.with_context(skip_export_flag=True).write({
+                            "shopify_orders_id": response_order.get("id"),
+                            "is_exported_to_shopify": True,
+                        })
+                    else:
+                        raise UserError(
+                            f"Failed to export data for order id ={order.id}. Response {response.status_code}- {error}")
+
+            if with_shopify_id_orders:
+
+                for order in with_shopify_id_orders:
+                    values = self.get_export_order_values(order)
+                    print("json.dumps(values)", json.dumps(values))
+
+                    url = f"{baseURL}/orders/{order.shopify_orders_id}.json"
+                    response = requests.request("PUT", url, headers=headers, data=json.dumps(values))
+                    error = response.json().get("errors")
+                    print("response.status_code", response.status_code)
+                    print("error", error)
+                    print("response.json()", response.json())
+
+                    if response.status_code == 200:
+                        order.with_context(skip_export_flag=True).write({
+                            "is_exported_to_shopify": True,
+                        })
+                        print("Export Success")
+                    else:
+                        raise UserError(
+                            f"Failed to export data for order id ={order.id}. Response {response.status_code}.{error}")
+        else:
+            raise UserError("Improper Store Details")
+
+    def get_export_order_values(self, order):
+
+        if order.partner_id.shopify_customer_id == False:
+            raise UserError(
+                f"Export of order (id={order.id}) failed as {order.partner_id.name} is not a Shopify Product")
+        line_val_list = []
+        if order.order_line:
+            for line in order.order_line:
+                if line.product_id.shopify_variant_id == False:
+                    raise UserError(
+                        f"Export of order (id={order.id}) failed as {line.product_id.name} is not a Shopify Product")
+                line_vals_dict = {
+                    'title': line.product_id.name,
+                    'price': line.price_unit,
+                    'variant_id': line.product_id.shopify_variant_id,
+                    'quantity': int(line.product_uom_qty),
+
+                }
+
+                tax_line_lst = []
+                if line.tax_id:
+                    for tax in line.tax_id:
+                        tax_line_dict = {
+                            'title': tax.tax_group_id.name,
+                            'rate': tax.amount / 100
+                        }
+                        tax_line_lst.append(tax_line_dict)
+                    line_vals_dict["tax_lines"] = tax_line_lst
+
+                line_val_list.append(line_vals_dict)
+
+        bill_first_name, bill_last_name = (order.partner_invoice_id.name).split(" ")
+        billing_address = {
+            "first_name": bill_first_name,
+            "last_name": bill_last_name,
+            "name": bill_first_name + " " + bill_last_name,
+            "phone": order.partner_invoice_id.mobile,
+            "address1": order.partner_invoice_id.street,
+            "address2": order.partner_invoice_id.street2,
+            "city": order.partner_invoice_id.city,
+            "zip": order.partner_invoice_id.zip,
+            "province": order.partner_invoice_id.state_id.name,
+            "country": order.partner_invoice_id.country_id.name,
+            "province_code": order.partner_invoice_id.state_id.code,
+            "country_code": order.partner_invoice_id.country_id.code,
+        }
+
+        deliv_first_name, deliv_last_name = (order.partner_shipping_id.name).split(" ")
+        delivery_address = {
+            "first_name": deliv_first_name,
+            "last_name": deliv_last_name,
+            "name": deliv_first_name + " " + deliv_last_name,
+            "phone": order.partner_shipping_id.mobile,
+            "address1": order.partner_shipping_id.street,
+            "address2": order.partner_shipping_id.street2,
+            "city": order.partner_shipping_id.city,
+            "zip": order.partner_shipping_id.zip,
+            "province": order.partner_shipping_id.state_id.name,
+            "country": order.partner_shipping_id.country_id.name,
+            "province_code": order.partner_shipping_id.state_id.code,
+            "country_code": order.partner_shipping_id.country_id.code,
+        }
+
+        data = {
+            "order": {
+                "id": order.shopify_orders_id,
+                "customer": {
+                    "id": order.partner_id.shopify_customer_id,
+                },
+                "line_items": line_val_list,
+                "financial_status": "paid" if order.state == "sale" else "pending",
+                "billing_address": billing_address,
+                "shipping_address": delivery_address,
+            }
+        }
+
+        return data

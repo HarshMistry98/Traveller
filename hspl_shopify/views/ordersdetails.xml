@@ -8,8 +8,18 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='payment_term_id']" position="after">
-                    <field name="shopify_orders_id"/>
+                <xpath expr="//notebook" position="inside">
+                    <page name="shopify" string="Shopify">
+                        <group>
+                            <group>
+                                <field name="shopify_orders_id"/>
+                                <field name="is_shopify_order"/>
+                            </group>
+                            <group>
+                                <field name="is_exported_to_shopify"/>
+                            </group>
+                        </group>
+                    </page>
                 </xpath>
             </field>
         </record>
@@ -33,7 +43,7 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="view_id" ref="sale.view_order_tree"/>
             <field name="target">current</field>
-            <field name="domain">[('shopify_orders_id', '!=', False)]</field>
+            <field name="domain">[('is_shopify_order', '=', True)]</field>
         </record>
 
         <record id="action_shopify_quatations" model="ir.actions.act_window">
@@ -42,7 +52,7 @@
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
             <field name="target">current</field>
-            <field name="domain">[('shopify_orders_id', '!=', False)]</field>
+            <field name="domain">[('is_shopify_order', '=', True)]</field>
         </record>
     </data>
 </odoo>

@@ -4,14 +4,14 @@ from odoo.http import request
 from odoo.tools import json
 
 
-class ShopifyWebhooksController(http.Controller):
+class ShopifyController(http.Controller):
 
     @http.route(['/customers/update', '/customers/create'], type='json', methods=['POST'])
     def customer_create_or_update(self):
         if request.httprequest.method == 'POST':
             try:
                 data = json.loads(request.httprequest.data)
-                self.env['res.partner'].update_customers(data)
+                request.env['res.partner'].update_customers(data)
             except Exception as e:
                 return {"error": str(e)}
         return {"success": True}
@@ -21,7 +21,7 @@ class ShopifyWebhooksController(http.Controller):
         if request.httprequest.method == 'POST':
             try:
                 data = json.loads(request.httprequest.data)
-                self.env['product.template'].update_products(data)
+                request.env['product.template'].update_products(data)
             except Exception as e:
                 return {"error": str(e)}
         return {"success": True}
@@ -31,7 +31,7 @@ class ShopifyWebhooksController(http.Controller):
         if request.httprequest.method == 'POST':
             try:
                 data = json.loads(request.httprequest.data)
-                self.env['sale.order'].update_orders(data)
+                request.env['sale.order'].update_orders(data)
             except Exception as e:
                 return {"error": str(e)}
         return {"success": True}

@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 from odoo import fields, models, api
@@ -10,7 +12,7 @@ class Webhooks(models.Model):
 
     webhook_id = fields.Char('Webhook ID', readonly=True)
     topic = fields.Char('Topic')
-    address = fields.Char('Address')
+    # address = fields.Char('Address')
     target_address = fields.Char('Target Address')
     format = fields.Char("Format", default='json')
 
@@ -32,17 +34,20 @@ class Webhooks(models.Model):
             payload = {
                 "webhook": {
                     "topic": str(vals_list[0].get('topic')),
-                    "address": str(domain_url + "/" + vals_list[0].get('topic')),
+                    "address": str(domain_url + "/shopify/webhook/" + vals_list[0].get('topic')),
                     "format": str(vals_list[0].get('format'))
                 }
             }
+            print("url", url)
+            print("payload", payload)
             headers = {
                 "X-Shopify-Access-Token": access_token,
                 "Content-Type": "application/json",
             }
+            print("headers", headers)
 
-            response = requests.request("post", url, headers=headers, json=payload)
-            if response.status_code in [200,201]:
+            response = requests.request("POST", url, headers=headers, data=json.dumps(payload))
+            if response.status_code in [200, 201]:
                 response_data = response.json()
                 if response_data and 'webhook' in response_data:
                     webhooks = response_data.get('webhook')
@@ -55,7 +60,7 @@ class Webhooks(models.Model):
                     webhook_exist = self.search([('webhook_id', '=', webhooks.get('id'))], limit=1)
                     if not webhook_exist:
                         vals_list[0].update(values)
-                        print("Paachi vals_list",vals_list)
+                        print("Paachi vals_list", vals_list)
                         print("written")
                     else:
                         webhook_exist.write(values)
