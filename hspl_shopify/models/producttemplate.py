@@ -90,22 +90,23 @@ class productsDetails(models.Model):
                             'product_tmpl_id': product_id.id
                         })
 
-    def update_product_variants(self, product, product_id):
-        '''Update product variants'''
-        product_variant = self.env['product.product'].search([('product_tmpl_id', '=', product_id.id)])
-        variants = product.get('variants')
-        if variants:
-            for variant in variants:
-                options = [variant.get(f'option{i}') for i in range(1, 4) if variant.get(f'option{i}')]
-                for item in product_variant:
-                    if item.product_template_attribute_value_ids:
-                        list_values = [rec.name for rec in item.product_template_attribute_value_ids]
-                        if set(options).issubset(set(list_values)):
-                            item.shopify_variant_id = variant.get('id')
-                            item.shopify_product_id = variant.get('product_id')
-                            item.barcode = variant.get('barcode')
-                            item.weight = variant.get('weight')
-                            item.lst_price = variant.get('price')
+    # def update_product_variants(self, product, product_id):
+    #     '''Update product variants'''
+    #     product_variant = self.env['product.product'].search([('product_tmpl_id', '=', product_id.id)])
+    #     variants = product.get('variants')
+    #     if variants:
+    #         for variant in variants:
+    #             options = [variant.get(f'option{i}') for i in range(1, 4) if variant.get(f'option{i}')]
+    #             for item in product_variant:
+    #                 if item.product_template_attribute_value_ids:
+    #                     list_values = [rec.name for rec in item.product_template_attribute_value_ids]
+    #                     if set(options).issubset(set(list_values)):
+    #                         item.shopify_variant_id = variant.get('id')
+    #                         item.shopify_product_id = variant.get('product_id')
+    #                         item.shopify_inventory_id = variant.get('inventory_item_id')
+    #                         item.barcode = variant.get('barcode')
+    #                         item.weight = variant.get('weight')
+    #                         item.lst_price = variant.get('price')
 
     def update_product_images(self, product, product_id):
         '''Update product images'''
@@ -123,7 +124,7 @@ class productsDetails(models.Model):
                 else:
                     image_id = self.env['product.image'].search([('shopify_image_id', '=', str(image.get('id')))])
                     if not image_id:
-                        image_id = self.env['product.image'].create({
+                        self.env['product.image'].create({
                             'shopify_image_id': image.get('id'),
                             'product_tmpl_id': product_id.id,
                             'name': product["title"],
@@ -134,10 +135,37 @@ class productsDetails(models.Model):
             product_id.image_1920 = False
 
     @api.model
-    def update_products(self, response_data):
+    def update_products(self, response_data=False):
         '''Update products based on Shopify response data'''
         productenv = self.env['product.template']
-        products = response_data.get("products", [response_data])
+        
+        if not response_data:
+            store = self.env['ir.config_parameter']
+
+            baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
+            access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
+
+            if baseURL and access_token:
+                url = f"{baseURL}/products.json"
+
+                payload = {}
+                headers = {
+                    'X-Shopify-Access-Token': access_token,
+                }
+
+                response = requests.request("GET", url, headers=headers, data=payload)
+
+                if response.status_code == 200:
+                    response_products_data = response.json()
+                    products = response_products_data.get('products')
+                else:
+                    print(f"Error: {response.status_code}")
+                    raise UserError(f"Error: {response.status_code}")
+            else:
+                raise UserError("Improper Store Details")
+
+        else:
+            products = [response_data]
 
         for product_data in products:
             tag_list = []
@@ -160,10 +188,10 @@ class productsDetails(models.Model):
             if not product_id:
                 product_id = self.env['product.template'].create(product_values)
             else:
-                product_id.write(product_values)
+                product_id.with_context(skip_export_flag=True).write(product_values)
 
             self.update_product_attributes(product_data, product_id)
-            self.update_product_variants(product_data, product_id)
+            self.env['product.product'].update_product_variants(product_data, product_id)
             self.update_product_images(product_data, product_id)
 
     def export_products(self):

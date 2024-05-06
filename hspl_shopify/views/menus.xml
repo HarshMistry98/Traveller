@@ -15,23 +15,23 @@
                       action="hspl_shopify.action_shopify_quatations"/>
 
             <menuitem id="menu_shopify_order_order"
-                      name="Order"
+                      name="Orders"
                       sequence="10"
                       action="hspl_shopify.action_shopify_orders"/>
         </menuitem>
 
         <menuitem id="menu_shopify_customer"
-                  name="Customer"
+                  name="Customers"
                   sequence="10"
                   action="hspl_shopify.action_shopify_customers">
         </menuitem>
 
         <menuitem id="menu_shopify_products"
-                  name="Product"
+                  name="Products"
                   sequence="20">
 
             <menuitem id="menu_shopify_product"
-                      name="Product"
+                      name="Products"
                       sequence="10"
                       action="hspl_shopify.action_shopify_product_templates"/>
 
@@ -41,27 +41,38 @@
                       action="hspl_shopify.action_shopify_product_variants"/>
         </menuitem>
 
+<!--        <menuitem id="menu_shopify_inventory"-->
+<!--                  name="Inventory"-->
+<!--                  sequence="40"-->
+<!--                  action="hspl_shopify.action_shopify_stock_quants">-->
+<!--        </menuitem>-->
+
         <menuitem id="menu_shopify_operation"
                   name="Operation"
-                  sequence="40"
+                  sequence="50"
                   action="hspl_shopify.action_operation">
         </menuitem>
 
         <menuitem id="menu_webhook"
                   name="Webhook"
-                  sequence="50"
+                  sequence="60"
                   action="hspl_shopify.action_webhook">
         </menuitem>
 
 
         <menuitem id="menu_shopify_config"
                   name="Configuration"
-                  sequence="60">
+                  sequence="70">
 
             <menuitem id="menu_shopify_general_settings"
                       name="Settings"
                       sequence="10"
                       action="hspl_shopify.action_shopify_setting_configuration"/>
+
+            <menuitem id="menu_shopify_warehouse"
+                      name="Warehouses"
+                      sequence="20"
+                      action="hspl_shopify.action_shopify_location"/>
 
         </menuitem>
 

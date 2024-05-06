@@ -94,9 +94,37 @@ class ordersDetails(models.Model):
 
         # return order_line_list
 
-    def update_orders(self, response_data):
+    def update_orders(self, response_data=False):
         orderenv = self.env['sale.order']
-        orders = response_data.get("orders", [response_data])
+
+        if not response_data:
+            store = self.env['ir.config_parameter']
+
+            baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
+            access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
+
+            if baseURL and access_token:
+                url = f"{baseURL}/orders.json"
+
+                payload = {}
+                headers = {
+                    'X-Shopify-Access-Token': access_token,
+                }
+
+                response = requests.request("GET", url, headers=headers, data=payload)
+
+                if response.status_code == 200:
+                    response_orders_data = response.json()
+                    orders = response_orders_data.get('orders')
+                else:
+                    print(f"Error: {response.status_code}")
+                    raise UserError(f"Error: {response.status_code}")
+            else:
+                raise UserError("Improper Store Details")
+
+        else:
+            orders = [response_data]
+        # orders = response_data.get("orders", [response_data])
 
         for order in orders:
             values = self.get_order_values(order)
@@ -107,11 +135,6 @@ class ordersDetails(models.Model):
                 order_id.write(values)
             # Creating Order Lines
             self.create_order_lines(order, order_id)
-            # order_line_list = self.create_order_lines(order, order_id)
-            #
-            # order_id.write({
-            #     'order_line': [(6, 0, order_line_list)]
-            # })
 
     def export_orders(self):
         print("Exporting Orders")

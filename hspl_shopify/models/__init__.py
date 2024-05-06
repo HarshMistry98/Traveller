@@ -7,3 +7,4 @@ from . import ordersdetails
 from . import producttemplate
 from . import webhooks
 from . import productimage
+from . import stock_location

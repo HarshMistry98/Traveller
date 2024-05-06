@@ -34,6 +34,7 @@
         'views/productdetails.xml',
         'views/ordersdetails.xml',
         'views/productdetailstemplate.xml',
+        'views/stock_location.xml',
         'views/webhooks.xml',
 
         'views/menus.xml',

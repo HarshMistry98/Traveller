@@ -21,16 +21,44 @@ class customersDetails(models.Model):
         res = super(customersDetails, self).write(vals)
         return res
 
-    def update_customers(self, response_data):
+    def update_customers(self, response_data=False):
         partners = self.env['res.partner']
-        customers = response_data.get("customers", [response_data])
+        print("1111",response_data)
+        if not response_data:
+            store = self.env['ir.config_parameter']
 
+            baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
+            access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
+
+            if baseURL and access_token:
+                url = f"{baseURL}/customers.json"
+
+                payload = {}
+                headers = {
+                    'X-Shopify-Access-Token': access_token,
+                }
+
+                response = requests.request("GET", url, headers=headers, data=payload)
+
+                if response.status_code == 200:
+                    response_customer_data = response.json()
+                    customers = response_customer_data.get('customers')
+                else:
+                    print(f"Error: {response.status_code}")
+                    raise UserError(f"Error: {response.status_code}")
+            else:
+                raise UserError("Improper Store Details")
+
+        else:
+            customers = [response_data]
+        print("response_data",response_data)
+        print("customers",customers)
         for customer in customers:
             values = self.get_customer_values(customer)
             partner_exist = partners.search([('shopify_customer_id', '=', values['shopify_customer_id'])])
             try:
                 if partner_exist:
-                    partner_exist.write(values, context={'skip_export_flag': True})
+                    partner_exist.with_context(skip_export_flag=True).write(values)
                 else:
                     partners.create(values)
             except Exception as e:
@@ -103,7 +131,6 @@ class customersDetails(models.Model):
                     response = requests.request(method="POST", url=url, headers=headers, data=json.dumps(values))
                     error = response.json().get("errors")
 
-
                     if response.status_code == 201:
                         response_data = response.json()
 
@@ -126,9 +153,6 @@ class customersDetails(models.Model):
                     error = response.json().get("errors")
 
                     if response.status_code == 200:
-                        # response_data = response.json()
-
-                        # response_customer = response_data.get("customer")
                         customer.with_context(skip_export_flag=True).write({
                             "is_exported_to_shopify": True,
                         })
