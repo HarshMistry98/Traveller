@@ -72,6 +72,11 @@
             <menuitem id="menu_shopify_warehouse"
                       name="Warehouses"
                       sequence="20"
+                      action="hspl_shopify.action_shopify_warehouse"/>
+
+            <menuitem id="menu_shopify_location"
+                      name="Locations"
+                      sequence="30"
                       action="hspl_shopify.action_shopify_location"/>
 
         </menuitem>

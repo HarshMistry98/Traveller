@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="loan_employee_group_category" model="ir.module.category">
+        <field name="name">Employee Loan</field>
+    </record>
+    <record id="loan_employee_group_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="emp_loan.loan_employee_group_category"/>
+    </record>
+    <record id="loan_employee_group_manager" model="res.groups">
+        <field name="name">Manger</field>
+        <field name="implied_ids" eval="[(4, ref('emp_loan.loan_employee_group_user'))]"/>
+        <field name="category_id" ref="emp_loan.loan_employee_group_category"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+    <record id="loan_employee_group_admin" model="res.groups">
+        <field name="name">Loan Administrator</field>
+        <field name="implied_ids" eval="[(4, ref('emp_loan.loan_employee_group_manager'))]"/>
+        <field name="category_id" ref="emp_loan.loan_employee_group_category"/>
+    </record>
+
+    <record id="loan_employee_basic_rule" model="ir.model.access">
+        <field name="name">End user permission</field>
+        <field name="group_id" ref="emp_loan.loan_employee_group_user"/>
+        <field name="perm_create">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_read">1</field>
+        <field name="perm_unlink">0</field>
+        <field name="model_id" ref="model_loan_loan"/>
+        <!--                <field name="model_id" ref="model_loan_installment"/>-->
+        <field name="group_id" ref="emp_loan.loan_employee_group_user"/>
+    </record>
+
+    <record id="loan_employee_manger_rule" model="ir.model.access">
+        <field name="name">Manager permission</field>
+        <field name="name">Loan Administrator</field>
+        <field name="perm_create">1</field>
+        <field name="perm_write">1</field>
+        <field name="perm_read">1</field>
+        <field name="perm_unlink">1</field>
+        <field name="model_id" ref="model_loan_loan"/>
+        <field name="group_id" ref="emp_loan.loan_employee_group_manager"/>
+    </record>
+
+    <record id="loan_rule_loan_visibility_user" model="ir.rule">
+        <!--          <field name="name">res.users.log per user</field>-->
+        <field name="name">User can only see his/her loan</field>
+        <field name="model_id" ref="model_loan_loan"/>
+        <field name="groups" eval="[(4, ref('loan_employee_group_user'))]"/>
+        <field name="domain_force">[('employee.user_id','=', user.id)]</field>
+        <!--          <field name="domain_force">[('employee','=', user.employee_id.id)]</field>-->
+
+    </record>
+
+
+    <record id="loan_rule_loan_visibility_user_name" model="ir.rule">
+        <field name="name">User can only see his/her name</field>
+        <field name="model_id" ref="model_loan_loan"/>
+        <field name="groups" eval="[(4, ref('loan_employee_group_user'))]"/>
+        <!--   <field name="domain_force">[('employee_id','=',user.id)]</field>-->
+        <!--         <field name="domain_force">[('user_id.employee','=',user.employee_id.id)]</field>-->
+        <field name="domain_force">[('employee.user_id','=', user.id)]</field>
+    </record>
+
+
+    <record id="loan_rule_loan_visibility_manager" model="ir.rule">
+        <field name="name">Administrator has all rights on loan</field>
+        <field name="model_id" ref="model_loan_loan"/>
+        <field name="groups" eval="[Command.link(ref('loan_employee_group_manager'))]"/>
+        <field name="domain_force">[('employee.parent_id','=', user.employee_id.id)]</field>
+    </record>
+
+<!--    <record id="loan_rule_loan_visibility_user_profile" model="ir.rule">-->
+<!--        <field name="name">User can only see his/her profile</field>-->
+<!--        <field name="model_id" ref="base.model_hr_employee"/>-->
+<!--        <field name="groups" eval="[(4, ref('loan_employee_group_user'))]"/>-->
+<!--        <field name="domain_force">[('employee.user_id','=', user.id)]</field>-->
+<!--    </record>-->
+
+</odoo>
+
+        <!--    <record id="loan_rule_loan_visibility_user_many2one_restriction" model="ir.rule">-->
+        <!--        <field name="name">mployee Many2one field</field>-->
+        <!--        <field name="model_id" ref="model_loan_loan"/>-->
+        <!--        <field name="groups" eval="[(4, ref('loan_employee_group_user'))]"/>-->
+        <!--        <field name="domain_force">[('employee', '=', user.employee_id.id)]</field>-->
+        <!--         <field name="perm_read" eval="1"/>-->
+        <!--    <field name="perm_write" eval="0"/>-->
+        <!--    <field name="perm_create" eval="0"/>-->
+        <!--    <field name="perm_unlink" eval="0"/>-->
+        <!--        &lt;!&ndash;        <field name="domain_force">[('employee.user_id', '=', user.employee_id.id)]</field>&ndash;&gt;-->
+        <!--&lt;!&ndash;        <field name="domain_force">[('employee.user_id','=', user.employee_id.id)]</field>&ndash;&gt;-->
+        <!--        <field name="perm_read" eval="True"/>-->
+        <!--    </record>-->
+
+
+        <!--    <record id="loan_rule_loan_visibility_user_many2one_restriction" model="ir.rule">-->
+        <!--        <field name="name">Employee Many2one field</field>-->
+        <!--        <field name="model_id" ref="model_loan_loan"/>-->
+        <!--        <field name="groups" eval="[(4, ref('loan_employee_group_user'))]"/>-->
+        <!--        <field name="perm_read" eval="0"/>-->
+        <!--        <field name="perm_write" eval="0"/>-->
+        <!--        <field name="perm_create" eval="0"/>-->
+        <!--        <field name="perm_unlink" eval="0"/>-->
+        <!--    </record>-->
+
+        <!--    test here                   -->
+        <!--    &lt;!&ndash; Record rule for managers &ndash;&gt;-->
+        <!--    <record id="loan_rule_loan_visibility_manager" model="ir.rule">-->
+        <!--        <field name="name">Loan Visibility Rule for Managers</field>-->
+        <!--        <field name="model_id" ref="model_loan_loan"/>-->
+        <!--        <field name="groups" eval="[Command.link(ref('loan_employee_group_manager'))]"/>-->
+        <!--        <field name="domain_force">[('employee.parent_id','=', user.employee_id.id)]</field>-->
+        <!--    </record>-->
+
+        <!--    &lt;!&ndash; Record rule for end users &ndash;&gt;-->
+        <!--    <record id="loan_rule_loan_visibility_user" model="ir.rule">-->
+        <!--        <field name="name">Loan Visibility Rule for End Users</field>-->
+        <!--        <field name="model_id" ref="model_loan_loan"/>-->
+        <!--        <field name="groups" eval="[Command.link(ref('emp_loan.loan_employee_group_user'))]"/>-->
+        <!--        <field name="domain_force">[(1, '=', 1)]</field>-->
+        <!--    </record>-->
+
+
+        <!--emp_loan.access_loan_loan,access_loan_loan,emp_loan.model_loan_loan,base.group_user,1,0,1,0-->

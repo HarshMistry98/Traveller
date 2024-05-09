@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 {
-    'name': "Shopify",
+    'name': "Employee_Loan",
 
     'summary': """
         Short (1 phrase/line) summary of the module's purpose, used as
@@ -8,7 +9,6 @@
     'description': """
         Long description of module's purpose
     """,
-
     'author': "My Company",
     'website': "https://www.yourcompany.com",
 
@@ -19,31 +19,24 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sale', 'stock', 'website_sale', 'l10n_in'],
+    'depends': ['base', 'hr', 'payroll','portal','mail'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'security/Security_access_file.xml',
 
-        'data/cron_jobs.xml',
+        'data/ir_sequence.xml',
 
-        'wizards/operation.xml',
-
-        'views/config.xml',
-        'views/customerdetails.xml',
-        'views/productdetails.xml',
-        'views/ordersdetails.xml',
-        'views/productdetailstemplate.xml',
-        'views/stock_location.xml',
-        'views/stock_warehouse.xml',
-        'views/webhooks.xml',
-
-        'views/menus.xml',
+        'views/loans.xml',
+        'views/schedule.xml',
+        'views/employee_inherit.xml',
+        # Start from here Apr 2 24
+        'views/loan_menu_inherit.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
-        'demo/demo.xml',
+        'demo/data_payroll.xml',
     ],
     'application': True,
 }
-# -*- coding: utf-8 -*-

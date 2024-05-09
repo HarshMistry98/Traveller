@@ -20,15 +20,15 @@ class ordersDetails(models.Model):
     is_shopify_order = fields.Boolean("Shopify Order", default=False)
     is_exported_to_shopify = fields.Boolean("Exported to Shopify")
 
-    # def write(self, vals):
-    #     if not self.env.context.get('skip_export_flag'):
-    #         vals.update({
-    #             "is_exported_to_shopify": False,
-    #         })
-    #     res = super(ordersDetails, self).write(vals)
-    #     return res
+    def write(self, vals):
+        if not self.env.context.get('skip_export_flag'):
+            vals.update({
+                "is_exported_to_shopify": False,
+            })
+        res = super(ordersDetails, self).write(vals)
+        return res
 
-    def get_order_values(self, order):
+    def get_order_values(self, order, default_location_id):
 
         customer_shopify_id = str(order.get('customer').get('id'))
         customer_id = self.env['res.partner'].search([('shopify_customer_id', '=', str(customer_shopify_id))])
@@ -44,6 +44,7 @@ class ordersDetails(models.Model):
             payment_status = 'sale'
         else:
             payment_status = 'draft'
+
         values = {
             'shopify_orders_id': order.get('id'),
             'is_exported_to_shopify': True,
@@ -52,7 +53,12 @@ class ordersDetails(models.Model):
             'partner_invoice_id': billing_id.id,
             'partner_shipping_id': shipping_id.id,
             'state': payment_status,
+            # 'warehouse_id': warehouse_name.id if warehouse_name else None
         }
+        warehouse_name = self.env['stock.warehouse'].search([("shopify_warehouse_id", "=", default_location_id)], limit=1)
+
+        if warehouse_name:
+            values["warehouse_id"] = warehouse_name.id
         return values
 
     def get_taxes(self, line_item):
@@ -97,21 +103,27 @@ class ordersDetails(models.Model):
     def update_orders(self, response_data=False):
         orderenv = self.env['sale.order']
 
-        if not response_data:
-            store = self.env['ir.config_parameter']
+        store = self.env['ir.config_parameter']
 
-            baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
-            access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
+        baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
+        access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
 
-            if baseURL and access_token:
+        if baseURL and access_token:
+            payload = {}
+            headers = {
+                'X-Shopify-Access-Token': access_token,
+            }
+            shop_url = f"{baseURL}/shop.json"
+            shop_response = requests.request("GET", shop_url, headers=headers, data=payload).json()
+            default_location_id = ""
+            if shop_response:
+                shop_data = shop_response.get("shop", "")
+                if shop_data:
+                    default_location_id = shop_data.get("primary_location_id")
+
+            if not response_data:
                 url = f"{baseURL}/orders.json"
-
-                payload = {}
-                headers = {
-                    'X-Shopify-Access-Token': access_token,
-                }
-
-                response = requests.request("GET", url, headers=headers, data=payload)
+                response = requests.request("GET", url=url, headers=headers, data=payload)
 
                 if response.status_code == 200:
                     response_orders_data = response.json()
@@ -120,14 +132,12 @@ class ordersDetails(models.Model):
                     print(f"Error: {response.status_code}")
                     raise UserError(f"Error: {response.status_code}")
             else:
-                raise UserError("Improper Store Details")
-
+                orders = [response_data]
         else:
-            orders = [response_data]
-        # orders = response_data.get("orders", [response_data])
+            raise UserError("Improper Store Details")
 
         for order in orders:
-            values = self.get_order_values(order)
+            values = self.get_order_values(order, default_location_id)
             order_id = orderenv.search([('shopify_orders_id', '=', str(order.get('id')))])
             if not order_id:
                 order_id = orderenv.create(values)

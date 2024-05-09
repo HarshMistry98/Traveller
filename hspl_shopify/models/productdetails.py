@@ -5,6 +5,8 @@ class productsDetails(models.Model):
     _inherit = 'product.product'
     _description = 'Product Details'
 
+    is_shopify_variant = fields.Boolean(string="Shopify Variant")
+
     shopify_product_id = fields.Char("Shopify Product ID")
     shopify_variant_id = fields.Char("Shopify Variant ID")
 
@@ -21,6 +23,7 @@ class productsDetails(models.Model):
                     if item.product_template_attribute_value_ids:
                         list_values = [rec.name for rec in item.product_template_attribute_value_ids]
                         if set(options).issubset(set(list_values)):
+                            item.is_shopify_variant = True
                             item.shopify_variant_id = variant.get('id')
                             item.shopify_product_id = variant.get('product_id')
                             item.shopify_inventory_id = variant.get('inventory_item_id')

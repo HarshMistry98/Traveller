@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="hr_salary_rule_loan" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">EMI</field>
+            <field name="category_id" ref="payroll.DED"/>
+            <field name="name">Loan</field>
+            <field name="sequence" eval="25"/>
+            <field name="amount_python_compute">result = -(payslip.env["loan.loan"].search([('employee.name', '=', payslip.employee_id.name), ('statusbar', '=', 'approved')], limit=1).installment_amount)</field>
+        </record>
+
+
+        <record id="hr_salary_rule_loan2" model="hr.salary.rule">
+            <field name="amount_select">code</field>
+            <field name="code">L2</field>
+            <field name="category_id" ref="payroll.DED"/>
+            <field name="name">Loan2</field>
+            <field name="sequence" eval="35"/>
+            <field name="amount_python_compute">result = -(payslip.env["loan.loan"].search([('employee.name', '=', payslip.employee_id.name), ('statusbar', '=', 'approved')], limit=1).amount)</field>
+        </record>
+
+
+        <record id="structure_loan" model="hr.payroll.structure">
+            <field name="name">Loan Structure</field>
+            <field name="code">LN</field>
+            <field name="parent_id" ref="payroll.structure_base"/>
+            <field name="company_id" ref="base.main_company"/>
+
+            <field
+                    eval="[(6, 0, [ref('hr_salary_rule_loan'), ref('hr_salary_rule_loan2')])]"
+                    name="rule_ids"
+            />
+        </record>
+
+        <record id="hr_loan_register" model="hr.contribution.register">
+            <field name="name">Loan Register</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+    </data>
+</odoo>

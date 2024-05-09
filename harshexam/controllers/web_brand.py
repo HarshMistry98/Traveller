@@ -17,7 +17,7 @@ class WebBrand(http.Controller):
     @http.route('/brand/products/<int:brandid>', type="http", auth="public", website=True, method=['GET', 'POST'],
                 csrf=False)
     def brand_product(self,brandid):
-        products = request.env['product.template'].search([("brand_id", "!=", False)])
+        products = request.env['product.template'].search([("brand_id", "=", brandid)])
         brand = request.env["product.brand"].browse(brandid)
         values = {
             "brand":brand,

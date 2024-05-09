@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form>
                 <label for="partner_ids"/>
-                <field name="partner_ids"/>
+                <field name="partner_ids" widget="many2many_tags"/>
                 <footer>
                     <button string="Show Orders" type="object" class="oe_highlight" name="action_show_orders"/>
                     <button string="Cancel" class="oe_link" special="cancel"/>

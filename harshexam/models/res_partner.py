@@ -6,11 +6,11 @@ class ModelName(models.Model):
     _inherit = 'res.partner'
     _description = 'Res Partner'
 
-    @api.constrains("phone")
-    def check_phone_length(self):
-        for rec in self:
-            if len(rec.phone) != 10:
-                raise UserError(" Phone should be of 10 digits only")
+    # @api.constrains("phone")
+    # def check_phone_length(self):
+    #     for rec in self:
+    #         if len(rec.phone) != 10:
+    #             raise UserError(" Phone should be of 10 digits only")
 
     @api.onchange("phone")
     def _onchange_format_phone(self):

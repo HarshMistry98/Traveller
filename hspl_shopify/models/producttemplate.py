@@ -16,13 +16,13 @@ class productsDetails(models.Model):
     is_shopify_product = fields.Boolean("Shopify Product", default=False)
     is_exported_to_shopify = fields.Boolean("Exported to Shopify")
 
-    # def write(self, vals):
-    #     if not self.env.context.get('skip_export_flag'):
-    #         vals.update({
-    #             "is_exported_to_shopify": False,
-    #         })
-    #     res = super(productsDetails, self).write(vals)
-    #     return res
+    def write(self, vals):
+        if not self.env.context.get('skip_export_flag'):
+            vals.update({
+                "is_exported_to_shopify": False,
+            })
+        res = super(productsDetails, self).write(vals)
+        return res
 
     def get_attribute(self, attribute_name):
         '''Function to return the attribute id if exist or creates the new attribute'''
@@ -89,24 +89,6 @@ class productsDetails(models.Model):
                             'value_ids': [(6, 0, value_list)],
                             'product_tmpl_id': product_id.id
                         })
-
-    # def update_product_variants(self, product, product_id):
-    #     '''Update product variants'''
-    #     product_variant = self.env['product.product'].search([('product_tmpl_id', '=', product_id.id)])
-    #     variants = product.get('variants')
-    #     if variants:
-    #         for variant in variants:
-    #             options = [variant.get(f'option{i}') for i in range(1, 4) if variant.get(f'option{i}')]
-    #             for item in product_variant:
-    #                 if item.product_template_attribute_value_ids:
-    #                     list_values = [rec.name for rec in item.product_template_attribute_value_ids]
-    #                     if set(options).issubset(set(list_values)):
-    #                         item.shopify_variant_id = variant.get('id')
-    #                         item.shopify_product_id = variant.get('product_id')
-    #                         item.shopify_inventory_id = variant.get('inventory_item_id')
-    #                         item.barcode = variant.get('barcode')
-    #                         item.weight = variant.get('weight')
-    #                         item.lst_price = variant.get('price')
 
     def update_product_images(self, product, product_id):
         '''Update product images'''
@@ -178,6 +160,7 @@ class productsDetails(models.Model):
 
             product_values = {
                 'shopify_product_id': str(product_data["id"]),
+                'is_shopify_product': True,
                 'name': product_data["title"],
                 'description': product_description,
                 'detailed_type': 'product',
@@ -362,7 +345,7 @@ class productsDetails(models.Model):
                     image_dic = {
                         'position': position,
                         'name': product_image.name,
-                        # 'attachment': product.image_1920 if position == 1 else product_image.image_1920,
+                        'attachment': product.image_1920.decode("utf-8") if position == 1 else product_image.image_1920.decode("utf-8"),
                     }
                     image_list.append(image_dic)
                     position += 1

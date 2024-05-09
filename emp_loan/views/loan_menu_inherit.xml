@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_loan_view" model="ir.ui.view">
+        <field name="name">inherit.loan.view</field>
+        <field name="model">loan.loan</field>
+        <field name="inherit_id" ref="emp_loan.emploayee_loan_form_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//form/sheet" position="before">
+                    <header>
+                        <!--                        <button name="chek_approval" string="Check Approval" type="object" class="btn-primary"/>-->
+                        <button name="button_approve" string="Approve" type="object" class="btn-primary"
+                                attrs="{'invisible':[('statusbar','in',['approved','cancle'])]}"
+                                groups="emp_loan.loan_employee_group_manager"/>
+                        <!--                        <button name="approve" string="Approve" groups="loan_employee_group_user" attrs="{'invisible': [('active', '=', False)]}" />-->
+                        <button name="button_cancel" string="Reject" type="object" class="btn-primary"
+                                attrs="{'invisible':[('statusbar','in',['approved','cancle'])]}"
+                                groups="emp_loan.loan_employee_group_manager"/>
+                        <button name="button_apply" string="Apply" type="object" class="btn-primary"
+                                attrs="{'invisible': [('statusbar', 'in', ['submitted', 'cancle','approved'])]}"
+                                context="{'statusbar': 'submitted'}"/>
+
+                        <field name="statusbar" widget="statusbar" class="o_field_statusbar"/>
+                    </header>
+                </xpath>
+            </data>
+        </field>
+    </record>
+    <record id="inherit_loan_tree_view" model="ir.ui.view">
+        <field name="name">inherit.loan.view</field>
+        <field name="model">loan.loan</field>
+
+        <field name="inherit_id" ref="emp_loan.emploayee_loan_tree_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//tree/field[@name='balance']" position="before">
+                    <field name="statusbar" widget="badge" decoration-success="statusbar == 'approved'"
+                           decoration-danger="statusbar == 'cancle'" decoration-warning="statusbar == 'submitted'"
+                           class="o_field_statusbar"/>
+                </xpath>
+            </data>
+
+        </field>
+    </record>
+
+    <!-- Add "ir.actions.act_window" in inherit so the bas not effected -->
+    <record id="loan_menu_inherit" model="ir.actions.act_window">
+        <field name="name">Loan</field>
+        <field name="res_model">loan.loan</field>
+        <field name="view_mode">tree,form</field>
+
+    </record>
+
+    <record id="ir_action_window_vielaon" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="inherit_loan_tree_view"/>
+        <field name="act_window_id" ref="loan_menu_inherit"/>
+    </record>
+    <record id="ir_action_window_vielaon2" model="ir.actions.act_window.view">
+        <field eval="2" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="inherit_loan_view"/>
+        <field name="act_window_id" ref="loan_menu_inherit"/>
+    </record>
+    <!--end "ir.actions.act_window"-->
+    <menuitem
+            id="menu_loan_menu_inherit"
+            name="Loan"
+            parent="hr.menu_hr_root"
+            action="loan_menu_inherit"
+    />
+
+</odoo>

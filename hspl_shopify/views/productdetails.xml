@@ -12,6 +12,7 @@
                     <page name="shopify" string="Shopify">
                         <group>
                             <group>
+                                <field name="is_shopify_variant"/>
                                 <field name="shopify_variant_id"/>
                                 <field name="shopify_product_id"/>
                             </group>
