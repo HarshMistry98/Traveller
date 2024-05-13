@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="image_select_wizard_form" model="ir.ui.view">
+        <field name="name">image.select.wizard.form</field>
+        <field name="model">product_variant.image</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>NOTE :- If image is not available than add the image to the Media in Product Template</p>
+                <group>
+                    <field name="selection_image" widget="radio"/>
+                </group>
+                <group>
+                    <field name="image_preview" widget="image"/>
+                </group>
+                <footer>
+                    <button name="confirm_selection"
+                            string="Select"
+                            type="object"
+                            class="oe_highlight"/>
+
+                    <button string="Cancel"
+                            class="oe_link"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

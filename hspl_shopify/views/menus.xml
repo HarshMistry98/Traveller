@@ -41,11 +41,11 @@
                       action="hspl_shopify.action_shopify_product_variants"/>
         </menuitem>
 
-<!--        <menuitem id="menu_shopify_inventory"-->
-<!--                  name="Inventory"-->
-<!--                  sequence="40"-->
-<!--                  action="hspl_shopify.action_shopify_stock_quants">-->
-<!--        </menuitem>-->
+        <!--        <menuitem id="menu_shopify_inventory"-->
+        <!--                  name="Inventory"-->
+        <!--                  sequence="40"-->
+        <!--                  action="hspl_shopify.action_shopify_stock_quants">-->
+        <!--        </menuitem>-->
 
         <menuitem id="menu_shopify_operation"
                   name="Operation"
@@ -69,18 +69,23 @@
                       sequence="10"
                       action="hspl_shopify.action_shopify_setting_configuration"/>
 
-            <menuitem id="menu_shopify_warehouse"
-                      name="Warehouses"
-                      sequence="20"
-                      action="hspl_shopify.action_shopify_warehouse"/>
+            <menuitem id="menu_shopify_warehouse_management"
+                      name="Warehouse Management"
+                      sequence="20">
 
-            <menuitem id="menu_shopify_location"
-                      name="Locations"
-                      sequence="30"
-                      action="hspl_shopify.action_shopify_location"/>
+                <menuitem id="menu_shopify_warehouse"
+                          name="Warehouses"
+                          sequence="20"
+                          action="hspl_shopify.action_shopify_warehouse"/>
 
-        </menuitem>
+                <menuitem id="menu_shopify_location"
+                          name="Locations"
+                          sequence="30"
+                          action="hspl_shopify.action_shopify_location"/>
+            </menuitem>
 
     </menuitem>
 
-</odoo>
+</menuitem>
+
+        </odoo>

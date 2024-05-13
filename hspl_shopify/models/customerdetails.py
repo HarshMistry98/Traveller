@@ -23,7 +23,7 @@ class customersDetails(models.Model):
 
     def update_customers(self, response_data=False):
         partners = self.env['res.partner']
-        print("1111",response_data)
+        print("1111", response_data)
         if not response_data:
             store = self.env['ir.config_parameter']
 
@@ -51,8 +51,8 @@ class customersDetails(models.Model):
 
         else:
             customers = [response_data]
-        print("response_data",response_data)
-        print("customers",customers)
+        print("response_data", response_data)
+        print("customers", customers)
         for customer in customers:
             values = self.get_customer_values(customer)
             partner_exist = partners.search([('shopify_customer_id', '=', values['shopify_customer_id'])])

@@ -79,12 +79,11 @@ class ordersDetails(models.Model):
         for line_item in line_items:
             variant_id = line_item.get('variant_id')
             product_variant = self.env['product.product'].search([('shopify_variant_id', '=', str(variant_id))])
-            product_variant_id = product_variant.id
             tax_ids = self.get_taxes(line_item)
             order_line_values = {
                 'shopify_order_line_id': line_item.get("id"),
                 'order_id': order_id.id,
-                'product_id': product_variant_id,
+                'product_id': product_variant.id,
                 'product_uom_qty': line_item.get('quantity'),
                 'tax_id': [(6, 0, tax_ids)],
                 'discount': float(line_item.get('total_discount')) * 100,

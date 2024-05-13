@@ -28,6 +28,7 @@
         'data/cron_jobs.xml',
 
         'wizards/operation.xml',
+        'wizards/variant_image.xml',
 
         'views/config.xml',
         'views/customerdetails.xml',
