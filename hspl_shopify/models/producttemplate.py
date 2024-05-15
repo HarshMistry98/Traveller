@@ -16,6 +16,13 @@ class productsDetails(models.Model):
     is_shopify_product = fields.Boolean("Shopify Product", default=False)
     is_exported_to_shopify = fields.Boolean("Exported to Shopify")
 
+    shopify_product_image_id = fields.Char("Shopify Product Image ID")
+
+    shopify_product_status = fields.Selection([
+        ('active', 'Active'),
+        ('draft', 'Draft'),
+    ], default='draft', required=True)
+
     @api.model_create_multi
     def create(self, vals_list):
         records = super(productsDetails, self).create(vals_list)
@@ -37,13 +44,13 @@ class productsDetails(models.Model):
                         self.env['product.image'].create(image_values)
         return records
 
-    def write(self, vals):
-        if not self.env.context.get('skip_export_flag'):
-            vals.update({
-                "is_exported_to_shopify": False,
-            })
-        res = super(productsDetails, self).write(vals)
-        return res
+    # def write(self, vals):
+    #     if not self.env.context.get('skip_export_flag'):
+    #         vals.update({
+    #             "is_exported_to_shopify": False,
+    #         })
+    #     res = super(productsDetails, self).write(vals)
+    #     return res
 
     def get_attribute(self, attribute_name):
         '''Function to return the attribute id if exist or creates the new attribute'''
@@ -124,19 +131,19 @@ class productsDetails(models.Model):
                 print("image_position", image_position)
                 if image_position == 1:
                     product_id.image_1920 = image_data
+                    product_id.shopify_product_image_id = image.get("id", "")
+                image_id = self.env['product.image'].search([('shopify_image_id', '=', str(image.get('id')))])
+                image_values = {
+                    'shopify_image_id': image.get('id'),
+                    'product_tmpl_id': product_id.id,
+                    'name': product["title"],
+                    'sequence': image.get('position'),
+                    'image_1920': image_data,
+                }
+                if not image_id:
+                    self.env['product.image'].create(image_values)
                 else:
-                    image_id = self.env['product.image'].search([('shopify_image_id', '=', str(image.get('id')))])
-                    image_values = {
-                        'shopify_image_id': image.get('id'),
-                        'product_tmpl_id': product_id.id,
-                        'name': product["title"],
-                        'sequence': image.get('position'),
-                        'image_1920': image_data,
-                    }
-                    if not image_id:
-                        self.env['product.image'].create(image_values)
-                    else:
-                        image_id.write(image_values)
+                    image_id.write(image_values)
                 # if image.get("variant_ids"):
                 #     for varian_id in image.get("variant_ids"):
                 #         variant = self.env['product.product'].search([("shopify_variant_id", "=", varian_id)])
@@ -151,9 +158,8 @@ class productsDetails(models.Model):
         if not response_data:
             store = self.env['ir.config_parameter']
 
-            baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
-            access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
-
+            baseURL = store.get_param('hspl_shopify.baseStoreURL')
+            access_token = store.get_param('hspl_shopify.access_token')
             if baseURL and access_token:
                 url = f"{baseURL}/products.json"
 
@@ -186,11 +192,12 @@ class productsDetails(models.Model):
                 product_description = soup.get_text()
 
             product_values = {
-                'shopify_product_id': str(product_data["id"]),
+                'shopify_product_id': product_data["id"],
                 'is_shopify_product': True,
                 'is_exported_to_shopify': True,
                 'name': product_data["title"],
                 'description': product_description,
+                'shopify_product_status': product_data.get("status"),
                 'detailed_type': 'product',
                 'product_tag_ids': [(6, 0, tag_list)],
             }
@@ -225,8 +232,8 @@ class productsDetails(models.Model):
         print("with_shopify_id_products", with_shopify_id_products)
 
         store = self.env['ir.config_parameter']
-        baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
-        access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
+        baseURL = store.get_param('hspl_shopify.baseStoreURL')
+        access_token = store.get_param('hspl_shopify.access_token')
 
         if baseURL and access_token:
             headers = {
@@ -265,7 +272,7 @@ class productsDetails(models.Model):
                                     if item.product_template_attribute_value_ids:
                                         list_values = [rec.name for rec in item.product_template_attribute_value_ids]
                                         if set(options).issubset(set(list_values)):
-                                            print("variant",variant)
+                                            print("variant", variant)
                                             item.shopify_variant_id = variant.get('id')
                                             item.shopify_product_id = variant.get('product_id')
                                             item.shopify_inventory_id = variant.get('inventory_item_id')
@@ -274,13 +281,13 @@ class productsDetails(models.Model):
                                                 ("product_tmpl_id", "=", product.id),
                                                 ("product_variant_id", "=", item.id),
                                             ])
-                                            print("variant_image",variant_image)
+                                            print("variant_image", variant_image)
                                             image_values = {
                                                 'name': item.name,
                                                 'shopify_image_id': variant.get("image_id"),
                                                 'image_1920': item.image_1920,
                                             }
-                                            print("image_values",image_values)
+                                            print("image_values", image_values)
                                             if not variant_image:
                                                 self.env['product.image'].create(image_values)
                                             else:
@@ -318,6 +325,7 @@ class productsDetails(models.Model):
                 "product": {
                     "title": product.name,
                     'tags': tag_vals,
+                    "status": product.shopify_product_status,
                     "variants": [
                         {
                             "title": "Default Title",
@@ -340,19 +348,20 @@ class productsDetails(models.Model):
                             ]
                         }
                     ],
-                    "image": {
+                    "images": {
                         "position": 1,
                         'name': product.name,
                         'attachment': product.image_1920.decode("utf-8")
                     }
                 }
             }
-            print("data1",data)
+            print("data1", data)
         else:
             data = {
                 "product": {
                     "title": product.name,
                     'tags': tag_vals,
+                    "status": product.shopify_product_status,
                 }
             }
 
@@ -398,13 +407,84 @@ class productsDetails(models.Model):
                     image_dic = {
                         'position': product_image.sequence,
                         'name': product_image.name,
-                        'attachment': product_image.image_1920.decode(
-                            "utf-8") if product_image.sequence != 1 else product.image_1920.decode(
-                            "utf-8"),
+                        'attachment': product_image.image_1920.decode("utf-8"),
                     }
                     image_list.append(image_dic)
 
                 data.get('product')['images'] = image_list
 
-            print("data2",data)
+            print("data2", data)
         return data
+
+    def activate_shopify_product(self):
+        print("Activating")
+        print(self._context)
+
+        for product_id in self._context.get("active_ids"):
+            product = self.env['product.template'].browse(product_id)
+            store = self.env['ir.config_parameter']
+            baseURL = store.get_param('hspl_shopify.baseStoreURL')
+            access_token = store.get_param('hspl_shopify.access_token')
+            if baseURL and access_token:
+                url = f"{baseURL}/products/{product.shopify_product_id}.json"
+
+                payload = {}
+                headers = {
+                    'X-Shopify-Access-Token': access_token,
+                }
+                product_values = {
+                    "product": {
+                        "id": int(product.shopify_product_id),
+                        "status": "active"
+                    }
+                }
+                print("json.dumps(product_values)",json.dumps(product_values))
+                response = requests.request("PUT", url, headers=headers, data=json.dumps(product_values))
+
+                if response.status_code == 200:
+                    product_response = response.json().get('product')
+
+                    product.write({
+                        "shopify_product_status": product_response.get("status"),
+                    })
+                else:
+                    print(f"Error: {response.status_code} {response.text}")
+                    raise UserError(f"Error: {response.status_code} {response.text}")
+            else:
+                raise UserError("Improper Store Details")
+
+    def draft_shopify_product(self):
+        print("Drafting")
+        print(self._context)
+
+        for product_id in self._context.get("active_ids"):
+            product = self.env['product.template'].browse(product_id)
+            store = self.env['ir.config_parameter']
+            baseURL = store.get_param('hspl_shopify.baseStoreURL')
+            access_token = store.get_param('hspl_shopify.access_token')
+            if baseURL and access_token:
+                url = f"{baseURL}/products/{product.shopify_product_id}.json"
+                print("url",url)
+                headers = {
+                    'X-Shopify-Access-Token': access_token,
+                }
+                product_values = {
+                    "product": {
+                        "id": int(product.shopify_product_id),
+                        "status": "draft"
+                    }
+                }
+                print("json.dumps(product_values)", json.dumps(product_values, indent=4))
+                response = requests.request("PUT", url=url, headers=headers, data=json.dumps(product_values))
+
+                if response.status_code == 200:
+                    product_response = response.json().get('product')
+
+                    product.write({
+                        "shopify_product_status": product_response.get("status"),
+                    })
+                else:
+                    print(f"Error: {response.status_code} {response.text}")
+                    raise UserError(f"Error: {response.status_code} {response.text}")
+            else:
+                raise UserError("Improper Store Details")

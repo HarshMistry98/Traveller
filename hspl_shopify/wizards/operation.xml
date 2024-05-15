@@ -8,20 +8,39 @@
                 <label for="operation_for"/>
                 <field name="operation_for"/>
                 <footer>
-                    <button string="IMPORT" type="object" class="oe_highlight" name="action_import_data"/>
-                    <button string="EXPORT" type="object" class="oe_highlight" name="action_export_data"/>
+                    <button string="IMPORT"
+                            type="object"
+                            class="oe_highlight"
+                            name="action_import_data"
+                            invisible="context.get('no_import')"/>
+
+                    <button string="EXPORT"
+                            type="object"
+                            class="oe_highlight"
+                            name="action_export_data"
+                            invisible="context.get('no_export')"/>
                     <button string="Cancel" class="oe_link" special="cancel"/>
                 </footer>
             </form>
         </field>
     </record>
 
-    <record id="action_operation" model="ir.actions.act_window">
-        <field name="name">Operation</field>
+    <record id="action_import_shopify" model="ir.actions.act_window">
+        <field name="name">Import From Shopify</field>
         <field name="res_model">shopify.operation</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="operation_import_wizard_view"/>
         <field name="target">new</field>
+        <field name="context">{"no_export": True}</field>
+    </record>
+
+    <record id="action_export_shopify" model="ir.actions.act_window">
+        <field name="name">Export To Shopify</field>
+        <field name="res_model">shopify.operation</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="operation_import_wizard_view"/>
+        <field name="target">new</field>
+        <field name="context">{"no_import": True}</field>
     </record>
 
 

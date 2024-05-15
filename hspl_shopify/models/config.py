@@ -14,7 +14,7 @@ class ResConfigSettings(models.TransientModel):
     baseStoreURL = fields.Char(string="Base URl", readonly=1, compute="_compute_baseStoreURL",
                                config_parameter='hspl_shopify.baseStoreURL',
                                default="https://your-store-name.myshopify.com/admin/api/api-version")
-    
+
     store_domain = fields.Char(string="Store Domain",
                                config_parameter='hspl_shopify.store_domain')
 
@@ -26,7 +26,6 @@ class ResConfigSettings(models.TransientModel):
         for rec in self:
             rec.baseStoreURL = f"https://{rec.store_name}.myshopify.com/admin/api/{rec.api_version}"
 
-
     def test_shopify_connection(self):
         store = self.env['ir.config_parameter']
 
@@ -34,12 +33,22 @@ class ResConfigSettings(models.TransientModel):
         access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
 
         if baseURL and access_token:
+            shop_url = f"{baseURL}/shop.json"
             payload = {}
             headers = {
                 'X-Shopify-Access-Token': access_token,
             }
-            response = requests.request("GET", baseURL, headers=headers, data=payload)
+            response = requests.request("GET", url=shop_url, headers=headers, data=payload)
             if response.status_code == 200:
+            # if response.status_code == 200 and response.json().get("shop"):
+            #     response_data = response.json()
+            #
+            #     response_shop = response_data.get("shop")
+            #     if response_shop:
+            #         store_domain = "https://" + response_data.get("shop").get("domain")
+            #         print("self.store_domain", store_domain)
+            #         self.store_domain = store_domain
+            #         self.env["ir.config_parameter"].sudo().set_param("hspl_shopify.store_domain", store_domain)
 
                 message = _("Connection Test Successful!")
                 return {
@@ -63,4 +72,24 @@ class ResConfigSettings(models.TransientModel):
                         'sticky': False,
                     }
                 }
-
+        # else:
+        #     message = _(f"Connection Test Failed!  Enter the value to test the connection ")
+        #     return {
+        #         'type': 'ir.actions.client',
+        #         'tag': 'display_notification',
+        #         'params': {
+        #             'message': message,
+        #             'type': 'danger',
+        #             'sticky': False,
+        #         }
+        #     }
+    # @api.onchange("store_domain")
+    # def _onchange_store_domain(self):
+    #
+    #     webhooks = self.env['shopify.webhooks'].search([])
+    #     for webhook in webhooks:
+    #         target_path = webhook.target_address[webhook.target_address.find("shopify"):]
+    #         print("target_path",target_path)
+    #         new_target_address = self.store_domain + "/" + target_path
+    #         print("new_target_address",new_target_address)
+    #         webhook.target_address = new_target_address

@@ -19,13 +19,14 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'sale', 'stock', 'website_sale', 'l10n_in'],
+    'depends': ['base', 'sale', 'sale_management', 'stock', 'website_sale', 'l10n_in'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
 
-        'data/cron_jobs.xml',
+        # 'data/cron_jobs.xml',
+        'data/shopify_webhooks.xml',
 
         'wizards/operation.xml',
         'wizards/variant_image.xml',

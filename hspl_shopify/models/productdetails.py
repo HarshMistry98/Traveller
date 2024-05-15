@@ -14,8 +14,12 @@ class productsDetails(models.Model):
     shopify_variant_id = fields.Char("Shopify Variant ID")
 
     shopify_inventory_id = fields.Char("Shopify Inventory ID")
-    shopify_variant_image_id = fields.Char("Shopify Variant Image ID")
+    shopify_variant_image_id = fields.Char("Shopify Variant Image ID", default="_get_shopify_product_image_id")
 
+    @api.depends('product_tmpl_id')
+    def _get_shopify_product_image_id(self):
+        for record in self:
+            record.shopify_variant_image_id = self.product_tmpl_id.shopify_product_image_id
     def select_variant_image(self):
         action = {
             'type': 'ir.actions.act_window',
@@ -32,10 +36,11 @@ class productsDetails(models.Model):
         return action
 
     def _compute_image_1920(self):
-        product_variant_image = self.env["product.image"].search(
-            [("shopify_image_id", "=", self.shopify_variant_image_id)], limit=1)
-        print("product_variant_image", product_variant_image)
-        self.image_variant_1920 = product_variant_image.image_1920
+        if self.shopify_variant_image_id:
+            product_variant_image = self.env["product.image"].search(
+                [("shopify_image_id", "=", self.shopify_variant_image_id)], limit=1)
+            print("product_variant_image", product_variant_image)
+            self.image_variant_1920 = product_variant_image.image_1920
         return super(productsDetails,self)._compute_image_1920()
 
 
@@ -45,9 +50,9 @@ class productsDetails(models.Model):
         variants = product.get('variants')
         if variants:
             for variant in variants:
-                variant_image = self.env['product.image'].search([('shopify_image_id', '=', variant.get('image_id'))])
-                print("variant_image", variant_image)
-                print(type(variant_image.image_1920))
+                # variant_image = self.env['product.image'].search([('shopify_image_id', '=', variant.get('image_id'))])
+                # print("variant_image", variant_image)
+                # print(type(variant_image.image_1920))
                 # print("variant_image.image_1920",variant_image.image_1920)
                 options = [variant.get(f'option{i}') for i in range(1, 4) if variant.get(f'option{i}')]
                 for item in product_variant:

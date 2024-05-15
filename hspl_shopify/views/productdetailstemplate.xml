@@ -14,9 +14,11 @@
                             <group>
                                 <field name="is_shopify_product"/>
                                 <field name="shopify_product_id"/>
+                                <field name="shopify_product_status"/>
                             </group>
                             <group>
                                 <field name="is_exported_to_shopify"/>
+                                <field name="shopify_product_image_id"/>
                             </group>
                         </group>
                     </page>
@@ -32,6 +34,26 @@
             <field name="view_id" ref="product.product_template_kanban_view"/>
             <field name="target">current</field>
             <field name="domain">[('is_shopify_product', '=', True)]</field>
+        </record>
+
+        <record model="ir.actions.server" id="action_activate_shopify_product">
+            <field name="name">Activate Shopify Product</field>
+            <field name="model_id" ref="hspl_shopify.model_product_template"/>
+            <field name="binding_model_id" ref="hspl_shopify.model_product_template"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.activate_shopify_product()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_draft_shopify_product">
+            <field name="name">Draft Shopify Product</field>
+            <field name="model_id" ref="hspl_shopify.model_product_template"/>
+            <field name="binding_model_id" ref="hspl_shopify.model_product_template"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.draft_shopify_product()
+            </field>
         </record>
     </data>
 </odoo>

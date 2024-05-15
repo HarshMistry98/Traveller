@@ -5,6 +5,7 @@
               name="Shopify"
               sequence="3">
 
+
         <menuitem id="menu_shopify_order"
                   name="Orders"
                   sequence="30">
@@ -41,18 +42,6 @@
                       action="hspl_shopify.action_shopify_product_variants"/>
         </menuitem>
 
-        <!--        <menuitem id="menu_shopify_inventory"-->
-        <!--                  name="Inventory"-->
-        <!--                  sequence="40"-->
-        <!--                  action="hspl_shopify.action_shopify_stock_quants">-->
-        <!--        </menuitem>-->
-
-        <menuitem id="menu_shopify_operation"
-                  name="Operation"
-                  sequence="50"
-                  action="hspl_shopify.action_operation">
-        </menuitem>
-
         <menuitem id="menu_webhook"
                   name="Webhook"
                   sequence="60"
@@ -84,8 +73,20 @@
                           action="hspl_shopify.action_shopify_location"/>
             </menuitem>
 
+            <menuitem id="menu_shopify_sync"
+                      name="Sync"
+                      sequence="30">
+
+                <menuitem id="menu_shopify_import_to_shopify"
+                          name="Import from Shopify"
+                          sequence="10"
+                          action="hspl_shopify.action_import_shopify"/>
+
+                <menuitem id="menu_shopify_export_to_shopify"
+                          name="Export to Shopify"
+                          sequence="20"
+                          action="hspl_shopify.action_export_shopify"/>
+            </menuitem>
+        </menuitem>
     </menuitem>
-
-</menuitem>
-
-        </odoo>
+</odoo>

@@ -7,7 +7,7 @@ from odoo.http import request
 class ShopifyWebhooksController(http.Controller):
 
     @http.route(['/shopify/webhook/<string:webhook_for>/<string:webhook_action>'], type="http", auth="public",
-                website=True, method=['POST'],
+                website=True, methods=['POST'],
                 csrf=False)
     def handle_webhook(self, webhook_for, webhook_action):
         if request.httprequest.method == 'POST':

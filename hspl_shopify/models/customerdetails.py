@@ -13,6 +13,13 @@ class customersDetails(models.Model):
     is_shopify_customer = fields.Boolean("Shopify Customer", default=False)
     is_exported_to_shopify = fields.Boolean("Exported to Shopify")
 
+    shopify_customer_status = fields.Selection([
+        ('enabled', 'Enable'),
+        ('disabled', 'Disable'),
+        ('invited', 'Invited'),
+        ('rejected', 'Rejected'),
+    ], default='disabled', required=True)
+
     def write(self, vals):
         if not self.env.context.get('skip_export_flag'):
             vals.update({
@@ -69,6 +76,7 @@ class customersDetails(models.Model):
             'is_exported_to_shopify': True,
             'is_shopify_customer': True,
             'shopify_customer_id': str(customer.get("id")),
+            'shopify_customer_status': customer.get("state"),
             'email': customer.get("email"),
             'name': customer.get("first_name") + ' ' + customer.get("last_name"),
             'mobile': customer.get("phone"),
@@ -172,6 +180,7 @@ class customersDetails(models.Model):
                 "last_name": last_name,
                 "email": customer.email,
                 "phone": customer.mobile,
+                'state': customer.shopify_customer_status,
                 "tags": tag_vals,
                 "addresses": [
                     {
@@ -189,3 +198,76 @@ class customersDetails(models.Model):
             }
         }
         return data
+
+    def enable_shopify_customer(self):
+        print("Enabling")
+        print(self._context)
+
+        for customer_id in self._context.get("active_ids"):
+            customer = self.env['res.partner'].browse(customer_id)
+            store = self.env['ir.config_parameter']
+            baseURL = store.get_param('hspl_shopify.baseStoreURL')
+            access_token = store.get_param('hspl_shopify.access_token')
+            if baseURL and access_token:
+                url = f"{baseURL}/customers/{customer.shopify_customer_id}.json"
+                print("url",url)
+                headers = {
+                    'X-Shopify-Access-Token': access_token,
+                }
+                customer_values = {
+                    "customer": {
+                        "id": int(customer.shopify_customer_id),
+                        "state": "enabled"
+                    }
+                }
+                print("json.dumps(customer_values)", json.dumps(customer_values, indent=4))
+                response = requests.request("PUT", url=url, headers=headers, data=json.dumps(customer_values))
+
+                if response.status_code == 200:
+                    customer_response = response.json().get('customer')
+
+                    customer.write({
+                        "shopify_customer_status": customer_response.get("state"),
+                    })
+                else:
+                    print(f"Error: {response.status_code} {response.text}")
+                    raise UserError(f"Error: {response.status_code} {response.text}")
+            else:
+                raise UserError("Improper Store Details")
+
+
+    def disable_shopify_customer(self):
+        print("Disabling")
+        print(self._context)
+
+        for customer_id in self._context.get("active_ids"):
+            customer = self.env['res.partner'].browse(customer_id)
+            store = self.env['ir.config_parameter']
+            baseURL = store.get_param('hspl_shopify.baseStoreURL')
+            access_token = store.get_param('hspl_shopify.access_token')
+            if baseURL and access_token:
+                url = f"{baseURL}/customers/{customer.shopify_customer_id}.json"
+                print("url",url)
+                headers = {
+                    'X-Shopify-Access-Token': access_token,
+                }
+                customer_values = {
+                    "customer": {
+                        "id": int(customer.shopify_customer_id),
+                        "state": "disabled"
+                    }
+                }
+                print("json.dumps(customer_values)", json.dumps(customer_values, indent=4))
+                response = requests.request("PUT", url=url, headers=headers, data=json.dumps(customer_values))
+
+                if response.status_code == 200:
+                    customer_response = response.json().get('customer')
+
+                    customer.write({
+                        "shopify_customer_status": customer_response.get("state"),
+                    })
+                else:
+                    print(f"Error: {response.status_code} {response.text}")
+                    raise UserError(f"Error: {response.status_code} {response.text}")
+            else:
+                raise UserError("Improper Store Details")

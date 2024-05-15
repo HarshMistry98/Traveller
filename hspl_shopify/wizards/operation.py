@@ -1,6 +1,6 @@
 import requests
 
-from odoo import models, fields, api
+from odoo import models, fields
 from odoo.exceptions import UserError
 
 
@@ -32,9 +32,10 @@ class operationImport(models.TransientModel):
             operateClass = self.env['stock.warehouse']
         elif operation_for == 'inventory':
             raise UserError("Inventory cannot be import. Only Exported")
+        else:
+            raise UserError("Select the valid operation")
 
-
-        getattr(operateClass,operatefunc)()
+        getattr(operateClass, operatefunc)()
 
     def action_export_data(self):
         print("Exporting")
@@ -53,5 +54,7 @@ class operationImport(models.TransientModel):
             operateClass = self.env['stock.quant']
         elif operation_for == "warehouses":
             raise UserError("You cannot export Warehouses.")
+        else:
+            raise UserError("Select the valid operation")
 
-        export_data = getattr(operateClass, operatefunc)()
+        getattr(operateClass, operatefunc)()

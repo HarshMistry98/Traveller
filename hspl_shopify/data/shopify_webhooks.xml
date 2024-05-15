@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <record id="webhook_customer_create" model="shopify.webhooks">
+            <field name="topic">customers/create</field>
+            <field name="format">json</field>
+        </record>
+
+        <record id="webhook_customer_update" model="shopify.webhooks">
+            <field name="topic">customers/update</field>
+            <field name="format">json</field>
+        </record>
+
+        <record id="webhook_products_create" model="shopify.webhooks">
+            <field name="topic">products/create</field>
+            <field name="format">json</field>
+        </record>
+
+        <record id="webhook_products_update" model="shopify.webhooks">
+            <field name="topic">products/update</field>
+            <field name="format">json</field>
+        </record>
+
+        <record id="webhook_orders_create" model="shopify.webhooks">
+            <field name="topic">orders/create</field>
+            <field name="format">json</field>
+        </record>
+
+        <record id="webhook_orders_updated" model="shopify.webhooks">
+            <field name="topic">orders/updated</field>
+            <field name="format">json</field>
+        </record>
+
+        <record id="webhook_locations_create" model="shopify.webhooks">
+            <field name="topic">locations/create</field>
+            <field name="format">json</field>
+        </record>
+
+        <record id="webhook_locations_update" model="shopify.webhooks">
+            <field name="topic">locations/update</field>
+            <field name="format">json</field>
+        </record>
+    </data>
+</odoo>

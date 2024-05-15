@@ -14,6 +14,7 @@
                             <group>
                                 <field name="is_shopify_customer"/>
                                 <field name="shopify_customer_id"/>
+                                <field name="shopify_customer_status"/>
                             </group>
                             <group>
                                 <field name="is_exported_to_shopify"/>
@@ -31,6 +32,26 @@
             <field name="view_id" ref="base.res_partner_kanban_view"/>
             <field name="target">current</field>
             <field name="domain">[('is_shopify_customer', '=', True)]</field>
+        </record>
+
+        <record model="ir.actions.server" id="action_enable_shopify_customer">
+            <field name="name">Enable Shopify Customer</field>
+            <field name="model_id" ref="hspl_shopify.model_res_partner"/>
+            <field name="binding_model_id" ref="hspl_shopify.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.enable_shopify_customer()
+            </field>
+        </record>
+
+        <record model="ir.actions.server" id="action_disable_shopify_customer">
+            <field name="name">Disable Shopify Customer</field>
+            <field name="model_id" ref="hspl_shopify.model_res_partner"/>
+            <field name="binding_model_id" ref="hspl_shopify.model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = records.disable_shopify_customer()
+            </field>
         </record>
 
 
