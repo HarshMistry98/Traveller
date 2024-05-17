@@ -1,4 +1,4 @@
-from odoo import fields, models, api
+from odoo import fields, models
 import requests
 import json
 
@@ -39,8 +39,8 @@ class ordersDetails(models.Model):
         shipping_name = order.get('shipping_address').get('name')
         shipping_id = self.env['res.partner'].search([('name', '=', shipping_name)], limit=1)
 
-        financial_status = order.get('financial_status')
-        if financial_status in ['paid', 'partially_paid']:
+        fulfillment_status = order.get('fulfillment_status')
+        if fulfillment_status in ['fulfilled']:
             payment_status = 'sale'
         else:
             payment_status = 'draft'
@@ -55,7 +55,8 @@ class ordersDetails(models.Model):
             'state': payment_status,
             # 'warehouse_id': warehouse_name.id if warehouse_name else None
         }
-        warehouse_name = self.env['stock.warehouse'].search([("shopify_warehouse_id", "=", default_location_id)], limit=1)
+        warehouse_name = self.env['stock.warehouse'].search([("shopify_warehouse_id", "=", default_location_id)],
+                                                            limit=1)
 
         if warehouse_name:
             values["warehouse_id"] = warehouse_name.id
@@ -79,15 +80,44 @@ class ordersDetails(models.Model):
         for line_item in line_items:
             variant_id = line_item.get('variant_id')
             product_variant = self.env['product.product'].search([('shopify_variant_id', '=', str(variant_id))])
+            if not product_variant:
+                store = self.env['ir.config_parameter']
+                baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
+                access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
+
+                if baseURL and access_token:
+                    # url = f"{baseURL}/customers.json"
+
+                    payload = {}
+                    headers = {
+                        'X-Shopify-Access-Token': access_token,
+                    }
+                else:
+                    raise UserError("Improper Store Details")
+                url = f"{baseURL}/products/{line_item.get('product_id')}.json"
+                response = requests.request("GET", url=url, headers=headers, data=payload)
+                if response.status_code == 200:
+                    response_product_data = response.json()
+                    product_data = response_product_data.get('product')
+                    self.env['product.template'].update_products(response_data=product_data)
+                    print("Product created")
+                    product_variant = self.env['product.product'].search([('shopify_variant_id', '=', str(variant_id))])
+                else:
+                    print(f"Error: {response.status_code}")
+                    raise UserError(f"Error: {response.status_code}")
+
             tax_ids = self.get_taxes(line_item)
             order_line_values = {
+                'name': line_item.get("name"),
                 'shopify_order_line_id': line_item.get("id"),
                 'order_id': order_id.id,
                 'product_id': product_variant.id,
                 'product_uom_qty': line_item.get('quantity'),
                 'tax_id': [(6, 0, tax_ids)],
                 'discount': float(line_item.get('total_discount')) * 100,
+                'customer_lead': 5.0,
             }
+            print("order_line_values",order_line_values)
             order_line = self.env['sale.order.line'].search([
                 ('shopify_order_line_id', '=', line_item.get("id")),
             ])
@@ -107,11 +137,11 @@ class ordersDetails(models.Model):
         baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
         access_token = store.search([('key', '=', 'hspl_shopify.access_token')]).value
 
+        headers = {
+            'X-Shopify-Access-Token': access_token,
+        }
         if baseURL and access_token:
             payload = {}
-            headers = {
-                'X-Shopify-Access-Token': access_token,
-            }
             shop_url = f"{baseURL}/shop.json"
             shop_response = requests.request("GET", shop_url, headers=headers, data=payload).json()
             default_location_id = ""
@@ -136,12 +166,26 @@ class ordersDetails(models.Model):
             raise UserError("Improper Store Details")
 
         for order in orders:
+            customer = order.get("customer", "")
+            customer_exist = self.env['res.partner'].search([("shopify_customer_id", "=", customer.get("id"))])
+            if not customer_exist:
+                url = f"{baseURL}/customers/{customer.get('id')}.json"
+                response = requests.request("GET", url=url, headers=headers, data=payload)
+                if response.status_code == 200:
+                    response_customer_data = response.json()
+                    customer_data = response_customer_data.get('customer')
+                    self.env['res.partner'].update_customers(response_data=customer_data)
+                    print("Customer created")
+                else:
+                    print(f"Error: {response.status_code}")
+                    raise UserError(f"Error: {response.status_code}")
+
             values = self.get_order_values(order, default_location_id)
             order_id = orderenv.search([('shopify_orders_id', '=', str(order.get('id')))])
             if not order_id:
-                order_id = orderenv.create(values)
+                order_id = orderenv.with_user(self.env.ref("hspl_shopify.shopify_user_root")).create(values)
             else:
-                order_id.write(values)
+                order_id.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write(values)
             # Creating Order Lines
             self.create_order_lines(order, order_id)
 
@@ -188,7 +232,8 @@ class ordersDetails(models.Model):
                         response_data = response.json()
 
                         response_order = response_data.get("order")
-                        order.with_context(skip_export_flag=True).write({
+                        order.with_context(skip_export_flag=True).with_user(
+                            self.env.ref("hspl_shopify.shopify_user_root")).write({
                             "shopify_orders_id": response_order.get("id"),
                             "is_exported_to_shopify": True,
                         })
@@ -210,7 +255,8 @@ class ordersDetails(models.Model):
                     print("response.json()", response.json())
 
                     if response.status_code == 200:
-                        order.with_context(skip_export_flag=True).write({
+                        order.with_context(skip_export_flag=True).with_user(
+                            self.env.ref("hspl_shopify.shopify_user_root")).write({
                             "is_exported_to_shopify": True,
                         })
                         print("Export Success")
@@ -290,10 +336,12 @@ class ordersDetails(models.Model):
                     "id": order.partner_id.shopify_customer_id,
                 },
                 "line_items": line_val_list,
-                "financial_status": "paid" if order.state == "sale" else "pending",
                 "billing_address": billing_address,
                 "shipping_address": delivery_address,
             }
         }
 
         return data
+
+    def get_export_order_values_gql(self, order):
+        pass

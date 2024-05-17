@@ -12,8 +12,10 @@
                     <field name="target_address"/>
                     <field name="format"/>
                     <field name="published" widget="boolean_toggle"/>
-                    <button name="publish_webhook" string="Publish" class="oe_highlight" type="object" attrs="{'invisible': [('published', '=', True)]}"/>
-                    <button name="unpublish_webhook" string="Unpublish" class="oe_highlight" type="object" attrs="{'invisible': [('published', '=', False)]}"/>
+                    <button name="publish_webhook" string="Publish" class="oe_highlight" type="object"
+                            attrs="{'invisible': [('published', '=', True)]}"/>
+                    <button name="unpublish_webhook" string="Unpublish" class="oe_highlight" type="object"
+                            attrs="{'invisible': [('published', '=', False)]}"/>
                 </tree>
             </field>
         </record>

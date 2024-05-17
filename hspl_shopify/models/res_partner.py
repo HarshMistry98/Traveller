@@ -65,9 +65,9 @@ class customersDetails(models.Model):
             partner_exist = partners.search([('shopify_customer_id', '=', values['shopify_customer_id'])])
             try:
                 if partner_exist:
-                    partner_exist.with_context(skip_export_flag=True).write(values)
+                    partner_exist.with_context(skip_export_flag=True).with_user(self.env.ref("hspl_shopify.shopify_user_root")).write(values)
                 else:
-                    partners.create(values)
+                    partners.with_user(self.env.ref("hspl_shopify.shopify_user_root")).create(values)
             except Exception as e:
                 raise e
 
@@ -143,7 +143,7 @@ class customersDetails(models.Model):
                         response_data = response.json()
 
                         response_customer = response_data.get("customer")
-                        customer.with_context(skip_export_flag=True).write({
+                        customer.with_context(skip_export_flag=True).with_user(self.env.ref("hspl_shopify.shopify_user_root")).write({
                             "shopify_customer_id": response_customer.get("id"),
                             "is_exported_to_shopify": True,
                         })
@@ -161,7 +161,7 @@ class customersDetails(models.Model):
                     error = response.json().get("errors")
 
                     if response.status_code == 200:
-                        customer.with_context(skip_export_flag=True).write({
+                        customer.with_context(skip_export_flag=True).with_user(self.env.ref("hspl_shopify.shopify_user_root")).write({
                             "is_exported_to_shopify": True,
                         })
                     else:
@@ -226,7 +226,7 @@ class customersDetails(models.Model):
                 if response.status_code == 200:
                     customer_response = response.json().get('customer')
 
-                    customer.write({
+                    customer.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write({
                         "shopify_customer_status": customer_response.get("state"),
                     })
                 else:
@@ -263,7 +263,7 @@ class customersDetails(models.Model):
                 if response.status_code == 200:
                     customer_response = response.json().get('customer')
 
-                    customer.write({
+                    customer.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write({
                         "shopify_customer_status": customer_response.get("state"),
                     })
                 else:

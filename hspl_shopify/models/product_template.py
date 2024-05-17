@@ -56,13 +56,14 @@ class productsDetails(models.Model):
         '''Function to return the attribute id if exist or creates the new attribute'''
         attribute_id = self.env['product.attribute'].search([('name', '=', attribute_name)], limit=1)
         if not attribute_id:
-            attribute_id = self.env['product.attribute'].create({
+            attribute_id = self.env['product.attribute'].with_user(
+                self.env.ref("hspl_shopify.shopify_user_root")).create({
                 'name': attribute_name,
                 'display_type': 'radio',
                 'create_variant': 'always',
                 'visibility': 'visible',
             })
-        return attribute_id.id
+        return attribute_id
 
     def get_attribute_values(self, attribute_id, values):
         '''Function to return the values of corresponding attibute id if exist or creates the new value for provided attribute'''
@@ -71,7 +72,8 @@ class productsDetails(models.Model):
             value_id = self.env['product.attribute.value'].search(
                 [('name', '=', value), ('attribute_id', '=', attribute_id)], limit=1)
             if not value_id:
-                value_id = self.env['product.attribute.value'].create({
+                value_id = self.env['product.attribute.value'].with_user(
+                    self.env.ref("hspl_shopify.shopify_user_root")).create({
                     'name': value,
                     'attribute_id': attribute_id,
                 })
@@ -86,7 +88,8 @@ class productsDetails(models.Model):
             for tag in tags:
                 tag_id = self.env['product.tag'].search([('name', '=', tag)], limit=1)
                 if not tag_id:
-                    tag_id = self.env['product.tag'].create({'name': tag})
+                    tag_id = self.env['product.tag'].with_user(self.env.ref("hspl_shopify.shopify_user_root")).create(
+                        {'name': tag})
                 tag_list.append(tag_id.id)
         return tag_list
 
@@ -96,27 +99,31 @@ class productsDetails(models.Model):
         variants = product.get('options')
         if variants:
             for variant in variants:
-                attribute_id = self.get_attribute(variant.get('name'))
-                values = variant.get('values')
-                value_list = self.get_attribute_values(attribute_id, values)
+                attribute = self.get_attribute(variant.get('name'))
+                print("attribute_id", attribute.id)
+                if attribute.name != "Title":
+                    print("Createing atrribute")
+                    values = variant.get('values')
+                    value_list = self.get_attribute_values(attribute.id, values)
 
-                if attribute_id and value_list:
-                    attribute_line = self.env['product.template.attribute.line'].search(
-                        [('attribute_id', '=', attribute_id),
-                         ('value_ids', 'in', value_list),
-                         ('product_tmpl_id', '=', product_id.id)], limit=1)
-                    if not attribute_line:
-                        attribute_line = self.env['product.template.attribute.line'].create({
-                            'attribute_id': attribute_id,
-                            'value_ids': [(6, 0, value_list)],
-                            'product_tmpl_id': product_id.id
-                        })
-                    else:
-                        attribute_line.write({
-                            'attribute_id': attribute_id,
-                            'value_ids': [(6, 0, value_list)],
-                            'product_tmpl_id': product_id.id
-                        })
+                    if attribute.id and value_list:
+                        attribute_line = self.env['product.template.attribute.line'].search(
+                            [('attribute_id', '=', attribute.id),
+                             ('value_ids', 'in', value_list),
+                             ('product_tmpl_id', '=', product_id.id)], limit=1)
+                        if not attribute_line:
+                            attribute_line = self.env['product.template.attribute.line'].with_user(
+                                self.env.ref("hspl_shopify.shopify_user_root")).create({
+                                'attribute_id': attribute.id,
+                                'value_ids': [(6, 0, value_list)],
+                                'product_tmpl_id': product_id.id
+                            })
+                        else:
+                            attribute_line.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write({
+                                'attribute_id': attribute.id,
+                                'value_ids': [(6, 0, value_list)],
+                                'product_tmpl_id': product_id.id
+                            })
 
     def update_product_images(self, product, product_id):
         '''Update product images'''
@@ -141,9 +148,10 @@ class productsDetails(models.Model):
                     'image_1920': image_data,
                 }
                 if not image_id:
-                    self.env['product.image'].create(image_values)
+                    self.env['product.image'].with_user(self.env.ref("hspl_shopify.shopify_user_root")).create(
+                        image_values)
                 else:
-                    image_id.write(image_values)
+                    image_id.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write(image_values)
                 # if image.get("variant_ids"):
                 #     for varian_id in image.get("variant_ids"):
                 #         variant = self.env['product.product'].search([("shopify_variant_id", "=", varian_id)])
@@ -204,10 +212,12 @@ class productsDetails(models.Model):
 
             product_id = productenv.search([('shopify_product_id', '=', str(product_data["id"]))])
             if not product_id:
-                product_id = self.env['product.template'].create(product_values)
+                product_id = self.env['product.template'].with_user(
+                    self.env.ref("hspl_shopify.shopify_user_root")).create(product_values)
                 print("product created")
             else:
-                product_id.with_context(skip_export_flag=True).write(product_values)
+                product_id.with_context(skip_export_flag=True).with_user(
+                    self.env.ref("hspl_shopify.shopify_user_root")).write(product_values)
                 print("product exist")
 
             self.update_product_attributes(product_data, product_id)
@@ -259,7 +269,8 @@ class productsDetails(models.Model):
                         response_data = response.json()
                         print("response_data", response_data)
                         response_product = response_data.get("product")
-                        product.with_context(skip_export_flag=True).write({
+                        product.with_context(skip_export_flag=True).with_user(
+                            self.env.ref("hspl_shopify.shopify_user_root")).write({
                             "shopify_product_id": response_product.get("id"),
                             "is_exported_to_shopify": True,
                         })
@@ -307,7 +318,8 @@ class productsDetails(models.Model):
                     error = response.json().get("errors")
 
                     if response.status_code == 200:
-                        product.with_context(skip_export_flag=True).write({
+                        product.with_context(skip_export_flag=True).with_user(
+                            self.env.ref("hspl_shopify.shopify_user_root")).write({
                             "is_exported_to_shopify": True,
                         })
 
@@ -351,7 +363,7 @@ class productsDetails(models.Model):
                     "images": {
                         "position": 1,
                         'name': product.name,
-                        'attachment': product.image_1920.decode("utf-8")
+                        'attachment': product.image_1920.decode("utf-8") if product.image_1920 else None
                     }
                 }
             }
@@ -417,9 +429,6 @@ class productsDetails(models.Model):
         return data
 
     def activate_shopify_product(self):
-        print("Activating")
-        print(self._context)
-
         for product_id in self._context.get("active_ids"):
             product = self.env['product.template'].browse(product_id)
             store = self.env['ir.config_parameter']
@@ -427,36 +436,30 @@ class productsDetails(models.Model):
             access_token = store.get_param('hspl_shopify.access_token')
             if baseURL and access_token:
                 url = f"{baseURL}/products/{product.shopify_product_id}.json"
-
-                payload = {}
                 headers = {
                     'X-Shopify-Access-Token': access_token,
+                    "Content-Type": "application/json"
                 }
                 product_values = {
                     "product": {
                         "id": int(product.shopify_product_id),
-                        "status": "active"
+                        "status": "active",
                     }
                 }
-                print("json.dumps(product_values)",json.dumps(product_values))
                 response = requests.request("PUT", url, headers=headers, data=json.dumps(product_values))
 
                 if response.status_code == 200:
                     product_response = response.json().get('product')
 
-                    product.write({
+                    product.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write({
                         "shopify_product_status": product_response.get("status"),
                     })
                 else:
-                    print(f"Error: {response.status_code} {response.text}")
                     raise UserError(f"Error: {response.status_code} {response.text}")
             else:
                 raise UserError("Improper Store Details")
 
     def draft_shopify_product(self):
-        print("Drafting")
-        print(self._context)
-
         for product_id in self._context.get("active_ids"):
             product = self.env['product.template'].browse(product_id)
             store = self.env['ir.config_parameter']
@@ -464,9 +467,9 @@ class productsDetails(models.Model):
             access_token = store.get_param('hspl_shopify.access_token')
             if baseURL and access_token:
                 url = f"{baseURL}/products/{product.shopify_product_id}.json"
-                print("url",url)
                 headers = {
                     'X-Shopify-Access-Token': access_token,
+                    "Content-Type": "application/json"
                 }
                 product_values = {
                     "product": {
@@ -474,17 +477,15 @@ class productsDetails(models.Model):
                         "status": "draft"
                     }
                 }
-                print("json.dumps(product_values)", json.dumps(product_values, indent=4))
                 response = requests.request("PUT", url=url, headers=headers, data=json.dumps(product_values))
 
                 if response.status_code == 200:
                     product_response = response.json().get('product')
 
-                    product.write({
+                    product.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write({
                         "shopify_product_status": product_response.get("status"),
                     })
                 else:
-                    print(f"Error: {response.status_code} {response.text}")
                     raise UserError(f"Error: {response.status_code} {response.text}")
             else:
                 raise UserError("Improper Store Details")

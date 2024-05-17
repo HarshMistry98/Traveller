@@ -12,11 +12,14 @@ class Webhooks(models.Model):
 
     webhook_id = fields.Char('Webhook ID', readonly=True)
     topic = fields.Char('Topic', required="True")
-    # address = fields.Char('Address')
     target_address = fields.Char('Target Address', compute="_compute_target_address")
     format = fields.Char("Format", default='json')
     published = fields.Boolean("Publish on Shopify", readonly=True)
 
+    def _get_store_domain(self):
+        # Fetch the domain from ir.config_parameter
+        param_value = self.env['ir.config_parameter'].get_param('hspl_shopify.store_domain')
+        return param_value or ''
     @api.depends("target_address")
     def _compute_target_address(self):
         print("Target changing")

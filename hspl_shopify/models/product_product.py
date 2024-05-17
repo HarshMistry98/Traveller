@@ -68,5 +68,6 @@ class productsDetails(models.Model):
                             item.barcode = variant.get('barcode')
                             item.weight = variant.get('weight')
                             item.lst_price = variant.get('price')
+                            print("Variant Created")
 
 

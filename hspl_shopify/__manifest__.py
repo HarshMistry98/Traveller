@@ -9,8 +9,8 @@
         Long description of module's purpose
     """,
 
-    'author': "My Company",
-    'website': "https://www.yourcompany.com",
+    'author': "Heliconia Solutions Pvt. Ltd.",
+    'website': "https://www.heliconia.io",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/16.0/odoo/addons/base/data/ir_module_category_data.xml
@@ -26,6 +26,7 @@
         'security/ir.model.access.csv',
 
         # 'data/cron_jobs.xml',
+        'data/res_users.xml',
         'data/shopify_webhooks.xml',
 
         'wizards/operation.xml',
@@ -46,6 +47,5 @@
     'demo': [
         'demo/demo.xml',
     ],
-    'application': True,
 }
 # -*- coding: utf-8 -*-

@@ -3,7 +3,7 @@
 
     <menuitem id="shopify_menu_root"
               name="Shopify"
-              sequence="3">
+              sequence="11">
 
 
         <menuitem id="menu_shopify_order"

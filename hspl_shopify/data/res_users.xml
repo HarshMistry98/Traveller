@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="res.partner" id="hspl_shopify.shopify_partner_root">
+            <field name="name">ShopifyBot</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="email">shopifybot@example.com</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="res.users" id="hspl_shopify.shopify_user_root">
+            <field name="partner_id" ref="hspl_shopify.shopify_partner_root"/>
+            <field name="company_id" ref="base.main_company"/>
+<!--            <field name="company_ids" eval="[Command.link(ref('base.main_company'))]"/>-->
+            <field name="active" eval="False"/>
+            <field name="login">shopifybot@example.com</field>
+            <field name="signature"><![CDATA[<span>-- <br/>
+System</span>]]></field>
+        </record>
+
+    </data>
+</odoo>
