@@ -42,6 +42,4 @@
         <field name="target">new</field>
         <field name="context">{"no_import": True}</field>
     </record>
-
-
 </odoo>

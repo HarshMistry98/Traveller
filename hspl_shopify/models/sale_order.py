@@ -100,10 +100,8 @@ class ordersDetails(models.Model):
                     response_product_data = response.json()
                     product_data = response_product_data.get('product')
                     self.env['product.template'].update_products(response_data=product_data)
-                    print("Product created")
                     product_variant = self.env['product.product'].search([('shopify_variant_id', '=', str(variant_id))])
                 else:
-                    print(f"Error: {response.status_code}")
                     raise UserError(f"Error: {response.status_code}")
 
             tax_ids = self.get_taxes(line_item)
@@ -117,7 +115,6 @@ class ordersDetails(models.Model):
                 'discount': float(line_item.get('total_discount')) * 100,
                 'customer_lead': 5.0,
             }
-            print("order_line_values",order_line_values)
             order_line = self.env['sale.order.line'].search([
                 ('shopify_order_line_id', '=', line_item.get("id")),
             ])
@@ -158,7 +155,6 @@ class ordersDetails(models.Model):
                     response_orders_data = response.json()
                     orders = response_orders_data.get('orders')
                 else:
-                    print(f"Error: {response.status_code}")
                     raise UserError(f"Error: {response.status_code}")
             else:
                 orders = [response_data]
@@ -175,9 +171,7 @@ class ordersDetails(models.Model):
                     response_customer_data = response.json()
                     customer_data = response_customer_data.get('customer')
                     self.env['res.partner'].update_customers(response_data=customer_data)
-                    print("Customer created")
                 else:
-                    print(f"Error: {response.status_code}")
                     raise UserError(f"Error: {response.status_code}")
 
             values = self.get_order_values(order, default_location_id)
@@ -190,7 +184,6 @@ class ordersDetails(models.Model):
             self.create_order_lines(order, order_id)
 
     def export_orders(self):
-        print("Exporting Orders")
 
         without_shopify_id_orders = self.env['sale.order'].search([("shopify_orders_id", "=", False),
                                                                    ("is_exported_to_shopify", "=", False),
@@ -204,8 +197,6 @@ class ordersDetails(models.Model):
         # If the order have Shopify ID so that order is  present on Shopify
         # therefore during export we have to update the order by PUT request
 
-        print("without_shopify_id_orders", without_shopify_id_orders)
-        print("with_shopify_id_orders", with_shopify_id_orders)
 
         store = self.env['ir.config_parameter']
         baseURL = store.search([('key', '=', 'hspl_shopify.baseStoreURL')]).value
@@ -245,21 +236,16 @@ class ordersDetails(models.Model):
 
                 for order in with_shopify_id_orders:
                     values = self.get_export_order_values(order)
-                    print("json.dumps(values)", json.dumps(values))
 
                     url = f"{baseURL}/orders/{order.shopify_orders_id}.json"
                     response = requests.request("PUT", url, headers=headers, data=json.dumps(values))
                     error = response.json().get("errors")
-                    print("response.status_code", response.status_code)
-                    print("error", error)
-                    print("response.json()", response.json())
 
                     if response.status_code == 200:
                         order.with_context(skip_export_flag=True).with_user(
                             self.env.ref("hspl_shopify.shopify_user_root")).write({
                             "is_exported_to_shopify": True,
                         })
-                        print("Export Success")
                     else:
                         raise UserError(
                             f"Failed to export data for order id ={order.id}. Response {response.status_code}.{error}")

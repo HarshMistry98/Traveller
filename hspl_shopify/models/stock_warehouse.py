@@ -12,7 +12,6 @@ class StockWarehouse(models.Model):
     is_shopify_warehouse = fields.Boolean(string="Shopify Warehouse")
 
     def update_warehouses(self, response_data=False):
-        print("Warehouse import")
         if not response_data:
             store = self.env['ir.config_parameter']
 
@@ -33,7 +32,6 @@ class StockWarehouse(models.Model):
                     response_locations_data = response.json()
                     warehouses = response_locations_data.get('locations')
                 else:
-                    print(f"Error: {response.status_code}")
                     raise UserError(f"Error: {response.status_code} ")
             else:
                 raise UserError("Improper Store Details")
@@ -52,10 +50,8 @@ class StockWarehouse(models.Model):
                     current_warehouse = self.env['stock.warehouse'].create(values)
             except Exception as e:
                 raise e
-            print("current_warehouse", current_warehouse)
 
             locations_of_warehouse = self.env['stock.location'].search([("warehouse_id", "=", current_warehouse.id)])
-            print("locations_of_warehouse", locations_of_warehouse)
             for location in locations_of_warehouse:
                 location.is_shopify_location = True
 

@@ -1,58 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-
-        <record id="shopify_order_details_form_inherit" model="ir.ui.view">
-            <field name="name">shopify.order.details.form.inherit</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="priority" eval="8"/>
-            <field name="arch" type="xml">
-                <xpath expr="//notebook" position="inside">
-                    <page name="shopify" string="Shopify">
+    <record id="shopify_order_details_form_inherit" model="ir.ui.view">
+        <field name="name">shopify.order.details.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="shopify" string="Shopify">
+                    <group>
                         <group>
-                            <group>
-                                <field name="shopify_orders_id"/>
-                                <field name="is_shopify_order"/>
-                            </group>
-                            <group>
-                                <field name="is_exported_to_shopify"/>
-                            </group>
+                            <field name="shopify_orders_id"/>
+                            <field name="is_shopify_order"/>
                         </group>
-                    </page>
-                </xpath>
-            </field>
-        </record>
+                        <group>
+                            <field name="is_exported_to_shopify"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 
-        <record id="view_shopify_orders_filter" model="ir.ui.view">
-            <field name="name">view.shopify.order.filter</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
-            <field name="arch" type="xml">
-                <search>
-                    <filter string="Shopify Orders" name="shopify_orders"
-                            domain="[('shopify_orders_id', '!=', False)]"/>
-                </search>
-            </field>
-        </record>
+    <record id="view_shopify_orders_filter" model="ir.ui.view">
+        <field name="name">view.shopify.order.filter</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <search>
+                <filter string="Shopify Orders" name="shopify_orders"
+                        domain="[('shopify_orders_id', '!=', False)]"/>
+            </search>
+        </field>
+    </record>
 
 
-        <record id="action_shopify_orders" model="ir.actions.act_window">
-            <field name="name">Shopify Orders</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-            <field name="view_id" ref="sale.view_order_tree"/>
-            <field name="target">current</field>
-            <field name="domain">[('is_shopify_order', '=', True)]</field>
-        </record>
+    <record id="action_shopify_orders" model="ir.actions.act_window">
+        <field name="name">Shopify Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_id" ref="sale.view_order_tree"/>
+        <field name="target">current</field>
+        <field name="domain">[('is_shopify_order', '=', True)]</field>
+    </record>
 
-        <record id="action_shopify_quatations" model="ir.actions.act_window">
-            <field name="name">Shopify Quatations</field>
-            <field name="res_model">sale.order</field>
-            <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
-            <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
-            <field name="target">current</field>
-            <field name="domain">[('is_shopify_order', '=', True)]</field>
-        </record>
-    </data>
+    <record id="action_shopify_quatations" model="ir.actions.act_window">
+        <field name="name">Shopify Quatations</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
+        <field name="view_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="target">current</field>
+        <field name="domain">[('is_shopify_order', '=', True)]</field>
+    </record>
 </odoo>

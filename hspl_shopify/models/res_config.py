@@ -6,7 +6,7 @@ from odoo import api, fields, models, _
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    store_name = fields.Char(string="Store Name", config_parameter='hspl_shopify.store_name')
+    store_name = fields.Char(config_parameter='hspl_shopify.store_name')
 
     api_version = fields.Char(string="API Version", config_parameter='hspl_shopify.api_version',
                               help="Format according to release month and year YYYY-MM ")

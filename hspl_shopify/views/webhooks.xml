@@ -1,49 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <record id="webhook_tree_view" model="ir.ui.view">
+        <field name="name">webhook.tree.view</field>
+        <field name="model">shopify.webhooks</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="webhook_id"/>
+                <field name="topic"/>
+                <field name="target_address"/>
+                <field name="format"/>
+                <field name="published" widget="boolean_toggle"/>
+                <button name="publish_webhook" string="Publish" class="oe_highlight" type="object"
+                        attrs="{'invisible': [('published', '=', True)]}"/>
+                <button name="unpublish_webhook" string="Unpublish" class="oe_highlight" type="object"
+                        attrs="{'invisible': [('published', '=', False)]}"/>
+            </tree>
+        </field>
+    </record>
 
-        <record id="webhook_tree_view" model="ir.ui.view">
-            <field name="name">webhook.tree.view</field>
-            <field name="model">shopify.webhooks</field>
-            <field name="arch" type="xml">
-                <tree editable="bottom">
-                    <field name="webhook_id"/>
-                    <field name="topic"/>
-                    <field name="target_address"/>
-                    <field name="format"/>
-                    <field name="published" widget="boolean_toggle"/>
-                    <button name="publish_webhook" string="Publish" class="oe_highlight" type="object"
-                            attrs="{'invisible': [('published', '=', True)]}"/>
-                    <button name="unpublish_webhook" string="Unpublish" class="oe_highlight" type="object"
-                            attrs="{'invisible': [('published', '=', False)]}"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="webhook_form_view" model="ir.ui.view">
-            <field name="name">webhook.form.view</field>
-            <field name="model">shopify.webhooks</field>
-            <field name="arch" type="xml">
-                <form>
-                    <sheet>
+    <record id="webhook_form_view" model="ir.ui.view">
+        <field name="name">webhook.form.view</field>
+        <field name="model">shopify.webhooks</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
                         <group>
-                            <group>
-                                <field name="webhook_id"/>
-                                <field name="topic"/>
-                                <field name="target_address"/>
-                                <field name="format"/>
-                                <field name="published" widget="boolean_toggle"/>
-                            </group>
+                            <field name="webhook_id"/>
+                            <field name="topic"/>
+                            <field name="target_address"/>
+                            <field name="format"/>
+                            <field name="published" widget="boolean_toggle"/>
                         </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-        <record id="action_webhook" model="ir.actions.act_window">
-            <field name="name">Webhook</field>
-            <field name="res_model">shopify.webhooks</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-    </data>
+    <record id="action_webhook" model="ir.actions.act_window">
+        <field name="name">Webhook</field>
+        <field name="res_model">shopify.webhooks</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 </odoo>

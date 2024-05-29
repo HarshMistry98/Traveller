@@ -35,11 +35,9 @@ class productsDetails(models.Model):
                         "product_tmpl_id": record.id,
                         "image_1920": val.get("image_1920"),
                     }
-                    print("image_values", image_values)
                     tmpl_image = self.env['product.image'].search([('sequence', "=", 1),
                                                                    ("product_tmpl_id", "=", self.id),
                                                                    ("image_1920", "=", val.get("image_1920"))])
-                    print("tmpl_image", tmpl_image)
                     if not tmpl_image:
                         self.env['product.image'].create(image_values)
         return records
@@ -100,9 +98,7 @@ class productsDetails(models.Model):
         if variants:
             for variant in variants:
                 attribute = self.get_attribute(variant.get('name'))
-                print("attribute_id", attribute.id)
                 if attribute.name != "Title":
-                    print("Createing atrribute")
                     values = variant.get('values')
                     value_list = self.get_attribute_values(attribute.id, values)
 
@@ -135,7 +131,6 @@ class productsDetails(models.Model):
                 image_url = image.get('src')
                 image_shopify = requests.get(image_url)
                 image_data = base64.b64encode(image_shopify.content)
-                print("image_position", image_position)
                 if image_position == 1:
                     product_id.image_1920 = image_data
                     product_id.shopify_product_image_id = image.get("id", "")
@@ -152,11 +147,47 @@ class productsDetails(models.Model):
                         image_values)
                 else:
                     image_id.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write(image_values)
-                # if image.get("variant_ids"):
-                #     for varian_id in image.get("variant_ids"):
-                #         variant = self.env['product.product'].search([("shopify_variant_id", "=", varian_id)])
-                #         variant.image_1920 = image_data
-                # print("image_id", image_id)
+
+    def s_update_product_images(self, product, product_id):
+        images = product.get('images')
+        if images:
+            for image in images:
+                template_image = True
+                variant_image = True
+                image_data = None
+                image_position = image.get('position')
+                image_url = image.get('src')
+                image_shopify = requests.get(image_url)
+                image_data = base64.b64encode(image_shopify.content)
+
+                if image_position == 1:
+                    product_id.image_1920 = image_data
+                    product_id.shopify_product_image_id = image.get("id", "")
+
+                variant_ids = image.get("variant_ids")
+                variant_list = []
+                if variant_ids:
+                    for variant_id in variant_ids:
+                        product_variant = self.env['product.product'].search(
+                            [("shopify_variant_id", "=", str(variant_id))])
+                        product_variant.image_variant_1920 = image_data
+                        variant_list.append(product_variant.id)
+
+                image_id = self.env['shopify.image'].search([('shopify_image_id', '=', str(image.get('id')))])
+                image_values = {
+                    'shopify_image_id': image.get('id'),
+                    'shopify_product_id': image.get('product_id'),
+                    'product_tmpl_id': product_id.id,
+                    'product_variant_ids': [(6, 0, variant_list)],
+                    'name': product["title"],
+                    'position': image.get('position'),
+                    'image_1920': image_data,
+                }
+                if not image_id:
+                    self.env['shopify.image'].with_user(self.env.ref("hspl_shopify.shopify_user_root")).create(
+                        image_values)
+                else:
+                    image_id.with_user(self.env.ref("hspl_shopify.shopify_user_root")).write(image_values)
 
     @api.model
     def update_products(self, response_data=False):
@@ -182,7 +213,6 @@ class productsDetails(models.Model):
                     response_products_data = response.json()
                     products = response_products_data.get('products')
                 else:
-                    print(f"Error: {response.status_code}")
                     raise UserError(f"Error: {response.status_code}")
             else:
                 raise UserError("Improper Store Details")
@@ -214,11 +244,9 @@ class productsDetails(models.Model):
             if not product_id:
                 product_id = self.env['product.template'].with_user(
                     self.env.ref("hspl_shopify.shopify_user_root")).create(product_values)
-                print("product created")
             else:
                 product_id.with_context(skip_export_flag=True).with_user(
                     self.env.ref("hspl_shopify.shopify_user_root")).write(product_values)
-                print("product exist")
 
             self.update_product_attributes(product_data, product_id)
             self.update_product_images(product_data, product_id)
@@ -238,9 +266,6 @@ class productsDetails(models.Model):
         # If the customer have Shopify ID so that customer is  present on Shopify
         # therefore during export we have to update the customer
 
-        print("without_shopify_id_products", without_shopify_id_products)
-        print("with_shopify_id_products", with_shopify_id_products)
-
         store = self.env['ir.config_parameter']
         baseURL = store.get_param('hspl_shopify.baseStoreURL')
         access_token = store.get_param('hspl_shopify.access_token')
@@ -258,22 +283,25 @@ class productsDetails(models.Model):
                     values = self.get_export_product_values(product)
 
                     url = f"{baseURL}/products.json"
-                    print("(values)", values)
-                    # print("json.dumps(values)", json.dumps(values))
                     response = requests.request(method="POST", url=url, headers=headers, data=json.dumps(values))
                     error = response.json().get("errors")
-                    print("response.status_code", response.status_code)
-                    print("error", error)
 
                     if response.status_code == 201:
                         response_data = response.json()
-                        print("response_data", response_data)
                         response_product = response_data.get("product")
-                        product.with_context(skip_export_flag=True).with_user(
-                            self.env.ref("hspl_shopify.shopify_user_root")).write({
+                        product_template_shopify_image_id = False
+                        response_product_images = response_product.get("images")
+                        if response_product_images:
+                            for image in response_product_images:
+                                if image.get("position") == 1:
+                                    product_template_shopify_image_id = image.get("id")
+                        value_to_update = {
                             "shopify_product_id": response_product.get("id"),
                             "is_exported_to_shopify": True,
-                        })
+                            'shopify_product_image_id': product_template_shopify_image_id,
+                        }
+                        product.with_context(skip_export_flag=True).with_user(
+                            self.env.ref("hspl_shopify.shopify_user_root")).write(value_to_update)
                         product_variant = self.env['product.product'].search([('product_tmpl_id', '=', product.id)])
                         variants = response_product.get('variants')
                         if variants:
@@ -283,7 +311,7 @@ class productsDetails(models.Model):
                                     if item.product_template_attribute_value_ids:
                                         list_values = [rec.name for rec in item.product_template_attribute_value_ids]
                                         if set(options).issubset(set(list_values)):
-                                            print("variant", variant)
+                                            item.is_shopify_variant = True
                                             item.shopify_variant_id = variant.get('id')
                                             item.shopify_product_id = variant.get('product_id')
                                             item.shopify_inventory_id = variant.get('inventory_item_id')
@@ -292,18 +320,15 @@ class productsDetails(models.Model):
                                                 ("product_tmpl_id", "=", product.id),
                                                 ("product_variant_id", "=", item.id),
                                             ])
-                                            print("variant_image", variant_image)
                                             image_values = {
                                                 'name': item.name,
                                                 'shopify_image_id': variant.get("image_id"),
                                                 'image_1920': item.image_1920,
                                             }
-                                            print("image_values", image_values)
                                             if not variant_image:
                                                 self.env['product.image'].create(image_values)
                                             else:
                                                 variant_image.write(image_values)
-                        print("Product Exported")
 
                     else:
                         raise UserError(
@@ -360,14 +385,8 @@ class productsDetails(models.Model):
                             ]
                         }
                     ],
-                    "images": {
-                        "position": 1,
-                        'name': product.name,
-                        'attachment': product.image_1920.decode("utf-8") if product.image_1920 else None
-                    }
                 }
             }
-            print("data1", data)
         else:
             data = {
                 "product": {
@@ -411,21 +430,24 @@ class productsDetails(models.Model):
             data.get('product')['variants'] = variant_val_list
             data.get('product')['options'] = option_list
 
-            image_list = []
-            product_images = self.env['product.image'].search([("product_tmpl_id", "=", product.id)])
+        image_list = []
+        product_images = self.env['product.image'].search([("product_tmpl_id", "=", product.id)])
 
-            if product_images:
-                for product_image in product_images:
-                    image_dic = {
-                        'position': product_image.sequence,
-                        'name': product_image.name,
-                        'attachment': product_image.image_1920.decode("utf-8"),
-                    }
-                    image_list.append(image_dic)
+        if product_images:
+            for product_image in product_images:
+                image_dic = {
+                    'position': product_image.sequence,
+                    'name': product_image.name,
+                    'attachment': product_image.image_1920.decode("utf-8"),
+                    'product_id': product_image.product_tmpl_id.shopify_product_id,
+                }
+                variant_list = []
+                if product_image.product_variant_id:
+                    variant_list.append(product_image.product_variant_id.shopify_variant_id)
+                image_dic['variant_ids']: variant_list
+                image_list.append(image_dic)
 
-                data.get('product')['images'] = image_list
-
-            print("data2", data)
+            data.get('product')['images'] = image_list
         return data
 
     def activate_shopify_product(self):

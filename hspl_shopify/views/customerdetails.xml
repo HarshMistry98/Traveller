@@ -1,61 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-
-        <record id="shopify_customer_details_form_inherit" model="ir.ui.view">
-            <field name="name">shopify.customer.details.form.inherit</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="priority" eval="8"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page[@name='internal_notes']" position="after">
-                    <page name="shopify" string="Shopify">
+    <record id="shopify_customer_details_form_inherit" model="ir.ui.view">
+        <field name="name">shopify.customer.details.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page name="shopify" string="Shopify">
+                    <group>
                         <group>
-                            <group>
-                                <field name="is_shopify_customer"/>
-                                <field name="shopify_customer_id"/>
-                                <field name="shopify_customer_status"/>
-                            </group>
-                            <group>
-                                <field name="is_exported_to_shopify"/>
-                            </group>
+                            <field name="is_shopify_customer"/>
+                            <field name="shopify_customer_id"/>
+                            <field name="shopify_customer_status"/>
                         </group>
-                    </page>
-                </xpath>
-            </field>
-        </record>
+                        <group>
+                            <field name="is_exported_to_shopify"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 
-        <record id="action_shopify_customers" model="ir.actions.act_window">
-            <field name="name">Shopify Customer</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="view_id" ref="base.res_partner_kanban_view"/>
-            <field name="target">current</field>
-            <field name="domain">[('is_shopify_customer', '=', True)]</field>
-        </record>
+    <record id="action_shopify_customers" model="ir.actions.act_window">
+        <field name="name">Shopify Customer</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_id" ref="base.res_partner_kanban_view"/>
+        <field name="target">current</field>
+        <field name="domain">[('is_shopify_customer', '=', True)]</field>
+    </record>
 
-        <record model="ir.actions.server" id="action_enable_shopify_customer">
-            <field name="name">Enable Shopify Customer</field>
-            <field name="model_id" ref="hspl_shopify.model_res_partner"/>
-            <field name="binding_model_id" ref="hspl_shopify.model_res_partner"/>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.enable_shopify_customer()
-            </field>
-        </record>
+    <record model="ir.actions.server" id="action_enable_shopify_customer">
+        <field name="name">Enable Shopify Customer</field>
+        <field name="model_id" ref="hspl_shopify.model_res_partner"/>
+        <field name="binding_model_id" ref="hspl_shopify.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.enable_shopify_customer()
+        </field>
+    </record>
 
-        <record model="ir.actions.server" id="action_disable_shopify_customer">
-            <field name="name">Disable Shopify Customer</field>
-            <field name="model_id" ref="hspl_shopify.model_res_partner"/>
-            <field name="binding_model_id" ref="hspl_shopify.model_res_partner"/>
-            <field name="state">code</field>
-            <field name="code">
-                action = records.disable_shopify_customer()
-            </field>
-        </record>
-
-
-    </data>
+    <record model="ir.actions.server" id="action_disable_shopify_customer">
+        <field name="name">Disable Shopify Customer</field>
+        <field name="model_id" ref="hspl_shopify.model_res_partner"/>
+        <field name="binding_model_id" ref="hspl_shopify.model_res_partner"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.disable_shopify_customer()
+        </field>
+    </record>
 </odoo>
 
 

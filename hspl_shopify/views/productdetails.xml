@@ -1,45 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-
-        <record id="shopify_product_details_product_form_inherit" model="ir.ui.view">
-            <field name="name">shopify.product.details.product.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="priority" eval="8"/>
-            <field name="arch" type="xml">
-                <xpath expr="//notebook" position="inside">
-                    <page name="shopify" string="Shopify">
+    <record id="shopify_product_details_product_form_inherit" model="ir.ui.view">
+        <field name="name">shopify.product.details.product.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="priority" eval="8"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="shopify" string="Shopify">
+                    <group>
                         <group>
-                            <group>
-                                <field name="is_shopify_variant"/>
-                                <field name="shopify_variant_id"/>
-                                <field name="shopify_product_id"/>
+                            <field name="is_shopify_variant"/>
+                            <field name="shopify_variant_id"/>
+                            <field name="shopify_product_id"/>
 
-                            </group>
-                            <group>
-                                <field name="shopify_inventory_id"/>
-                                <field name = "shopify_variant_image_id"/>
-                                <button name="select_variant_image"
-                                        string = "Select"
-                                        type="object"
-                                        class="btn-primary"/>
-
-                            </group>
                         </group>
-                    </page>
-                </xpath>
-            </field>
-        </record>
+                        <group>
+                            <field name="shopify_inventory_id"/>
+                            <field name="shopify_variant_image_id"/>
+                            <button name="select_variant_image"
+                                    string="Select"
+                                    type="object"
+                                    class="btn-primary"/>
 
-        <record id="action_shopify_product_variants" model="ir.actions.act_window">
-            <field name="name">Shopify Variants</field>
-            <field name="res_model">product.product</field>
-            <field name="view_mode">tree,kanban,form,activity</field>
-            <field name="view_id" ref="product.product_product_tree_view"/>
-            <field name="target">current</field>
-            <field name="domain">[('is_shopify_variant', '=', True)]</field>
-        </record>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 
-    </data>
+    <record id="action_shopify_product_variants" model="ir.actions.act_window">
+        <field name="name">Shopify Variants</field>
+        <field name="res_model">product.product</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_id" ref="product.product_product_tree_view"/>
+        <field name="target">current</field>
+        <field name="domain">[('is_shopify_variant', '=', True)]</field>
+    </record>
 </odoo>

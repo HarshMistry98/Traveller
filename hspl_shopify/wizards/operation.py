@@ -38,7 +38,6 @@ class operationImport(models.TransientModel):
         getattr(operateClass, operatefunc)()
 
     def action_export_data(self):
-        print("Exporting")
 
         operation_for = self.operation_for
 

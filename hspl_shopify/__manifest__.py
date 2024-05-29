@@ -2,11 +2,10 @@
     'name': "Shopify",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Shopify Integration""",
 
     'description': """
-        Long description of module's purpose
+        Shopify Integration
     """,
 
     'author': "Heliconia Solutions Pvt. Ltd.",
@@ -16,7 +15,7 @@
     # Check https://github.com/odoo/odoo/blob/16.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '16.0.1.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base', 'sale', 'sale_management', 'stock', 'website_sale', 'l10n_in'],
@@ -25,7 +24,6 @@
     'data': [
         'security/ir.model.access.csv',
 
-        # 'data/cron_jobs.xml',
         'data/res_users.xml',
         'data/shopify_webhooks.xml',
 

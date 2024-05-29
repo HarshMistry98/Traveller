@@ -22,7 +22,6 @@ class Webhooks(models.Model):
         return param_value or ''
     @api.depends("target_address")
     def _compute_target_address(self):
-        print("Target changing")
         web_base_url = self.env['ir.config_parameter'].get_param('hspl_shopify.store_domain')
         if not web_base_url:
             web_base_url = self.env['ir.config_parameter'].get_param('web.base.url')
@@ -30,9 +29,7 @@ class Webhooks(models.Model):
             target_address = web_base_url + "/shopify/webhook/" + rec.topic
             rec.target_address = target_address
 
-    # @api.onchange("target_address")
-    # def _onchange_target_address(self):
-    #     print("on chanchanging address")
+
     def publish_webhook(self):
         store = self.env['ir.config_parameter']
 

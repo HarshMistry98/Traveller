@@ -23,7 +23,6 @@ class VariantImage(models.TransientModel):
     @api.onchange("selection_image")
     def _onchange_selection_image(self):
         self.image_preview = self.env['product.image'].search([('shopify_image_id', '=', self.selection_image)], limit=1).image_1920
-        print("image_preview",self.image_preview)
 
     def confirm_selection(self):
         product = self.env['product.product'].browse(self._context.get('current_product_id'))

@@ -8,6 +8,7 @@ from . import product_product
 from . import sale_order
 from . import webhooks
 from . import product_image
+from . import shopify_image
 from . import stock_location
 from . import stock_warehouse
 from . import stock_quant

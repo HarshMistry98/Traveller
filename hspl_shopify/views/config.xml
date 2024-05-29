@@ -1,68 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="res_config_settings_view_form" model="ir.ui.view">
-            <field name="name">shopify.config.settings.view.form.inherit.event</field>
-            <field name="model">res.config.settings</field>
-            <field name="priority" eval="65"/>
-            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Shopify" string="Shopify" data-key="hspl_shopify">
-                        <h2>Store</h2>
-                        <header>
-                            <button name="test_shopify_connection" type="object" string="Test Connection" class="btn-primary"/>
-                        </header>
-                        <div class="row mt16 o_settings_container" name="Shopify_setting_container">
-                            <div class="col-12 col-lg-6 o_setting_box"
-                                 id="manage_tracks">
-                                <div class="o_setting_right_pane border-start-0">
-                                    <div class="content-group">
-                                        <div class="row mt8">
-                                            <label class="col-lg-3" string="Store Name" for="store_name"/>
-                                            <field name="store_name"/>
-                                        </div>
-                                        <div class="row mt8">
-                                            <label class="col-lg-3" string="API Version" for="api_version"/>
-                                            <field name="api_version"/>
-                                        </div>
-                                        <div class="row mt8">
-                                            <label class="col-lg-3" string="Store URL" for="baseStoreURL"/>
-                                            <field name="baseStoreURL"/>
-                                        </div>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">shopify.config.settings.view.form.inherit.event</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="65"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Shopify" string="Shopify" data-key="hspl_shopify">
+                    <h2>Store</h2>
+                    <header>
+                        <button name="test_shopify_connection" type="object" string="Test Connection"
+                                class="btn-primary"/>
+                    </header>
+                    <div class="row mt16 o_settings_container" name="Shopify_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                             id="manage_tracks">
+                            <div class="o_setting_right_pane border-start-0">
+                                <div class="content-group">
+                                    <div class="row mt8">
+                                        <label class="col-lg-3" string="Store Name" for="store_name"/>
+                                        <field name="store_name"/>
+                                    </div>
+                                    <div class="row mt8">
+                                        <label class="col-lg-3" string="API Version" for="api_version"/>
+                                        <field name="api_version"/>
+                                    </div>
+                                    <div class="row mt8">
+                                        <label class="col-lg-3" string="Store URL" for="baseStoreURL"/>
+                                        <field name="baseStoreURL"/>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
-                                <div class="o_setting_right_pane border-start-0">
-                                    <div class="content-group">
-                                        <div class="row mt8">
-                                            <label class="col-lg-3" string="Access Token" for="access_token"/>
-                                            <field name="access_token"/>
-                                        </div>
-                                        <div class="row mt8">
-                                            <label class="col-lg-3" string="Store Domain" for="store_domain"/>
-                                            <field name="store_domain" placeholder="http://www.example.com"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
+                        <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="o_setting_right_pane border-start-0">
+                                <div class="content-group">
+                                    <div class="row mt8">
+                                        <label class="col-lg-3" string="Access Token" for="access_token"/>
+                                        <field name="access_token"/>
+                                    </div>
+                                    <div class="row mt8">
+                                        <label class="col-lg-3" string="Store Domain" for="store_domain"/>
+                                        <field name="store_domain" placeholder="http://www.example.com"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </xpath>
-            </field>
-        </record>
+                </div>
+            </xpath>
+        </field>
+    </record>
 
-        <record id="action_shopify_setting_configuration" model="ir.actions.act_window">
-            <field name="name">Settings</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.config.settings</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="hspl_shopify.res_config_settings_view_form"/>
-            <field name="target">inline</field>
-            <field name="context">{'module' : 'hspl_shopify'}</field>
-        </record>
-
-    </data>
+    <record id="action_shopify_setting_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="hspl_shopify.res_config_settings_view_form"/>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'hspl_shopify'}</field>
+    </record>
 </odoo>

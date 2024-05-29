@@ -30,7 +30,6 @@ class customersDetails(models.Model):
 
     def update_customers(self, response_data=False):
         partners = self.env['res.partner']
-        print("1111", response_data)
         if not response_data:
             store = self.env['ir.config_parameter']
 
@@ -51,15 +50,12 @@ class customersDetails(models.Model):
                     response_customer_data = response.json()
                     customers = response_customer_data.get('customers')
                 else:
-                    print(f"Error: {response.status_code}")
                     raise UserError(f"Error: {response.status_code}")
             else:
                 raise UserError("Improper Store Details")
 
         else:
             customers = [response_data]
-        print("response_data", response_data)
-        print("customers", customers)
         for customer in customers:
             values = self.get_customer_values(customer)
             partner_exist = partners.search([('shopify_customer_id', '=', values['shopify_customer_id'])])
@@ -101,7 +97,6 @@ class customersDetails(models.Model):
             'state_id': state_id,
             'country_id': country_id,
         })
-        print("values----->", values)
         return values
 
     def export_customers(self):
@@ -200,8 +195,6 @@ class customersDetails(models.Model):
         return data
 
     def enable_shopify_customer(self):
-        print("Enabling")
-        print(self._context)
 
         for customer_id in self._context.get("active_ids"):
             customer = self.env['res.partner'].browse(customer_id)
@@ -210,7 +203,6 @@ class customersDetails(models.Model):
             access_token = store.get_param('hspl_shopify.access_token')
             if baseURL and access_token:
                 url = f"{baseURL}/customers/{customer.shopify_customer_id}.json"
-                print("url",url)
                 headers = {
                     'X-Shopify-Access-Token': access_token,
                 }
@@ -220,7 +212,6 @@ class customersDetails(models.Model):
                         "state": "enabled"
                     }
                 }
-                print("json.dumps(customer_values)", json.dumps(customer_values, indent=4))
                 response = requests.request("PUT", url=url, headers=headers, data=json.dumps(customer_values))
 
                 if response.status_code == 200:
@@ -230,15 +221,12 @@ class customersDetails(models.Model):
                         "shopify_customer_status": customer_response.get("state"),
                     })
                 else:
-                    print(f"Error: {response.status_code} {response.text}")
                     raise UserError(f"Error: {response.status_code} {response.text}")
             else:
                 raise UserError("Improper Store Details")
 
 
     def disable_shopify_customer(self):
-        print("Disabling")
-        print(self._context)
 
         for customer_id in self._context.get("active_ids"):
             customer = self.env['res.partner'].browse(customer_id)
@@ -247,7 +235,6 @@ class customersDetails(models.Model):
             access_token = store.get_param('hspl_shopify.access_token')
             if baseURL and access_token:
                 url = f"{baseURL}/customers/{customer.shopify_customer_id}.json"
-                print("url",url)
                 headers = {
                     'X-Shopify-Access-Token': access_token,
                 }
@@ -257,7 +244,6 @@ class customersDetails(models.Model):
                         "state": "disabled"
                     }
                 }
-                print("json.dumps(customer_values)", json.dumps(customer_values, indent=4))
                 response = requests.request("PUT", url=url, headers=headers, data=json.dumps(customer_values))
 
                 if response.status_code == 200:
@@ -267,7 +253,6 @@ class customersDetails(models.Model):
                         "shopify_customer_status": customer_response.get("state"),
                     })
                 else:
-                    print(f"Error: {response.status_code} {response.text}")
                     raise UserError(f"Error: {response.status_code} {response.text}")
             else:
                 raise UserError("Improper Store Details")
